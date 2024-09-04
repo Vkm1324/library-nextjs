@@ -14,15 +14,17 @@ export const booksTable = mysqlTable("books", {
 });
 
 export const usersTable = mysqlTable("Users", {
+  // base data
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
-  age: int("age"), //.$default(sql`check('age >= 15 AND age <= 100')`),// check is not implemented yet in orm
-  DOB: date("DOB").notNull(),
-  address: varchar("address", { length: 255 }).notNull(),
-  phoneNum: bigint("phoneNum", { mode: "number", unsigned: true }).notNull(),
-  password: varchar("password", { length: 255 }).notNull(),
-  role: int("role"),
-  email:varchar("email",{length:50}).notNull()
+  role: int("role").notNull(),
+  email: varchar("email", { length: 50 }).notNull(),
+  image: varchar("image", { length: 255 }).notNull(),
+
+  // requires update data
+  address: varchar("address", { length: 255 }),
+  DOB: date("DOB"),
+  phoneNum: bigint("phoneNum", { mode: "number", unsigned: true }),
 });
 
 export const TransactionType = mysqlEnum("transactionType", ["borrow", "return"]);
