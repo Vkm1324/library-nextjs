@@ -12,7 +12,11 @@ import { Suspense } from "react";
 import { fetchBooksCount } from "@/lib/book-management/books.repository";
 import Pagination from "@/components/ui/landingPage/pagination";
 import BooksGrid from "@/components/ui/landingPage/booksGrid";
+import SignIn from "@/components/ui/landingPage/sign-in";
+
+// UI-Skeletons 
 import BooksGridSkeleton from "@/components/ui/skeletons/booksGrid";
+
 
 export default async function LandingPage({ searchParams, }: {
   searchParams?: {
@@ -55,7 +59,9 @@ export default async function LandingPage({ searchParams, }: {
           >
             About
           </Link>
-          <Button variant="default">Sign In</Button>
+          <Link key={"Login"} href={"/login"}>
+            <Button variant="default">Sign In</Button>
+          </Link>
         </nav>
       </header>
       <main className="flex-1">
