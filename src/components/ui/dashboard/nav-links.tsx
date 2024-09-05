@@ -29,7 +29,6 @@ const links = [
 ];
 export default function UserNavLinks() {
   const pathname = usePathname();
-  console.log(pathname);
   return (
     <div className="flex flex-row justify-between gap-4">
       {links.map((link) => {

@@ -7,7 +7,6 @@ export interface IUserBase {
 
 export interface IUserProfile extends IUserBase{
   DOB: Date;
-  age: number;
   phoneNum: number;
   address: string;
 }

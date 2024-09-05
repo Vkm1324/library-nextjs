@@ -53,3 +53,17 @@ export const logTable = mysqlTable("Log", {
 });
 
 
+
+export const bookRequestStatusType = mysqlEnum("status", [
+  "pending",
+  "approved",
+  "rejected",
+]);
+
+export const bookRequestTable = mysqlTable("bookRequest", {
+  id: serial("id").primaryKey(),
+  userId: int("userId").notNull(),
+  bookId: int("bookId").notNull(),
+  requestDate: datetime("requestDate").notNull(),
+  status: bookRequestStatusType.notNull(), // "pending", "approved", or "rejected"
+});

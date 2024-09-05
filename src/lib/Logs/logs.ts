@@ -1,7 +1,7 @@
 // logsRepository.js
 
-import { db } from "../db/db";
-import { logTable } from "../drizzle/schema/schema";
+import { db } from "../../db/db";
+import { logTable } from "../../drizzle/schema/schema";
 import { eq } from "drizzle-orm";
 export class LogsRepository {
 

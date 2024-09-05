@@ -1,11 +1,11 @@
 import { IPageRequest, IPagedResponse } from "../../../core/pagination.model";
 import { IRepository } from "../../../core/repository";
-import { IUser, IUserBase, Roles } from "./models/user.model";  
+import { IUser, IUserBase, IUserProfile, Roles } from "./models/user.model";  
 import mysql from "mysql2/promise";
 import { AppEnv } from "../../../read-env"; 
 import { db } from "../../db/db";
 import { usersTable } from "../../drizzle/schema/schema";
-import { sql } from "drizzle-orm/sql";
+import { eq, sql } from "drizzle-orm/sql";
 /**
  * Class representing a user repository.
  * @implements {IRepository<IUserBase, IUser>}
@@ -76,9 +76,27 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
     }
     return null;
   }
-
-  async update(id: number, updatedData: IUserBase): Promise<IUser | null> {
-    return null;
+  // TODO compatible to update image too
+  async update(
+    id: number,
+    updatedData: Omit<IUserProfile, "image">
+  ): Promise<IUser | null> {
+    try {
+      const result = await db
+        .update(usersTable)
+        .set({
+          name: updatedData.name,
+          DOB: updatedData.DOB,
+          phoneNum: updatedData.phoneNum,
+          address: updatedData.address,
+          email: updatedData.email,
+        })
+        .where(eq(usersTable.id, id));
+      return await this.getById(id);
+    } catch (error) {
+      console.error("Error updating user:", error);
+      throw new Error("Failed to update user");
+    }
   }
 
   async delete(id: number): Promise<IUser | null> {
@@ -161,5 +179,4 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
   lists() {
     console.table();
   }
- 
 }

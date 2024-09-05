@@ -1,0 +1,3 @@
+#create a middle ware for protecting all routes of dashboard from unaithorized access
+#revalidate the paths to the original paths after they move too and fro in profile 
+#color the data acc to the condition in transactions 
