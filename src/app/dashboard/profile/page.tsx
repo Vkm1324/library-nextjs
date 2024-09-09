@@ -6,20 +6,18 @@ import { UserRepository } from "@/lib/user-management/user.repository";
 export default async function profile() {
     const session = await auth();
     const id = session?.user.id;
-    console.log(id);
+    // console.log(id);
     if (id) {
-        const userRepo = new UserRepository();
-        const userData = await userRepo.getById(id);
-        if (userData) {
-            return (
-                <main>
-                    <Form user={userData} />
-                </main>
-            );
-        }
-        else{
-          notFound();
-        }
-
+      const userRepo = new UserRepository();
+      const userData = await userRepo.getById(id);
+      if (userData) {
+        return (
+          <main>
+            <Form user={userData} />
+          </main>
+        );
+      } else {
+        notFound();
+      }
     }
 }

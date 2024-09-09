@@ -1,6 +1,6 @@
 "use client";
 
-import {
+ import {
   HomeIcon,
   Moon,
   Sun,
@@ -9,6 +9,11 @@ import {
   LogOut,
   Book,
   DollarSign,
+  FileClock,
+  MessageCircleMore,
+  Users,
+  BookPlus,
+  NotebookPen,
 } from "lucide-react";
 
 import Link from "next/link";
@@ -18,17 +23,36 @@ import clsx from "clsx";
 // Map of links to display in the top navigation bar.
 // TODO mapping  of links should be dynamic such that user and admin can enjoy their own privilages
 
-const links = [
+const userLinks = [
   { name: "Home", href: "/dashboard", icon: HomeIcon },
   {
     name: "Transactions",
     href: "/dashboard/transaction",
-    icon: DollarSign,
+    icon: FileClock,
   },
-  { name: "Request Book", href: "/dashboard/requestBook", icon: Book },
+  { name: "Book Request", href: "/dashboard/requestBook", icon: BookPlus },
 ];
-export default function UserNavLinks() {
+const adminLinks = [
+  { name: "Home", href: "/dashboard", icon: HomeIcon },
+  {
+    name: "Transactions",
+    href: "/dashboard/transaction",
+    icon: FileClock,
+  },
+  { name: "Book Request", href: "/dashboard/requestBook", icon: BookPlus },
+  {
+    name: "Users Book Request",
+    href: "/dashboard/userRequests",
+    icon: NotebookPen,
+  },
+  { name: "Users", href: "/dashboard/users", icon: Users },
+  { name: "Book", href: "/dashboard/books", icon: Book },
+];
+
+export default function UserNavLinks({ role }: { role: number }) {
   const pathname = usePathname();
+  // TODO role should be string which describes the user role rather than number so use Roles and adjust it
+  const links = role === 2020 ? userLinks : adminLinks;
   return (
     <div className="flex flex-row justify-between gap-4">
       {links.map((link) => {

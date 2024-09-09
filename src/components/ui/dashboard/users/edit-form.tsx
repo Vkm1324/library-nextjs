@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { useActionState } from "react";
 import { updateProfile, State } from "@/lib/actions";
 import { Button } from "@/components/ui/button";
@@ -13,7 +20,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { User, Mail, Calendar, Phone, MapPin } from "lucide-react"; 
+import { User, Mail, Calendar, Phone, MapPin } from "lucide-react";
 import Link from "next/link";
 
 interface IUserProfile {
@@ -125,6 +132,20 @@ export default function EditProfileForm({ user }: { user: IUserProfile }) {
                 <p className="text-sm text-red-500">{state.errors.address}</p>
               )}
             </div>
+            {/* Role Select Field */}
+            <div className="space-y-2">
+              <Label htmlFor="role">Role</Label>
+              <Select id="role" defaultValue={user.role?.toString()}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="4040">Editor</SelectItem>
+                  <SelectItem value="5050">Admin</SelectItem>
+                  <SelectItem value="2020">User</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
           {state.message && (
             <Alert variant="default">
@@ -136,10 +157,10 @@ export default function EditProfileForm({ user }: { user: IUserProfile }) {
         </CardContent>
         <CardFooter className="flex justify-between">
           <Link
-            href="/dashboard"
+            href="/dashboard/users"
             className="mt-4 rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-400"
           >
-           Cancel
+            Cancel
           </Link>
           <Button type="submit">Update Profile</Button>
         </CardFooter>

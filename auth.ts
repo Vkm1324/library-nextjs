@@ -20,7 +20,7 @@ async function getUser(user: IUser): Promise<{ id: number; role: number }> {
   }
 }
 
-// Extend the built-in session and user types
+// Extend session and user types
 declare module "next-auth" {
   interface Session {
     user: {
@@ -29,7 +29,7 @@ declare module "next-auth" {
     } & DefaultSession["user"];
   }
 
-  interface User {
+  interface user {
     id: number;
     role: number;
   }
@@ -41,7 +41,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user, account }) {
       if (account && user) {
         // This condition will be true only on initial sign-in
-        const { id, role } = await getUser(user as IUser);
+        const { id, role } = await getUser(user as unknown as IUser);
         token.id = id;
         token.role = role;
       }
@@ -49,8 +49,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as number;
         session.user.role = token.role as number;
+        session.user.id = token.id as number;
       }
       return session;
     },

@@ -18,20 +18,19 @@ export default function SearchComponent({ placeholder }: { placeholder: string }
     }
     replace(`${pathName}?${params.toString()}`);
   }, 1000);
-  return (
-    <div className="relative flex flex-1 flex-shrink-0 items-center ">
-      <label htmlFor="search" className="sr-only">
-        Search
-      </label>
-      <input
-        className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-        placeholder={ placeholder}
-        onChange={(e) => {
-          handleSearch(e.target.value);
-        }}
-        defaultValue={searchParams.get("query")?.toString()}
-      />
-      <Search className="h-6 w-4  ml-2" />
-    </div>
-  );
+return (
+  <div className="relative flex flex-1 flex-shrink-0 items-center">
+    <label htmlFor="search" className="sr-only">
+      Search
+    </label>
+    <input
+      className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+      placeholder={placeholder}
+      onChange={(e) => handleSearch(e.target.value)}
+      defaultValue={searchParams.get("query")?.toString()}
+    />
+    <Search className=" absolute  left-3 h-6 w-4 text-gray-500" />
+  </div>
+);
+
 }

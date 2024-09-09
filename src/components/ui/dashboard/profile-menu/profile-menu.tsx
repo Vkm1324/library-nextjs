@@ -10,13 +10,13 @@ import {
 import {
   Bell,
   HelpCircle,
-  LogOut,
   LogOutIcon,
+  MessageCircleMore,
   UserRoundPenIcon,
 } from "lucide-react";
-import { auth, signOut } from "../../../../auth";
+import { auth, signOut } from "../../../../../auth";
 import Image from "next/image";
-import Logout from "./profile/logout";
+import Logout from ".././profile/logout";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 // import clsx from "clsx";
@@ -27,10 +27,15 @@ const profileLinks = [
     href: "dashboard/profile",
     icon: UserRoundPenIcon,
   },
+  // {
+  //   name: "Notifications",
+  //   href: "dashboard/notifications",
+  //   icon: Bell,
+  // },
   {
-    name: "Notifications",
-    href: "dashboard/notifications",
-    icon: Bell,
+    name: "My Requests",
+    href: "/dashboard/myRequests",
+    icon: MessageCircleMore,
   },
   {
     name: "Help",

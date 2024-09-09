@@ -1,20 +1,64 @@
 import { IPageRequest, IPagedResponse } from "../../../core/pagination.model";
 import { IRepository } from "../../../core/repository";
-import { IUser, IUserBase, IUserProfile, Roles } from "./models/user.model";  
+import {
+  IUser,
+  IUserBase,
+  IUserDisplay,
+  IUserProfile,
+  Roles,
+} from "./models/user.model";
 import mysql from "mysql2/promise";
-import { AppEnv } from "../../../read-env"; 
+import { AppEnv } from "../../../read-env";
 import { db } from "../../db/db";
 import { usersTable } from "../../drizzle/schema/schema";
-import { eq, sql } from "drizzle-orm/sql";
+import { count, eq, sql } from "drizzle-orm/sql";
 /**
  * Class representing a user repository.
  * @implements {IRepository<IUserBase, IUser>}
  */
 export class UserRepository implements IRepository<IUserBase, IUser> {
-  pool: mysql.Pool | null;
+  async fetchFilteredUsers(query: string, currentPage: number) {
+    const ITEMS_PER_PAGE = 8;
+    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+    // TODO remove the timeout  later
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      const results = await db
+        .select()
+        .from(usersTable)
+        // TODO include role too in where conditon 
+        .where(
+          sql`${usersTable.id} LIKE ${"%" + query + "%"} OR 
+          ${usersTable.name} LIKE ${"%" + query + "%"} OR
+          ${usersTable.email} LIKE ${"%" + query + "%"}
+          `
+        )
+        .orderBy(usersTable.id)
+        .limit(ITEMS_PER_PAGE)
+        .offset(offset);
+      // return user
+      return results as unknown as IUser[];
+    } catch (error) {
+      console.error("Database Error:", error);
+      throw new Error("Failed to fetch invoices.");
+    }
+  }
 
-  constructor() {
-    this.pool = mysql.createPool(AppEnv.DATABASE_URL);
+  async fetchAllUsersPageCount(query: string): Promise<number> {
+    const ITEMS_PER_PAGE = 8;
+    try {
+      const [countResult] = await db
+        .select({ count: count() })
+        .from(usersTable)
+        .where(sql`${usersTable.id} LIKE ${"%" + query + "%"}`);
+      const bookCount =
+        countResult.count > 0 ? countResult.count / ITEMS_PER_PAGE : 0;
+      // Return the  count of books
+      return Math.ceil(bookCount);
+    } catch (error) {
+      console.error("Database Error:", error);
+      throw new Error("Failed to fetch books count.");
+    }
   }
   /**
    * Creates a new user.
@@ -27,6 +71,7 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
       ...data,
       id: 0,
       role: Roles.User,
+      address: ""
     };
     const [result] = await db.insert(usersTable).values(user).$returningId();
     console.log(`User with UserId:${result.id} has been added successfully `);
@@ -79,8 +124,8 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
   // TODO compatible to update image too
   async update(
     id: number,
-    updatedData: Omit<IUserProfile, "image">
-  ): Promise<IUser | null> {
+    updatedData: Omit<IUser, "image">
+  ): Promise<IUser | IUserDisplay | null> {
     try {
       const result = await db
         .update(usersTable)
@@ -90,6 +135,7 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
           phoneNum: updatedData.phoneNum,
           address: updatedData.address,
           email: updatedData.email,
+          // role:updatedData.role
         })
         .where(eq(usersTable.id, id));
       return await this.getById(id);
@@ -180,3 +226,39 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
     console.table();
   }
 }
+
+export async function update(
+  id: number,
+  updatedData: Omit<IUserProfile, "image">
+): Promise<IUser | null> {
+  try {
+    const result = await db
+      .update(usersTable)
+      .set({
+        name: updatedData.name,
+        DOB: updatedData.DOB,
+        phoneNum: updatedData.phoneNum,
+        address: updatedData.address,
+        email: updatedData.email,
+      })
+      .where(eq(usersTable.id, id));
+    const user = new UserRepository();
+    return await user.getById(id);
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw new Error("Failed to update user");
+  }
+}
+
+export const getRoleName = (role: number) => {
+  switch (role) {
+    case Roles.Admin:
+      return "Admin";
+    case Roles.Editor:
+      return "Editor";
+    case Roles.User:
+      return "User";
+    default:
+      return "Unknown Role";
+  }
+};

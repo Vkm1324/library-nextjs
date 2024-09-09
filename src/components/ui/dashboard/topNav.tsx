@@ -1,14 +1,15 @@
-import UserNavLinks from "./nav-links";
-import { signOut } from "../../../../auth";
-import { LogOutIcon } from "lucide-react";
-import ProfileMenu from "@/components/ui/dashboard/profile";
+import { auth } from "../../../../auth";
+import UserNavLinks from "./nav-links"; 
+import ProfileMenu from "@/components/ui/dashboard/profile-menu/profile-menu";
 
-export default function TopNav() {
+export default async function TopNav() {
+  const session = await auth();
+  const userRole = session?.user.role;
   return (
     <div className="flex h-full flex-row px-3 py-4 md:px-2">
       <div className="flex grow justify-end flex-row ">
-        <UserNavLinks />
-        <ProfileMenu/>
+        <UserNavLinks role={userRole!} />
+        <ProfileMenu />
       </div>
     </div>
   );

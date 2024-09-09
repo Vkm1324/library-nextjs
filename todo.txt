@@ -1,3 +1,6 @@
 #create a middle ware for protecting all routes of dashboard from unaithorized access
 #revalidate the paths to the original paths after they move too and fro in profile 
+#if user didnt logged out ,when he opens landing page he should be redirected to dashboard such that untill unless he logs out he will not be able to come back to landing page
+ #add search for transaction and myrequests
+ #change status to book return status , and remove transaction type from the transactions 
 #color the data acc to the condition in transactions 

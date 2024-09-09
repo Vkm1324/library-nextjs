@@ -8,7 +8,7 @@ export default defineConfig({
   dbCredentials: {
     url: AppEnv.DATABASE_URL as string,
   },
-  verbose: true,
+  // verbose: true,
   strict: true,
   breakpoints: true,
 });

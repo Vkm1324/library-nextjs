@@ -11,19 +11,17 @@ export interface IUserProfile extends IUserBase{
   address: string;
 }
 
-// TODO IUserDisplay extends IUserBase omit password
-export interface IUserDisplay extends Omit <IUserBase,"password" > {
-
-}
-
 export enum Roles {
-  Admin = 6060,
+  Admin = 5050,
   Editor = 4040,
   User = 2020,
 } 
 
-// TODO  extend IUserProfile rather than IUserBase
-export interface IUser extends IUserBase {
+export interface IUser extends IUserProfile {
   id: number;
   role: Roles;
+}
+
+export interface IUserDisplay extends Omit<IUser, "role"> {
+
 }

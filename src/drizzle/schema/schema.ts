@@ -60,7 +60,7 @@ export const bookRequestStatusType = mysqlEnum("status", [
   "rejected",
 ]);
 
-export const bookRequestTable = mysqlTable("bookRequest", {
+export const bookRequestTable = mysqlTable("BookRequest", {
   id: serial("id").primaryKey(),
   userId: int("userId").notNull(),
   bookId: int("bookId").notNull(),
