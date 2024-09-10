@@ -2,7 +2,8 @@ import { IUser } from "@/lib/user-management/models/user.model";
 import { UserRepository } from "@/lib/user-management/user.repository";
 import NextAuth, { DefaultSession } from "next-auth";
 import Google from "next-auth/providers/google";
-
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import { db } from "@/db/db";
 const userRepo = new UserRepository();
 
 async function getUser(user: IUser): Promise<{ id: number; role: number }> {
@@ -36,6 +37,7 @@ declare module "next-auth" {
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  adapter: DrizzleAdapter(db),
   providers: [Google],
   callbacks: {
     async jwt({ token, user, account }) {
