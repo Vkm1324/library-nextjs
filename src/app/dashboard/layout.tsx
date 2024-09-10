@@ -1,8 +1,7 @@
 
 import TopNav from "@/components/ui/dashboard/topNav";
- 
-// TODO install "next": "15.0.0-canary.131" to enable 
-// export const experimental_ppr = true;
+  
+export const experimental_ppr = true;
 export default  function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex max-h-full flex-col max-w-full  md:overflow-hidden">

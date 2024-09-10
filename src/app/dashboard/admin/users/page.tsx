@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 import Pagination from "@/components/ui/landingPage/pagination";
 import TransactionTableSkeleton from "@/components/ui/skeletons/TransactionTable";
-import { auth } from "../../../../auth";
 import Search from "@/components/ui/landingPage/search";
 import { UserRepository } from "@/lib/user-management/user.repository";
 import UsersTable from "@/components/ui/dashboard/users/table";
 import UsersTableSkeleton from "@/components/ui/skeletons/users-table";
+import { auth } from "../../../../../auth";
 
 export default async function UserPage({
   searchParams,

@@ -21,7 +21,6 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 
 // Map of links to display in the top navigation bar.
-// TODO mapping  of links should be dynamic such that user and admin can enjoy their own privilages
 
 const userLinks = [
   { name: "Home", href: "/dashboard", icon: HomeIcon },
@@ -32,21 +31,15 @@ const userLinks = [
   },
   { name: "Book Request", href: "/dashboard/requestBook", icon: BookPlus },
 ];
-const adminLinks = [
-  { name: "Home", href: "/dashboard", icon: HomeIcon },
-  {
-    name: "Transactions",
-    href: "/dashboard/transaction",
-    icon: FileClock,
-  },
-  { name: "Book Request", href: "/dashboard/requestBook", icon: BookPlus },
+const adminLinks = [ 
+  ...userLinks,
   {
     name: "Users Book Request",
-    href: "/dashboard/userRequests",
+    href: "/dashboard/admin/userRequests",
     icon: NotebookPen,
   },
-  { name: "Users", href: "/dashboard/users", icon: Users },
-  { name: "Book", href: "/dashboard/books", icon: Book },
+  { name: "Users", href: "/dashboard/admin/users", icon: Users },
+  { name: "Book", href: "/dashboard/admin/books", icon: Book },
 ];
 
 export default function UserNavLinks({ role }: { role: number }) {

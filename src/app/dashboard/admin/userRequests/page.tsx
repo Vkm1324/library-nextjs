@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Pagination from "@/components/ui/landingPage/pagination";
-import { auth } from "../../../../auth";
+import { auth } from "../../../../../auth";
 import { BookRequestRepository } from "@/lib/book-requests/book-request.repository";
 import BookRequestTable from "@/components/ui/dashboard/user-request/table";
 import Search from "@/components/ui/landingPage/search";
