@@ -8,6 +8,7 @@ export const booksTable = mysqlTable("books", {
   publisher: varchar("publisher", { length: 255 }).notNull(),
   genre: varchar("genre", { length: 255 }).notNull(),
   isbnNo: int("isbNo").notNull().unique(),
+  image: varchar("image",{length:255}),
   numofPages: int("numofPages").notNull(),
   totalNumberOfCopies: int("totalNumberOfCopies").notNull(),
   availableNumberOfCopies: int("availableNumberOfCopies").notNull(),
@@ -19,7 +20,7 @@ export const usersTable = mysqlTable("Users", {
   name: varchar("name", { length: 255 }).notNull(),
   role: int("role").notNull(),
   email: varchar("email", { length: 50 }).notNull(),
-  image: varchar("image", { length: 255 }).notNull(),
+  image: varchar("image", { length: 255 }),
 
   // requires update data
   address: varchar("address", { length: 255 }),

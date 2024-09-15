@@ -19,20 +19,21 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { getRoleName } from "@/middleware";
 
 // Map of links to display in the top navigation bar.
 
 const userLinks = [
   { name: "Home", href: "/dashboard", icon: HomeIcon },
-  {
-    name: "Transactions",
-    href: "/dashboard/transaction",
-    icon: FileClock,
-  },
   { name: "Book Request", href: "/dashboard/requestBook", icon: BookPlus },
 ];
-const adminLinks = [ 
+const adminLinks = [
   ...userLinks,
+  {
+    name: "Transactions",
+    href: "/dashboard/admin/transaction",
+    icon: FileClock,
+  },
   {
     name: "Users Book Request",
     href: "/dashboard/admin/userRequests",
@@ -43,9 +44,8 @@ const adminLinks = [
 ];
 
 export default function UserNavLinks({ role }: { role: number }) {
-  const pathname = usePathname();
-  // TODO role should be string which describes the user role rather than number so use Roles and adjust it
-  const links = role === 2020 ? userLinks : adminLinks;
+  const pathname = usePathname(); 
+  const links = getRoleName(role) === "User" ? userLinks : adminLinks;
   return (
     <div className="flex flex-row justify-between gap-4">
       {links.map((link) => {

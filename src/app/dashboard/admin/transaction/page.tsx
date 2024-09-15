@@ -1,32 +1,22 @@
-import Table from "@/components/ui/dashboard/profile-menu/myRequests/table";
-import { auth } from "../../../../auth";
+import Table from "@/components/ui/dashboard/transaction/table";
+import { fetchFilteredTransaction, fetchTransactionPageCount } from "@/lib/transaction/transaction.repository";
 import { Suspense } from "react";
 import Pagination from "@/components/ui/landingPage/pagination";
 import TransactionTableSkeleton from "@/components/ui/skeletons/TransactionTable";
-import { fetchFilteredBookRequestOfUser, fetchFilteredUserBookRequestPageCount } from "@/lib/book-requests/book-request.repository";
-import {  GenericColumn } from "@/components/ui/table/columns";
 import Search from "@/components/ui/landingPage/search";
 
-
-
-export default async function MyRequestsPage({
+export default async function TransactionPage({
   searchParams,
 }: {
   searchParams?: {
     query?: string;
     page?: string;
   };
-}) {
-  const session = await auth();
-  const uId = session?.user.id!;
-  const currentPage = Number(searchParams?.page) || 1;
-  const query =(searchParams?.query) || "";
-  const totalPages = await fetchFilteredUserBookRequestPageCount(uId, query);
-    const bookRequests = await fetchFilteredBookRequestOfUser(
-      +uId,
-      currentPage,
-      query
-    );
+  }) {
+    const currentPage = Number(searchParams?.page) || 1;
+    const query = searchParams?.query || "";
+    const totalPages = await fetchTransactionPageCount(query);
+    const transactions = await fetchFilteredTransaction(query, currentPage);
   return (
     <main>
       <section className="w-full py-12 md:py-24 lg:py-0 xl:py-0">
@@ -37,15 +27,14 @@ export default async function MyRequestsPage({
               <Search placeholder="Search... " />
             </div>
             {/* Rendering the Books Table component */}
-
-      {
-        <Suspense
-          key={uId + currentPage}
-          fallback={<TransactionTableSkeleton />}
-        >
-          <Table data={bookRequests} />
-        </Suspense>
-      }
+            {
+              <Suspense
+                key={query + currentPage}
+                fallback={<TransactionTableSkeleton />}
+              >
+                <Table data={transactions} />
+              </Suspense>
+            }
             <div className="mt-5 flex w-full justify-center">
               <Pagination totalPages={totalPages} />
             </div>
@@ -56,5 +45,3 @@ export default async function MyRequestsPage({
     </main>
   );
 }
-
-

@@ -1,10 +1,9 @@
 import { IUser } from "@/lib/user-management/models/user.model";
 import { UserRepository } from "@/lib/user-management/user.repository";
-import NextAuth, { DefaultSession } from "next-auth"; 
+import NextAuth, { DefaultSession } from "next-auth";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/db/db";
 import authConfig from "./auth.config";
- 
 
 async function getUser(user: IUser): Promise<{ id: number; role: number }> {
   try {
@@ -63,7 +62,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       if (request.method === "POST") {
         const { authToken } = (await request.json()) ?? {};
-        console.log(authToken)
+        // console.log(authToken);
         // If the request has a valid auth token, it is authorized
         // const valid = await validateAuthToken(authToken);
         // if (valid) return true;
@@ -75,5 +74,3 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
 });
-
- 

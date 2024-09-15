@@ -1,5 +1,3 @@
-
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,8 +15,7 @@ import {
 import { auth, signOut } from "../../../../../auth";
 import Image from "next/image";
 import Logout from ".././profile/logout";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from "next/link"; 
 // import clsx from "clsx";
 
 const profileLinks = [
@@ -27,21 +24,21 @@ const profileLinks = [
     href: "dashboard/profile",
     icon: UserRoundPenIcon,
   },
-  // {
-  //   name: "Notifications",
-  //   href: "dashboard/notifications",
-  //   icon: Bell,
-  // },
+  {
+    name: "My Transaction",
+    href: "dashboard/myTransaction",
+    icon: Bell,
+  },
   {
     name: "My Requests",
     href: "/dashboard/myRequests",
     icon: MessageCircleMore,
   },
-  {
-    name: "Help",
-    href: "dashboard/help",
-    icon: HelpCircle,
-  },
+  // {
+  //   name: "Help",
+  //   href: "dashboard/help",
+  //   icon: HelpCircle,
+  // },
   {
     name: "Sign Out",
     href: "dashboard/logout",

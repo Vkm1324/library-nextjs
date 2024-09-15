@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -6,6 +6,9 @@ import { redirect } from "next/navigation";
 import { update, UserRepository } from "./user-management/user.repository";
 import { BookRequestRepository } from "./book-requests/book-request.repository";
 import { IBookResquest } from "./book-requests/models/books-request.model";
+import { TransactionRepository } from "./transaction/transaction.repository";
+import { BookRepository } from "./book-management/books.repository";
+import { Book } from "lucide-react";
 
 export async function reject(id: number) {
   try {
@@ -23,8 +26,22 @@ export async function reject(id: number) {
 export async function approve(id: number) {
   try {
     const bookReq = new BookRequestRepository();
+    const transaction = new TransactionRepository();
     const data: Partial<IBookResquest> = { status: "approved" };
     await bookReq.update(id, data);
+    const result = await bookReq.getById(id);
+
+    if (result && result.bookId && result.userId) {
+      const transactionData = {
+        bookId: result.bookId,
+        userId: result.userId,
+      };
+      // Create the transaction
+      await transaction.create(transactionData);
+    } else {
+      throw new Error("Failed to retrieve book request or required data");
+    }
+
     revalidatePath("/dashboard/request");
     return { message: "Request approved successfully." };
   } catch (error) {
@@ -33,22 +50,19 @@ export async function approve(id: number) {
   }
 }
 
-
-export async function requestBook(uid: number, bookid:number) {
+export async function requestBook(uid: number, bookid: number) {
   const reqbook = new BookRequestRepository();
   const result = await reqbook.create({
-    userId:uid, bookId:bookid,
-    requestDate: new Date()
+    userId: uid,
+    bookId: bookid,
+    requestDate: new Date(),
   });
   if (result) {
     return `Request has been loadged succesfully for book Id:  ${result.bookId}`;
-  }
-  else {
+  } else {
     return "Request failed";
   }
 }
-
-
 
 // Zod validation schema for user profile update (omit image)
 const UserProfileUpdateSchema = z.object({
@@ -59,12 +73,9 @@ const UserProfileUpdateSchema = z.object({
   DOB: z.coerce.date({
     invalid_type_error: "Please enter a valid date of birth.",
   }),
-  phoneNum: z.coerce
-    .number()
-    .int()
-    .min(1000000000, {
-      message: "Please enter a valid 10-digit phone number.",
-    }),
+  phoneNum: z.coerce.number().int().min(1000000000, {
+    message: "Please enter a valid 10-digit phone number.",
+  }),
   address: z.string({
     invalid_type_error: "Please enter a valid address.",
   }),
@@ -81,9 +92,12 @@ export type State = {
   message?: string | null;
 };
 
- 
 // Function to update the user profile
-export async function updateProfile(id: number, prevState: State, formData: FormData) {
+export async function updateProfile(
+  id: number,
+  prevState: State,
+  formData: FormData
+) {
   const validatedFields = UserProfileUpdateSchema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),
@@ -120,25 +134,24 @@ export async function updateProfile(id: number, prevState: State, formData: Form
   redirect("/dashboard/profile");
 }
 
- export async function deleteUser(id: number) { 
-   try {
-     const user = new UserRepository();
-     await user.delete(+id);
-     revalidatePath("/dashboard/users");
-     return { message: "Deleted user ." };
-   } catch (error) {
-     return { message: "Database Error: Failed to Delete Invoice." };
-   }
- }
-
+export async function deleteUser(id: number) {
+  try {
+    const user = new UserRepository();
+    await user.delete(+id);
+    revalidatePath("/dashboard/users");
+    return { message: "Deleted user ." };
+  } catch (error) {
+    return { message: "Database Error: Failed to Delete Invoice." };
+  }
+}
 
 // Define the schema for creating a user
 const UserSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
-  email: z.string().email({ message: "Invalid email address." }), 
-  role: z.enum(["editor", "admin", "user"], {
-    invalid_type_error: "Please select a valid role.",
-  }),
+  email: z.string().email({ message: "Invalid email address." }),
+  // role: z.enum(["editor", "admin", "user"], {
+  //   invalid_type_error: "Please select a valid role.",
+  // }),
   DOB: z.string().optional(),
   phoneNum: z.string().optional(),
   address: z.string().optional(),
@@ -164,10 +177,10 @@ export type CreateUserState = {
 // Create user function
 export async function createUser(prevState: State, formData: FormData) {
   // Validate form using Zod
-  const validatedFields = CreateUser.safeParse({
+  const validatedCreateUserFields = CreateUser.safeParse({
     name: formData.get("name"),
-    email: formData.get("email"), 
-    image: formData.get("image"), 
+    email: formData.get("email"),
+    image: formData.get("image"),
     role: formData.get("role"),
     DOB: formData.get("DOB"),
     phoneNum: formData.get("phoneNum"),
@@ -175,31 +188,147 @@ export async function createUser(prevState: State, formData: FormData) {
   });
 
   // If form validation fails, return errors early. Otherwise, continue.
-  if (!validatedFields.success) {
+  if (!validatedCreateUserFields.success) {
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
+      errors: validatedCreateUserFields.error.flatten().fieldErrors,
       message: "Missing Fields. Failed to Create User.",
     };
   }
 
   // Prepare data for insertion into the database
-  const data =
-    validatedFields.data;
-  const newUser = { ...data };
+  const data = validatedCreateUserFields.data;
+  const newUser = { ...data, image: " " };
   // Insert data into the database
   try {
     const userRepo = new UserRepository();
-    await userRepo.create(data);
+    await userRepo.create(newUser);
   } catch (error) {
     // If a database error occurs, return a more specific error.
     return {
       message: "Database Error: Failed to Create User.",
     };
   }
-
   // Revalidate the cache for the users page and redirect the user.
-  revalidatePath("/dashboard/users");
-  redirect("/dashboard/users");
+  revalidatePath("/dashboard/admin/users");
+  redirect("/dashboard/admin/users");
 }
- 
- 
+
+export async function updateTransaction(id: number) {
+  try {
+    const user = new TransactionRepository();
+    await user.updateReturnStatus(+id);
+    revalidatePath("/dashboard/admin/transaction");
+    return { message: "Deleted user ." };
+  } catch (error) {
+    return { message: "Database Error: Failed to Delete Invoice." };
+  }
+}
+
+// Zod validation schema for updating book details
+const BookUpdateSchema = z.object({
+  title: z.string().min(1, { message: "Please enter a valid title." }),
+  author: z.string().min(1, { message: "Please enter a valid author." }),
+  publisher: z.string().min(1, { message: "Please enter a valid publisher." }),
+  genre: z.string().min(1, { message: "Please enter a valid genre." }),
+  isbnNo: z.coerce
+    .number()
+    .min(1000000000, { message: "Please enter a valid ISBN number." })
+    .refine((isbnNo) => String(isbnNo).length === 13, {
+      message: "ISBN number should be 13 digits long.",
+    }),
+  numofPages: z.coerce
+    .number()
+    .min(1, { message: "Enter a valid page count." }),
+  totalNumberOfCopies: z.coerce.number().min(1, {
+    message: "Enter a valid total copy count.",
+  }),
+  availableNumberOfCopies: z.coerce.number().min(0, {
+    message: "Enter a valid available copy count.",
+  }),
+  image: z.string().optional(),
+});
+
+export type BookState = {
+  errors?: {
+    title?: string[];
+    author?: string[];
+    publisher?: string[];
+    genre?: string[];
+    isbnNo?: string[];
+    numofPages?: string[];
+    totalNumberOfCopies?: string[];
+    availableNumberOfCopies?: string[];
+  };
+  message?: string | null;
+};
+// Function to update book details
+export async function updateBook(
+  id: number,
+  prevState: BookState,
+  formData: FormData
+) {
+  const validatedFields = BookUpdateSchema.safeParse({
+    title: formData.get("title"),
+    author: formData.get("author"),
+    publisher: formData.get("publisher"),
+    genre: formData.get("genre"),
+    isbnNo: formData.get("isbnNo"),
+    numofPages: formData.get("numofPages"),
+    totalNumberOfCopies: formData.get("totalNumberOfCopies"),
+    availableNumberOfCopies: formData.get("availableNumberOfCopies"),
+    image: formData.get("image"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing fields. Failed to update book.",
+    };
+  }
+
+  const {
+    title,
+    author,
+    publisher,
+    genre,
+    isbnNo,
+    numofPages,
+    totalNumberOfCopies,
+    availableNumberOfCopies,
+    image,
+  } = validatedFields.data;
+
+  const updatedData = {
+    title,
+    author,
+    publisher,
+    genre,
+    isbnNo,
+    numofPages,
+    totalNumberOfCopies,
+    availableNumberOfCopies,
+    image,
+  };
+
+  try {
+    const bookRepo = new BookRepository();
+    await bookRepo.update(id, updatedData);
+  } catch (error) {
+    console.log("Database error: Failed to update book.");
+    return { message: "Error: Failed to update book." };
+  }
+
+  revalidatePath("/dashboard/admin/books");
+  redirect("/dashboard/admin/books");
+}
+
+export async function deleteBook(id: number) {
+  try {
+    const Book = new BookRepository();
+    const book= await Book.delete(+id);
+    revalidatePath("/dashboard/admin/books");
+    return { message: `Deleted book .${book?.title}` };
+  } catch (error) {
+    return { message: "Database Error: Failed to Delete book." };
+  }
+}

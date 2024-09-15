@@ -24,9 +24,8 @@ import { User, Mail, Calendar, Phone, MapPin } from "lucide-react";
 import Link from "next/link";
 
 export default function CreateProfileForm() {
-  const initialState: CreateUserState = { message: null, errors: {} };
+  const initialState: CreateUserState = { message: "", errors:{} };
   const [state, formAction] = useActionState(createUser, initialState);
-
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
@@ -122,7 +121,7 @@ export default function CreateProfileForm() {
         </CardContent>
         <CardFooter className="flex justify-between">
           <Link
-            href="/dashboard/users"
+            href="/dashboard/admin/users"
             className="mt-4 rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-400"
           >
             Cancel

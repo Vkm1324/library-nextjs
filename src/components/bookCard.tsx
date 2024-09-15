@@ -7,6 +7,7 @@ import { requestBook } from "@/lib/actions";
 
 interface BookCardProps {
   book: {
+    image: string | null;
     id: number;
     title: string;
     author: string;
@@ -43,6 +44,13 @@ export default function BookCard({ book, uid }: BookCardProps) {
       className="overflow-hidden transition-shadow hover:shadow-lg"
       onClick={handleRequestBook}
     >
+      {book.image && (
+        <img
+          src={book.image}
+          alt={book.title}
+          className="w-full h-48 object-cover"
+        />
+      )}
       <CardHeader className="p-4 bg-muted">
         <CardTitle className="text-lg font-semibold line-clamp-2">
           {book.title}

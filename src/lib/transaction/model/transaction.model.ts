@@ -10,6 +10,7 @@ type transactionType ="borrow" | "return";
 type statusType ="completed"| "overdue";
 
 export interface ITransaction extends ITransactionBase {
+  bookTitle: string;
   transactionId: number;
   transactionType: transactionType;
   issueddate: Date;

@@ -1,14 +1,74 @@
-import { formatDateToLocal } from "@/lib/utils";
-import { fetchFilteredTransaction } from "@/lib/transaction/transaction.repository";
+"use client";
 
-export default async function TransactionTable({
-  query,
-  currentPage,
-}: {
-  query: number;
-  currentPage: number;
-}) {
-  const transactions = await fetchFilteredTransaction(query, currentPage);
+import { formatDateToLocal } from "@/lib/utils";
+import { ReturnBookButton } from "./buttons";
+import { ITransaction } from "@/lib/transaction/model/transaction.model";
+import { DataTable } from "@/components/ui/table/data-table"; // Import DataTable for desktop view
+
+interface MyTransactionTableProps {
+  data: ITransaction[];
+}
+
+const transactionColumns = [
+  {
+    accessorKey: "transactionId",
+    header: "Transaction ID",
+  },
+  {
+    accessorKey: "bookId",
+    header: "Book ID",
+  },
+  {
+    accessorKey: "lateFees",
+    header: "Late Fees",
+  },
+  {
+    accessorKey: "issueddate",
+    header: "Issued Date",
+  },
+  {
+    accessorKey: "dueDate",
+    header: "Due Date",
+  },
+  {
+    accessorKey: "returnDate",
+    header: "Return Date",
+  },
+  {
+    accessorKey: "transactionType",
+    header: "Status",
+    cell: ({ row }) => {
+      const transaction = row.original;
+      return transaction.transactionType === "borrow" ? (
+        <span className="text-yellow-500">Pending</span>
+      ) : transaction.returnDate > transaction.dueDate ? (
+        <span className="text-red-500">Overdue</span>
+      ) : (
+        <span className="text-green-500">Completed</span>
+      );
+    },
+  },
+  {
+    accessorKey: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      const transaction = row.original;
+      return transaction.transactionType === "borrow" ? (
+        <ReturnBookButton id={transaction.transactionId} />
+      ) : null;
+    },
+  },
+];
+
+export default function TransactionTable({ data }: MyTransactionTableProps) {
+  const formattedData = data.map((transaction) => ({
+    ...transaction,
+    issueddate: formatDateToLocal(transaction.issueddate.toDateString()),
+    dueDate: formatDateToLocal(transaction.dueDate.toDateString()),
+    returnDate: transaction.returnDate
+      ? formatDateToLocal(transaction.returnDate.toDateString())
+      : "N/A",
+  }));
 
   return (
     <div className="mt-6 flow-root">
@@ -16,7 +76,7 @@ export default async function TransactionTable({
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           {/* Mobile view */}
           <div className="md:hidden">
-            {transactions?.map((transaction) => (
+            {formattedData.map((transaction) => (
               <div
                 key={transaction.transactionId}
                 className="mb-2 w-full rounded-md bg-white p-4"
@@ -26,99 +86,42 @@ export default async function TransactionTable({
                   <p className="text-sm text-gray-500">
                     {transaction.lateFees}
                   </p>
-                  <p className="text-sm text-gray-500">{transaction.status}</p>
                   <p className="text-sm text-gray-500">
-                    {transaction.transactionType}
+                    {transaction.transactionType === "borrow"
+                      ? "Pending"
+                      : transaction.returnDate > transaction.dueDate
+                      ? "Overdue"
+                      : "Completed"}
                   </p>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <p className="text-xl font-medium">
-                    {formatDateToLocal(transaction.issueddate.toDateString())}
+                    {formatDateToLocal(transaction.issueddate)}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {formatDateToLocal(transaction.dueDate.toDateString())}
+                    {formatDateToLocal(transaction.dueDate)}
                   </p>
-                  <p>
-                    {formatDateToLocal(transaction.returnDate.toDateString())}
+                  <p className="text-sm text-gray-500">
+                    {transaction.returnDate === "N/A"
+                      ? "N/A"
+                      : formatDateToLocal(transaction.returnDate)}
                   </p>
                 </div>
+                {transaction.transactionType === "borrow" && (
+                  <div className="mt-4">
+                    <ReturnBookButton id={transaction.transactionId} />
+                  </div>
+                )}
               </div>
             ))}
           </div>
 
           {/* Desktop view */}
-          <table className="hidden min-w-full text-gray-900 md:table">
-            <thead className="rounded-lg text-left text-sm font-normal">
-              <tr>
-                <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Transaction ID
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Book ID
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Late Fees
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Transaction Type
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Issued Date
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Due Date
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Return Date
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Status
-                </th>
-                <th scope="col" className="relative py-3 pl-6 pr-3">
-                  <span className="sr-only">Edit</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white">
-              {transactions?.map((transaction) => (
-                <tr
-                  key={transaction.transactionId}
-                  className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
-                >
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    {transaction.transactionId}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {transaction.bookId}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {transaction.lateFees}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {transaction.transactionType}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {formatDateToLocal(transaction.issueddate.toDateString())}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {formatDateToLocal(transaction.dueDate.toDateString())}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {formatDateToLocal(transaction.returnDate.toDateString())}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {transaction.status}
-                  </td>
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    {/* <div className="flex justify-end gap-3"> */}
-                      {/* <UpdateTransaction id={transaction.transactionId} />
-                      <DeleteTransaction id={transaction.transactionId} />
-                    </div> */}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <DataTable
+            columns={transactionColumns}
+            data={formattedData}
+            initialSortBy="status"
+          />
         </div>
       </div>
     </div>

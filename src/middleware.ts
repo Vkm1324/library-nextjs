@@ -2,6 +2,20 @@
 import authConfig from "./../auth.config"; 
 import { getSession } from "next-auth/react";
 import { getToken } from "next-auth/jwt";
+import { Roles } from "./lib/user-management/models/user.model";
+export const getRoleName = (role: number) => {
+  switch (role) {
+    case Roles.Admin:
+      return "Admin";
+    case Roles.Editor:
+      return "Editor";
+    case Roles.User:
+      return "User";
+    default:
+      return "Unknown Role";
+  }
+};
+
 
 const { auth } = NextAuth(authConfig);
 
@@ -14,11 +28,13 @@ export default auth(async (req) => {
     const token = await getToken({ req, secret: process.env.AUTH_SECRET  });
     // console.log(token);
     const id = token?.id; 
-    const role= token?.role; 
+    let roleId:number= token?.role; 
     // const id = req.auth.user.id; 
     // const role= req.auth.user.role
-      console.log(role,id);
-      if (role !== 5050) {
+    if (roleId) {
+    }
+    const userRole=getRoleName(roleId);
+      if (userRole !== "Admin") {
               const newUrl = new URL("/dashboard", req.nextUrl.origin);
               return Response.redirect(newUrl);
       }  

@@ -2,7 +2,7 @@ export interface IUserBase {
   // immutable data which has to kept safe
   name: string;
   email: string;
-  image: string;
+  image: string | null;
 }
 
 export interface IUserProfile extends IUserBase{

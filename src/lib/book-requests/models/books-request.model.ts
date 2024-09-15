@@ -5,6 +5,7 @@ export interface IBookRequestBase {
 }
 
 export interface IBookResquest extends IBookRequestBase {
+  [x: string]: ReactNode;
   id: number;
   status: "pending" | "approved" | "rejected";
 }

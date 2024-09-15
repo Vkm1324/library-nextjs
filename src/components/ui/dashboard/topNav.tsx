@@ -9,7 +9,7 @@ export default async function TopNav() {
     <div className="flex h-full flex-row px-3 py-4 md:px-2">
       <div className="flex grow justify-end flex-row ">
         <UserNavLinks role={userRole!} />
-        <ProfileMenu />
+        <ProfileMenu  />
       </div>
     </div>
   );

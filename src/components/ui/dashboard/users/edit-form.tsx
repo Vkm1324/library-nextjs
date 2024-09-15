@@ -157,7 +157,7 @@ export default function EditProfileForm({ user }: { user: IUserProfile }) {
         </CardContent>
         <CardFooter className="flex justify-between">
           <Link
-            href="/dashboard/users"
+            href="/dashboard/admin/users"
             className="mt-4 rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-400"
           >
             Cancel

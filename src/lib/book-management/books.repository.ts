@@ -1,11 +1,11 @@
 import { IPageRequest, IPagedResponse } from "../../../core/pagination.model";
 import { IRepository } from "../../../core/repository";
-import { IBookBase, IBook } from "../book-management/models/books.model";
+import { IBookBase, IBook, IBookTitle } from "../book-management/models/books.model";
 import { AppEnv } from "../../../read-env";
 import mysql from "mysql2/promise";
 import { db } from "../../db/db";
 import { booksTable } from "../../drizzle/schema/schema";
-import { eq, sql, count } from "drizzle-orm/sql";
+import { eq, sql, count, or, like } from "drizzle-orm/sql";
 
 export class BookRepository implements IRepository<IBookBase, IBook> {
   // private mySqlPoolConnection: MySqlPoolConnection;
@@ -85,6 +85,17 @@ export class BookRepository implements IRepository<IBookBase, IBook> {
     return null;
   }
 
+  async getName(id: number): Promise<IBookTitle | null> {
+    const result = await db
+      .select({ title: booksTable.title,id:booksTable.id })
+      .from(booksTable)
+      .where(sql`${booksTable.id}=${id}`);
+    if (result) {
+      return result[0] as unknown as IBook;
+    }
+    return null;
+  }
+
   async getByIsbn(isbn: number): Promise<IBook | null> {
     const result = await db
       .select()
@@ -109,35 +120,71 @@ export class BookRepository implements IRepository<IBookBase, IBook> {
 export async function fetchFilteredBooks(query: string, currentPage: number) {
   const ITEMS_PER_PAGE = 8;
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-  // TODO remove the timeout  later
- await new Promise((resolve) => setTimeout(resolve, 3000));
+
+  // Simulate delay, remove later
+  await new Promise((resolve) => setTimeout(resolve, 3000));
+
   try {
+    // Step 1: Create the filtering condition based on the provided query
+    const whereClause = query
+      ? or(
+          like(booksTable.title, `%${query}%`), // Filter by status
+          like(booksTable.id, `%${+query}%`), // Filter by bookId
+          like(booksTable.publisher, `%${query}%`), // Filter by publisher
+          like(booksTable.genre, `%${query}%`), // Filter by genre
+          like(booksTable.author, `%${query}%`), // Filter by author
+          like(booksTable.isbnNo, `%${+query}%`) // Filter by isbn
+        )
+      : undefined;
+
+    // Step 2: Execute the database query with pagination
     const results = await db
       .select()
       .from(booksTable)
-      .where(sql`${booksTable.title} LIKE ${"%" + query + "%"}`)
-      .orderBy(booksTable.id)
+      .where(whereClause)
       .limit(ITEMS_PER_PAGE)
-      .offset(offset);
-// return books
+      .offset(offset)
+      .orderBy(booksTable.id);
+
+    // Step 3: Return the results casted to IBook[]
     return results as unknown as IBook[];
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch invoices.");
+    throw new Error("Failed to fetch books.");
   }
 }
+
 export async function fetchBooksCount(query: string): Promise<number> {
   const ITEMS_PER_PAGE = 8;
+
   try {
+    // Step 1: Create the filtering condition based on the provided query
+    const whereClause = query
+      ? or(
+          like(booksTable.title, `%${query}%`), // Filter by status
+          like(booksTable.id, `%${+query}%`), // Filter by bookId
+          like(booksTable.publisher, `%${query}%`), // Filter by publisher
+          like(booksTable.author, `%${query}%`), // Filter by author
+          like(booksTable.genre, `%${query}%`), // Filter by genre
+          like(booksTable.isbnNo, `%${+query}%`) // Filter by isbn
+        )
+      : undefined;
+
+    // Step 2: Execute the database query to get the count
     const [countResult] = await db
       .select({ count: count() })
       .from(booksTable)
-      .where(sql`${booksTable.title} LIKE ${"%" + query + "%"}`);  
-    const bookCount = countResult.count > 0 ? countResult.count / ITEMS_PER_PAGE : 0;
-      // Return the  count of books 
+      .where(whereClause);
+
+    // Step 3: Calculate total pages based on book count
+    const bookCount =
+      countResult.count > 0 ? countResult.count / ITEMS_PER_PAGE : 0;
+
+    // Step 4: Return the total number of pages
     return Math.ceil(bookCount);
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch books count.");
   }
 }
+

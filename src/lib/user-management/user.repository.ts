@@ -26,7 +26,7 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
       const results = await db
         .select()
         .from(usersTable)
-        // TODO include role too in where conditon 
+        // TODO include role too in where conditon
         .where(
           sql`${usersTable.id} LIKE ${"%" + query + "%"} OR 
           ${usersTable.name} LIKE ${"%" + query + "%"} OR
@@ -71,7 +71,7 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
       ...data,
       id: 0,
       role: Roles.User,
-      address: ""
+      address: "",
     };
     const [result] = await db.insert(usersTable).values(user).$returningId();
     console.log(`User with UserId:${result.id} has been added successfully `);
@@ -109,6 +109,16 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
       .from(usersTable)
       .where(sql`${usersTable.name} LIKE ${"%" + name + "%"}`);
     return result as unknown as IUser[];
+  }
+  async getUsername(id: number): Promise<IUser | null> {
+    const result = await db
+      .select({id:usersTable.id, name:usersTable.name})
+      .from(usersTable)
+      .where(sql`${usersTable.id}=${id}`);
+    if (result) {
+      return result[0] as unknown as IUser;
+    }
+    return null;
   }
 
   async getByPhoneNumber(phoneNumber: string) {

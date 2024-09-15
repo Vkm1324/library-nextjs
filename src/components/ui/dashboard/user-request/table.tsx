@@ -1,27 +1,87 @@
-import { BookRequestRepository } from "@/lib/book-requests/book-request.repository";
+"use client";
+
 import { formatDateToLocal } from "@/lib/utils";
 import { ApproveRequest, RejectRequest } from "../user-request/buttons";
+import { GenericColumn } from "../../table/columns";
+import { DataTable } from "@/components/ui/table/data-table";
+import { IBookResquest } from "@/lib/book-requests/models/books-request.model";
 
-export default async function BookRequestTable({
-  query,
-  currentPage,
-}: {
-  query: string;
-  currentPage: number;
-}) {
-  const db = new BookRequestRepository();
-  // TODO make fetchFilteredBookRequest compatible ( currently it accepts only user id)
-  const bookRequests = await db.fetchFilteredBookRequest(
-    query,
-    currentPage
-  );
+const bookRequestsColumns: GenericColumn<any>[] = [
+  {
+    accessorKey: "id",
+    header: "Request ID",
+  },
+  {
+    accessorKey: "bookId",
+    header: "Book Id",
+  },
+  {
+    accessorKey: "bookTitle",
+    header: "Book Title ",
+  },
+  {
+    accessorKey: "userId",
+    header: "User ID",
+  },
+  {
+    accessorKey: "username",
+    header: "User Name",
+  },
+  {
+    accessorKey: "requestDate",
+    header: "Request Date",
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    sortingFn: (rowA, rowB) => {
+      const order = ["pending", "approved", "rejected"];
+      const statusA = rowA.getValue<string>("status");
+      const statusB = rowB.getValue<string>("status");
+      return order.indexOf(statusA) - order.indexOf(statusB);
+    },
+    cell: (info) => (
+      <span
+        className={`${
+          info.row.original.status === "approved"
+            ? "text-green-800"
+            : info.row.original.status === "rejected"
+            ? "text-red-800"
+            : "text-yellow-800"
+        }`}
+      >
+        {info.row.original.status}
+      </span>
+    ),
+  },
+  {
+    header: "Action",
+    cell: (info) => (
+      <div className="flex justify-end gap-3">
+        {info.row.original.status === "pending" && (
+          <>
+            <ApproveRequest id={info.row.original.id} />
+            <RejectRequest id={info.row.original.id} />
+          </>
+        )}
+      </div>
+    ),
+  },
+];
+
+export default function BookRequestTable({ data }: { data: IBookResquest[] }) {
+  const formattedData = data.map((request) => ({
+    ...request,
+    requestDate: formatDateToLocal(request.requestDate.toDateString()), // Format the request date
+  }));
+
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           {/* Mobile view */}
           <div className="md:hidden">
-            {bookRequests?.map((request) => (
+            {formattedData?.map((request) => (
               <div
                 key={request.id}
                 className="mb-4 w-full rounded-md bg-white p-4 shadow-md"
@@ -50,21 +110,22 @@ export default async function BookRequestTable({
 
                 {/* Second row with Approve and Reject buttons */}
                 <div className="flex justify-between gap-4">
-                  <ApproveRequest id={request.id}  />
-                  <RejectRequest id={request.id}  />
+                  <ApproveRequest id={request.id} />
+                  <RejectRequest id={request.id} />
                 </div>
 
-                {/* Status  */}
+                {/* Status */}
                 <div className="mt-4">
                   <p className="text-sm font-medium text-gray-700">Status:</p>
                   <p
-                    className={`text-sm ${
-                      request.status === "approved"
-                        ? "text-green-800"
-                        : request.status === "rejected"
-                        ? "text-red-800"
-                        : "text-yellow-800"
-                    }`}
+                    className={`text-sm 
+                      ${
+                        request.status === "approved"
+                          ? "text-green-800"
+                          : request.status === "rejected"
+                          ? "text-red-800"
+                          : "text-yellow-800"
+                      }`}
                   >
                     {request.status}
                   </p>
@@ -73,72 +134,8 @@ export default async function BookRequestTable({
             ))}
           </div>
 
-          {/* Desktop view */}
-          <table className="hidden min-w-full text-gray-900 md:table">
-            <thead className="rounded-lg text-left text-sm font-normal">
-              <tr>
-                <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Request ID
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Book ID
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  User ID
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Request Date
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Status
-                </th>
-                <th scope="col" className="relative py-3 pl-6 pr-3">
-                  <span className="px-3 py-5 font-semibold">Action</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white">
-              {bookRequests?.map((request) => (
-                <tr
-                  key={request.id}
-                  className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
-                >
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    {request.id}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {request.bookId}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {request.userId}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {formatDateToLocal(request.requestDate.toDateString())}
-                  </td>
-                  <td
-                    className={`whitespace-nowrap px-3 py-3 ${
-                      request.status === "approved"
-                        ? "bg-green-100 text-green-800"
-                        : request.status === "rejected"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-yellow-100 text-yellow-800"
-                    }`}
-                  >
-                    {request.status}
-                  </td>
-
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    {request.status === "pending" && (
-                      <div className="flex justify-end gap-3">
-                        <ApproveRequest id={request.id} />
-                        <RejectRequest id={request.id} />
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {/* Desktop view using DataTable */}
+          <DataTable columns={bookRequestsColumns} data={formattedData} initialSortBy="status" />
         </div>
       </div>
     </div>

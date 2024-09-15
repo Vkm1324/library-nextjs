@@ -7,9 +7,15 @@ export interface IBookBase {
   isbnNo: number;
   numofPages: number;
   totalNumberOfCopies: number;
+  image:string |null;
 }
 
 export interface IBook extends IBookBase {
   id: number;
   availableNumberOfCopies: number;
+}
+
+export interface IBookTitle{
+  id: number;
+  title: string;
 }

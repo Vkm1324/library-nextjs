@@ -1,6 +1,4 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import Search from "@/components/ui/landingPage/search";
+ import Search from "@/components/ui/landingPage/search";
 import { Suspense } from "react";
 import { fetchBooksCount } from "@/lib/book-management/books.repository";
 import Pagination from "@/components/ui/landingPage/pagination";
