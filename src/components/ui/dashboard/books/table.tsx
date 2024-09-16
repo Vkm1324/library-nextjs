@@ -30,20 +30,20 @@ const createBooksColumns = (
     header: "Available Copies",
   },
   {
-      header: "Actions",
-      cell: (info) => {
-          const bookId = info.row.original.id;
-          const isPending = pendingReturnTransactions.some(
-              (transaction) => transaction === bookId
-          );
-          return (
-              <div className="flex justify-start gap-3">
-                  <UpdateBook id={bookId} />
-                  {!isPending && <DeleteBook id={bookId} />}
-              </div>
-          );
-      },
-      accessorKey: "id"
+    header: "Actions",
+    cell: (info) => {
+      const bookId = info.row.original.id;
+      const isPending = pendingReturnTransactions.some(
+        (transaction) => transaction === bookId
+      );
+      return (
+        <div className="flex justify-start gap-3">
+          <UpdateBook id={bookId} />
+          {!isPending && <DeleteBook id={bookId} />}
+        </div>
+      );
+    },
+    accessorKey: "isbnNo",
   },
 ];
 
@@ -65,11 +65,11 @@ export default function UsersTable({
           <div className="md:hidden">
             {formattedData.map((book) => {
               const isPending = pendingReturnTransactions.some(
-                (transaction) => transaction === book.id
+                (bookId) => bookId === book.id
               );
               return (
                 <div
-                  key={book.id}
+                  key={book.id}  
                   className="mb-2 w-full rounded-md bg-white p-4 shadow-md"
                 >
                   <div className="border rounded-lg p-4">

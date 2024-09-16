@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react"; 
 import { useActionState } from "react";
 import { updateBook, BookState } from "@/lib/actions";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Link from "next/link";
+import SingleImageDropzoneUsage from "@/components/ui/uploadImage";
 
 interface IBookProfile {
   id: number;
@@ -32,13 +34,37 @@ export default function EditBookForm({ book }: { book: IBookProfile }) {
   const initialState: BookState = { message: null, errors: {} };
   const updateBookWithId = updateBook.bind(null, book.id);
   const [state, formAction] = useActionState(updateBookWithId, initialState);
+  const [imageUrl, setImageUrl] = React.useState<string | undefined>(
+    book.image
+  ); 
+
+  // Handle image upload completion
+  const handleUploadComplete = (result: any) => {
+    if (result && result.url) {
+      setImageUrl(result.url);
+      // Update the image URL in the form state
+      // You might need to update state or send the image URL with the form submission
+    }
+  };
+
+  // Handle form submission
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    // Gather form data
+    const formData = new FormData(event.currentTarget);
+    formData.set("image", imageUrl || "");
+
+    // Submit the form with the updated book information
+    formAction(formData);
+  };
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
         <CardTitle>Edit Book</CardTitle>
       </CardHeader>
-      <form action={formAction}>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -170,12 +196,9 @@ export default function EditBookForm({ book }: { book: IBookProfile }) {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="image">Image URL</Label>
-              <Input
-                id="image"
-                name="image"
-                type="url"
-                defaultValue={book.image || ""}
+              <Label htmlFor="image">Image</Label>
+              <SingleImageDropzoneUsage
+                onUploadComplete={handleUploadComplete}
               />
               <div className="h-6">
                 {state.errors?.image && (

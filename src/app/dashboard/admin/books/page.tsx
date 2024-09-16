@@ -3,7 +3,6 @@ import Pagination from "@/components/ui/landingPage/pagination";
 import Search from "@/components/ui/landingPage/search"; 
 import BooksTable from "@/components/ui/dashboard/books/table";
 import UsersTableSkeleton from "@/components/ui/skeletons/users-table";
-import { auth } from "../../../../../auth"; 
 import { CreateBook } from "@/components/ui/dashboard/books/buttons";
 import { fetchBooksCount, fetchFilteredBooks } from "@/lib/book-management/books.repository";
 import { fetchPendingTransaction } from "@/lib/transaction/transaction.repository";
@@ -15,10 +14,7 @@ export default async function UserPage({
     query?: string;
     page?: string;
   };
-}) {
-  const session = await auth();
-  const adminUId = session?.user.id!;
-
+}) { 
   const query = searchParams!.query || "";
   const currentPage = Number(searchParams?.page) || 1; 
 const [totalPages, totalBooks, pendingReturnTransactions] = await Promise.all([
@@ -39,14 +35,14 @@ const [totalPages, totalBooks, pendingReturnTransactions] = await Promise.all([
               <CreateBook />
             </div>
             <Suspense
-              key={adminUId + currentPage}
+              key={currentPage}
               fallback={<UsersTableSkeleton />}
             >
               <BooksTable
                 data={totalBooks}
                 pendingReturnTransactions={pendingReturnTransactions}
               />
-              +
+
             </Suspense>
             <div className="mt-5 flex w-full justify-center">
               <Pagination totalPages={totalPages} />

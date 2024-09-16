@@ -222,7 +222,9 @@ export async function updateTransaction(id: number) {
   } catch (error) {
     return { message: "Database Error: Failed to Delete Invoice." };
   }
-}
+} 
+ 
+ 
 
 // Zod validation schema for updating book details
 const BookUpdateSchema = z.object({
@@ -245,7 +247,7 @@ const BookUpdateSchema = z.object({
   availableNumberOfCopies: z.coerce.number().min(0, {
     message: "Enter a valid available copy count.",
   }),
-  image: z.string().optional(),
+  image: z.string().url().optional(), // Ensure image is a valid URL if provided
 });
 
 export type BookState = {
@@ -258,9 +260,11 @@ export type BookState = {
     numofPages?: string[];
     totalNumberOfCopies?: string[];
     availableNumberOfCopies?: string[];
+    image?: string[]; // Adjust for image URL errors
   };
   message?: string | null;
 };
+
 // Function to update book details
 export async function updateBook(
   id: number,

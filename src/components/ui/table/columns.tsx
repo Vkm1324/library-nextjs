@@ -14,6 +14,6 @@ export function createColumns<T>(columns: GenericColumn<T>[]): ColumnDef<T>[] {
   return columns.map((column) => ({
     accessorKey: column.accessorKey,
     header: column.header,
-    cell: column.cell, // Include the cell property if it exists
+    // cell: column.cell, // Include the cell property if it exists
   }));
 }
