@@ -31,12 +31,12 @@ export default auth(async (req) => {
     });
     // console.log(token);
     const id = token?.id; 
-    let roleId= token?.role; 
-    // const id = req.auth.user.id; 
-    // const role= req.auth.user.role
+    let roleId= token?.role;  
+    console.log("User role is ", roleId);
     if (roleId) {
     }
-    const userRole=getRoleName(roleId);
+    const userRole = getRoleName(roleId);
+    console.log("User role is ", userRole , roleId.toString());
       if (userRole !== "Admin") {
               const newUrl = new URL("/dashboard", req.nextUrl.origin);
               return Response.redirect(newUrl);

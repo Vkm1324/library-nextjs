@@ -18,18 +18,6 @@ import Link from "next/link";
 import SingleImageDropzoneUsage from "@/components/ui/uploadImage";
 import { IBook } from "@/lib/book-management/models/books.model";
 
-interface IBookProfile {
-  id: number;
-  title: string;
-  author: string;
-  publisher: string;
-  genre: string;
-  isbnNo: number;
-  image?: string;
-  numofPages: number;
-  totalNumberOfCopies: number;
-  availableNumberOfCopies: number;
-}
 
 export default function EditBookForm({ book }: { book: IBook }) {
   const initialState: BookState = { message: null, errors: {} };
@@ -43,8 +31,7 @@ export default function EditBookForm({ book }: { book: IBook }) {
   const handleUploadComplete = (result: any) => {
     if (result && result.url) {
       setImageUrl(result.url);
-      // Update the image URL in the form state
-      // You might need to update state or send the image URL with the form submission
+      // Update the image URL in the form state 
     }
   };
 
