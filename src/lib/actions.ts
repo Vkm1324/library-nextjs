@@ -8,7 +8,6 @@ import { BookRequestRepository } from "./book-requests/book-request.repository";
 import { IBookResquest } from "./book-requests/models/books-request.model";
 import { TransactionRepository } from "./transaction/transaction.repository";
 import { BookRepository } from "./book-management/books.repository";
-import { Book } from "lucide-react";
 
 export async function reject(id: number) {
   try {
@@ -171,7 +170,7 @@ export type CreateUserState = {
     phoneNum?: string[];
     address?: string[];
   };
-  message?: string | null;
+  message: string;
 };
 
 // Create user function
@@ -197,11 +196,18 @@ export async function createUser(prevState: State, formData: FormData) {
 
   // Prepare data for insertion into the database
   const data = validatedCreateUserFields.data;
-  const newUser = { ...data, image: " " };
+  const newUser = {
+    ...data,
+    DOB: new Date(data.DOB!),
+    phoneNum: +data.phoneNum!,
+    address: data.address!,
+    image: "",
+  };
   // Insert data into the database
   try {
     const userRepo = new UserRepository();
-    await userRepo.create(newUser);
+    const result = await userRepo.create(newUser);
+    // return { message: "Success" };
   } catch (error) {
     // If a database error occurs, return a more specific error.
     return {
@@ -222,9 +228,7 @@ export async function updateTransaction(id: number) {
   } catch (error) {
     return { message: "Database Error: Failed to Delete Invoice." };
   }
-} 
- 
- 
+}
 
 // Zod validation schema for updating book details
 const BookUpdateSchema = z.object({
@@ -329,7 +333,7 @@ export async function updateBook(
 export async function deleteBook(id: number) {
   try {
     const Book = new BookRepository();
-    const book= await Book.delete(+id);
+    const book = await Book.delete(+id);
     revalidatePath("/dashboard/admin/books");
     return { message: `Deleted book .${book?.title}` };
   } catch (error) {

@@ -16,7 +16,7 @@ export default async function UserPage({
   };
 }) {
   const session = await auth();
-  const adminUId = session?.user.id!;
+  const adminUId = session?.user.uId!;
 
   const query = searchParams!.query || "";
   const currentPage = Number(searchParams?.page) || 1;

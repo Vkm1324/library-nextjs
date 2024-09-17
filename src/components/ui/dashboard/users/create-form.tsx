@@ -24,7 +24,7 @@ import { User, Mail, Calendar, Phone, MapPin } from "lucide-react";
 import Link from "next/link";
 
 export default function CreateProfileForm() {
-  const initialState: CreateUserState = { message: "", errors:{} };
+  const initialState: CreateUserState = { message: "", errors: {} };
   const [state, formAction] = useActionState(createUser, initialState);
   return (
     <Card className="w-full max-w-2xl mx-auto">
@@ -99,7 +99,8 @@ export default function CreateProfileForm() {
             {/* Role Select Field */}
             <div className="space-y-2">
               <Label htmlFor="role">Role</Label>
-              <Select id="role">
+              {/* <Select id="role"> */}
+              <Select>
                 <SelectTrigger>
                   <SelectValue placeholder="Select role" />
                 </SelectTrigger>

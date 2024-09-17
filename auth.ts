@@ -26,12 +26,20 @@ async function getUser(user: IUser): Promise<{ id: number; role: number }> {
 declare module "next-auth" {
   interface Session {
     user: {
-      id: number;
+      uId: number;
       role: number;
     } & DefaultSession["user"];
   }
 
   interface user {
+    uId: number;
+    role: number;
+  }
+}
+
+// declare module "next-auth/jwt" {
+declare module "next-auth/" {
+  interface JWT {
     id: number;
     role: number;
   }
@@ -53,7 +61,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       if (session.user) {
         session.user.role = token.role as number;
-        session.user.id = token.id as number;
+        session.user.uId = token.id as number;
       }
       return session;
     },
@@ -62,11 +70,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       if (request.method === "POST") {
         const { authToken } = (await request.json()) ?? {};
-        // console.log(authToken);
-        // If the request has a valid auth token, it is authorized
-        // const valid = await validateAuthToken(authToken);
-        // if (valid) return true;
-        // return NextResponse.json("Invalid auth token", { status: 401 });
+ 
         const body = request.json();
       }
       // Logged in users are authenticated, otherwise redirect to login page

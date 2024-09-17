@@ -6,9 +6,7 @@ import {
   IUserDisplay,
   IUserProfile,
   Roles,
-} from "./models/user.model";
-import mysql from "mysql2/promise";
-import { AppEnv } from "../../../read-env";
+} from "./models/user.model"; 
 import { db } from "../../db/db";
 import { usersTable } from "../../drizzle/schema/schema";
 import { count, eq, sql } from "drizzle-orm/sql";
@@ -65,12 +63,15 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
    * @param {IUserBase} data - The user data.
    * @returns {Promise<IUser>} The created user.
    */
-  // destructure and make name.lowercase and then insert
+  // destructure and  then insert
+  // ! fix the create currently we r hard coding when new user creates
   async create(data: IUserBase): Promise<IUser> {
     const user: IUser = {
       ...data,
       id: 0,
       role: Roles.User,
+      DOB: null,
+      phoneNum: 0,
       address: "",
     };
     const [result] = await db.insert(usersTable).values(user).$returningId();
@@ -112,7 +113,7 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
   }
   async getUsername(id: number): Promise<IUser | null> {
     const result = await db
-      .select({id:usersTable.id, name:usersTable.name})
+      .select({ id: usersTable.id, name: usersTable.name })
       .from(usersTable)
       .where(sql`${usersTable.id}=${id}`);
     if (result) {
@@ -134,8 +135,8 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
   // TODO compatible to update image too
   async update(
     id: number,
-    updatedData: Omit<IUser, "image">
-  ): Promise<IUser | IUserDisplay | null> {
+    updatedData: IUserBase // Change this to IUserBase to match base type
+  ): Promise<IUser | null> {
     try {
       const result = await db
         .update(usersTable)
@@ -166,11 +167,6 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
 
   list(params: IPageRequest): IPagedResponse<IUser> {
     throw new Error("Method not implemented.");
-  }
-
-  async close() {
-    // await this.mySqlPoolConnection.release();
-    this.pool = null;
   }
 
   // /**

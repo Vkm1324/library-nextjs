@@ -5,8 +5,7 @@ import { UserRepository } from "@/lib/user-management/user.repository";
 
 export default async function profile() {
     const session = await auth();
-    const id = session?.user.id;
-    // console.log(id);
+    const id = session?.user.uId;
     if (id) {
       const userRepo = new UserRepository();
       const userData = await userRepo.getById(id);

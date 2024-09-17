@@ -15,19 +15,11 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { User, Mail, Calendar, Phone, MapPin } from "lucide-react"; 
 import Link from "next/link";
+import { IUser } from "@/lib/user-management/models/user.model";
 
-interface IUserProfile {
-  id: number;
-  name: string;
-  email: string;
-  role?: number;
-  image?: string;
-  DOB?: Date | null;
-  phoneNum?: string | null;
-  address?: string | null;
-}
+ 
 
-export default function EditProfileForm({ user }: { user: IUserProfile }) {
+export default function EditProfileForm({ user }: { user: IUser }) {
   const initialState: State = { message: null, errors: {} };
   const updateProfileWithId = updateProfile.bind(null, user.id);
   const [state, formAction] = useActionState(updateProfileWithId, initialState);

@@ -20,11 +20,11 @@ const userColumns: GenericColumn<IUser>[] = [
     accessorKey: "email",
     header: "Email",
   },
-  {
-    accessorKey: "role",
-    header: "Role",
-    cell: (info) => getRoleName(info.row.original.role),
-  },
+{
+  accessorKey: "role",
+  header: "Role",
+  cell: (info) => <span>{getRoleName(info.row.original.role)}</span>, 
+},
   {
     header: "Actions",
     cell: (info) => (
@@ -35,6 +35,7 @@ const userColumns: GenericColumn<IUser>[] = [
         )}
       </div>
     ),
+    accessorKey: "image"
   },
 ];
 

@@ -4,7 +4,6 @@ import { Suspense } from "react";
 import Pagination from "@/components/ui/landingPage/pagination";
 import TransactionTableSkeleton from "@/components/ui/skeletons/TransactionTable";
 import { fetchFilteredBookRequestOfUser, fetchFilteredUserBookRequestPageCount } from "@/lib/book-requests/book-request.repository";
-import {  GenericColumn } from "@/components/ui/table/columns";
 import Search from "@/components/ui/landingPage/search";
 
 
@@ -18,7 +17,7 @@ export default async function MyRequestsPage({
   };
 }) {
   const session = await auth();
-  const uId = session?.user.id!;
+  const uId = session?.user.uId!;
   const currentPage = Number(searchParams?.page) || 1;
   const query =(searchParams?.query) || "";
   const totalPages = await fetchFilteredUserBookRequestPageCount(uId, query);

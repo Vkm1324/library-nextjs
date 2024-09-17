@@ -1,13 +1,9 @@
 "use client";
-
-import { formatDateToLocal } from "@/lib/utils";
-import { ReturnBookButton } from "./buttons";
 import { ITransaction } from "@/lib/transaction/model/transaction.model";
-import { DataTable } from "@/components/ui/table/data-table"; // Import DataTable for desktop view
-
-interface MyTransactionTableProps {
-  data: ITransaction[];
-}
+import { CellContext } from "@tanstack/react-table";
+import { ReturnBookButton } from "./buttons";
+import { formatDateToLocal } from "@/lib/utils";
+import { DataTable } from "../../table/data-table";
 
 const transactionColumns = [
   {
@@ -25,49 +21,77 @@ const transactionColumns = [
   {
     accessorKey: "issueddate",
     header: "Issued Date",
+    cell: (info: CellContext<ITransaction, unknown>) => {
+      const issuedDate = info.row.original.issueddate;
+      return <span>{formatDateToLocal(issuedDate.toDateString())}</span>;
+    },
   },
   {
     accessorKey: "dueDate",
     header: "Due Date",
+    cell: (info: CellContext<ITransaction, unknown>) => {
+      const dueDate = info.row.original.dueDate;
+      return <span>{formatDateToLocal(dueDate.toDateString())}</span>;
+    },
   },
   {
     accessorKey: "returnDate",
     header: "Return Date",
-  },
-  {
-    accessorKey: "transactionType",
-    header: "Status",
-    cell: ({ row }) => {
-      const transaction = row.original;
-      return transaction.transactionType === "borrow" ? (
-        <span className="text-yellow-500">Pending</span>
-      ) : transaction.returnDate > transaction.dueDate ? (
-        <span className="text-red-500">Overdue</span>
-      ) : (
-        <span className="text-green-500">Completed</span>
+    cell: (info: CellContext<ITransaction, unknown>) => {
+      const returnDate = info.row.original.returnDate;
+      return (
+        <span>
+          {returnDate ? formatDateToLocal(returnDate.toDateString()) : "N/A"}
+        </span>
       );
     },
   },
   {
-    accessorKey: "actions",
-    header: "Actions",
-    cell: ({ row }) => {
-      const transaction = row.original;
-      return transaction.transactionType === "borrow" ? (
-        <ReturnBookButton id={transaction.transactionId} />
-      ) : null;
+    accessorKey: "status",
+    header: "Status",
+    cell: (info: CellContext<ITransaction, unknown>) => {
+      const { transactionType, returnDate, dueDate } = info.row.original;
+      const status =
+        transactionType === "borrow"
+          ? "Pending"
+          : returnDate && returnDate > dueDate
+          ? "Overdue"
+          : "Completed";
+
+      const statusClass =
+        transactionType === "borrow"
+          ? "text-yellow-800"
+          : returnDate && returnDate > dueDate
+          ? "text-red-800"
+          : "text-green-800";
+
+      return <span className={statusClass}>{status}</span>;
     },
   },
+  {
+    header: "Action",
+    cell: (info: CellContext<ITransaction, unknown>) => {
+      const { transactionType, transactionId } = info.row.original;
+      return (
+        <div className="flex justify-end gap-3">
+          {transactionType === "borrow" && (
+            <ReturnBookButton id={transactionId} />
+          )}
+        </div>
+      );
+    },
+    accessorKey: "", // Empty because it's a custom action column
+  },
 ];
+
+interface MyTransactionTableProps {
+  data: ITransaction[];
+}
 
 export default function TransactionTable({ data }: MyTransactionTableProps) {
   const formattedData = data.map((transaction) => ({
     ...transaction,
-    issueddate: formatDateToLocal(transaction.issueddate.toDateString()),
-    dueDate: formatDateToLocal(transaction.dueDate.toDateString()),
-    returnDate: transaction.returnDate
-      ? formatDateToLocal(transaction.returnDate.toDateString())
-      : "N/A",
+    // Keep the original dates for logic, format them only when rendering
   }));
 
   return (
@@ -76,7 +100,7 @@ export default function TransactionTable({ data }: MyTransactionTableProps) {
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           {/* Mobile view */}
           <div className="md:hidden">
-            {formattedData.map((transaction) => (
+            {data.map((transaction) => (
               <div
                 key={transaction.transactionId}
                 className="mb-2 w-full rounded-md bg-white p-4"
@@ -89,22 +113,23 @@ export default function TransactionTable({ data }: MyTransactionTableProps) {
                   <p className="text-sm text-gray-500">
                     {transaction.transactionType === "borrow"
                       ? "Pending"
-                      : transaction.returnDate > transaction.dueDate
+                      : transaction.returnDate &&
+                        transaction.returnDate > transaction.dueDate
                       ? "Overdue"
                       : "Completed"}
                   </p>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <p className="text-xl font-medium">
-                    {formatDateToLocal(transaction.issueddate)}
+                    {formatDateToLocal(transaction.issueddate.toDateString())}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {formatDateToLocal(transaction.dueDate)}
+                    {formatDateToLocal(transaction.dueDate.toDateString())}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {transaction.returnDate === "N/A"
-                      ? "N/A"
-                      : formatDateToLocal(transaction.returnDate)}
+                    {transaction.returnDate
+                      ? formatDateToLocal(transaction.returnDate.toDateString())
+                      : "N/A"}
                   </p>
                 </div>
                 {transaction.transactionType === "borrow" && (
@@ -119,7 +144,7 @@ export default function TransactionTable({ data }: MyTransactionTableProps) {
           {/* Desktop view */}
           <DataTable
             columns={transactionColumns}
-            data={formattedData}
+            data={data}
             initialSortBy="status"
           />
         </div>

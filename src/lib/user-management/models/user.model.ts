@@ -2,13 +2,14 @@ export interface IUserBase {
   // immutable data which has to kept safe
   name: string;
   email: string;
-  image: string | null;
+  image?: string | undefined;
+  DOB: Date | null ;
+  phoneNum: number;
+  address: string;
 }
 
 export interface IUserProfile extends IUserBase{
-  DOB: Date;
-  phoneNum: number;
-  address: string;
+
 }
 
 export enum Roles {

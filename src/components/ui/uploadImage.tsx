@@ -1,11 +1,10 @@
 "use client";
-
 import { SingleImageDropzone } from "@/components/single-image-dropzone";
 import { useEdgeStore } from "@/lib/edgestore";
 import { useState } from "react";
 
 type UploadResult = {
-  response: any; // Replace `any` with actual types if known
+  response: any;
   url: string;
   metadata: any;
 };
@@ -17,7 +16,7 @@ type SingleImageDropzoneUsageProps = {
 export default function SingleImageDropzoneUsage({
   onUploadComplete,
 }: SingleImageDropzoneUsageProps) {
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<File | undefined>(undefined);
   const { edgestore } = useEdgeStore();
 
   const handleUpload = async (file: File) => {
@@ -42,12 +41,12 @@ export default function SingleImageDropzoneUsage({
     }
   };
 
-  const handleFileChange = (file: File | null) => {
+  const handleFileChange = (file?: File) => {
     if (file) {
       setFile(file);
       handleUpload(file);
     } else {
-      setFile(null);
+      setFile(undefined);
     }
   };
 

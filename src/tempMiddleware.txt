@@ -24,11 +24,16 @@ export default auth(async (req) => {
     const newUrl = new URL("/", req.nextUrl.origin);
       return Response.redirect(newUrl);
   }
+  // ! remeove salt
   else if (req.auth && req.nextUrl.pathname.startsWith("/dashboard/admin/")) {
-    const token = await getToken({ req, secret: process.env.AUTH_SECRET  });
+    const secret = process.env.AUTH_SECRET;
+    const token = await getToken({
+      req, secret: secret!,
+      salt:""
+    });
     // console.log(token);
     const id = token?.id; 
-    let roleId:number= token?.role; 
+    let roleId:number= token?.role!; 
     // const id = req.auth.user.id; 
     // const role= req.auth.user.role
     if (roleId) {

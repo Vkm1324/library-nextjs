@@ -14,7 +14,7 @@ export class TransactionRepository {
   private userRepo: UserRepository;
   private bookRepo: BookRepository;
 
-  constructor() { 
+  constructor() {
     this.userRepo = new UserRepository();
     this.bookRepo = new BookRepository();
   }
@@ -25,9 +25,9 @@ export class TransactionRepository {
       // console.log(errorTheme("No Users with the ID:", data.userId));
       return null;
     }
-    
+
     const book = await this.bookRepo.getById(data.bookId);
-    
+
     if (book === undefined || book === null) {
       // TODO return appropriate message
       // console.log(errorTheme("No book with the ID:", data.bookId));
@@ -62,6 +62,7 @@ export class TransactionRepository {
       transactionId: 0,
       transactionType: "borrow",
       lateFees: 0,
+      bookTitle: "",
     };
 
     try {
@@ -108,13 +109,15 @@ export class TransactionRepository {
       .select()
       .from(transactionsTable)
       .where(sql`${transactionsTable.userId}=${id}`);
-    if (result && result.length>0) {
+    if (result && result.length > 0) {
       return result as unknown as ITransaction;
     }
     return null;
   }
-
-  async updateReturnStatus(transactionId: number): Promise<ITransaction> {
+// todo fix the undefined
+  async updateReturnStatus(
+    transactionId: number
+  ): Promise<ITransaction | undefined> {
     try {
       const transaction = await this.getById(transactionId);
       if (transaction) {

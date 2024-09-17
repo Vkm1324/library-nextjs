@@ -19,7 +19,7 @@ export default async function MyTransactionPage({
   };
 }) {
   const session = await auth();
-  const uId = session?.user.id!;
+  const uId = session?.user.uId!;
   const currentPage = Number(searchParams?.page) || 1;
   const query = (searchParams?.query) || "";
   const totalPages = await fetchTransactionPageCountOfUser(uId, query);

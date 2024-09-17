@@ -34,12 +34,6 @@ const bookRequestsColumns: GenericColumn<any>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    sortingFn: (rowA, rowB) => {
-      const order = ["pending", "approved", "rejected"];
-      const statusA = rowA.getValue<string>("status");
-      const statusB = rowB.getValue<string>("status");
-      return order.indexOf(statusA) - order.indexOf(statusB);
-    },
     cell: (info) => (
       <span
         className={`${
@@ -66,6 +60,7 @@ const bookRequestsColumns: GenericColumn<any>[] = [
         )}
       </div>
     ),
+    accessorKey: ""
   },
 ];
 

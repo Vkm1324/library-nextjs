@@ -7,13 +7,13 @@ import { requestBook } from "@/lib/actions";
 
 interface BookCardProps {
   book: {
-    image: string | null;
+    image: string | undefined;
     id: number;
     title: string;
     author: string;
     publisher: string;
     genre: string;
-    isbnNo: string;
+    isbnNo: number;
     availableNumberOfCopies: number;
   };
   uid?: number;

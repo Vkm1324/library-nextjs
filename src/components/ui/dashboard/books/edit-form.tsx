@@ -16,6 +16,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Link from "next/link";
 import SingleImageDropzoneUsage from "@/components/ui/uploadImage";
+import { IBook } from "@/lib/book-management/models/books.model";
 
 interface IBookProfile {
   id: number;
@@ -30,7 +31,7 @@ interface IBookProfile {
   availableNumberOfCopies: number;
 }
 
-export default function EditBookForm({ book }: { book: IBookProfile }) {
+export default function EditBookForm({ book }: { book: IBook }) {
   const initialState: BookState = { message: null, errors: {} };
   const updateBookWithId = updateBook.bind(null, book.id);
   const [state, formAction] = useActionState(updateBookWithId, initialState);

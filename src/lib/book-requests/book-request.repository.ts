@@ -16,6 +16,7 @@ export class BookRequestRepository
       requestDate: new Date(),
       id: 0,
       status: "pending",
+      bookTitle: ""
     };
     const [result] = await db
       .insert(bookRequestTable)
