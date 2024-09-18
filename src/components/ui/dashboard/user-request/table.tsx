@@ -5,8 +5,11 @@ import { ApproveRequest, RejectRequest } from "../user-request/buttons";
 import { GenericColumn } from "../../table/columns";
 import { DataTable } from "@/components/ui/table/data-table";
 import { IBookResquest } from "@/lib/book-requests/models/books-request.model";
+interface bookreq extends IBookResquest {
+  username: string;
+}
 
-const bookRequestsColumns: GenericColumn<IBookResquest>[] = [
+const bookRequestsColumns: GenericColumn<bookreq>[] = [
   {
     accessorKey: "id",
     header: "Request ID",
@@ -60,7 +63,7 @@ const bookRequestsColumns: GenericColumn<IBookResquest>[] = [
         )}
       </div>
     ),
-    accessorKey: "bookTitle"
+    accessorKey: "bookTitle",
   },
 ];
 
