@@ -1,6 +1,6 @@
 "use client";
 
-import { User, Building, BookOpen, BookCopy, Hash } from "lucide-react";
+import { User, Building, BookOpen, BookCopy, Hash, BadgeIndianRupee } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { requestBook } from "@/lib/actions"; 
@@ -76,6 +76,7 @@ export default function BookCard({ book, uid }: BookCardProps) {
 
               {/* Price */}
               <div className="flex items-center space-x-1 sm:space-x-2">
+                <BadgeIndianRupee className="w-4 h-4" />
                 <span>{book.price ? book.price : "N / A"}</span>
               </div>
 

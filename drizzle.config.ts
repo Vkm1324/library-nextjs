@@ -1,14 +1,27 @@
+// import { defineConfig } from "drizzle-kit";
+// import { AppEnv } from "./read-env";
+
+// export default defineConfig({
+//   schema: "./src/drizzle/schema/schema.ts",
+//   out: "./Migrations",
+//   dialect: "mysql",
+//   dbCredentials: {
+//     url: AppEnv.DATABASE_URL as string,
+//   },
+//   // verbose: true,
+//   strict: true,
+//   breakpoints: true,
+// });
+
+import "@/drizzle/envConfig";
 import { defineConfig } from "drizzle-kit";
-import { AppEnv } from "./read-env";
 
 export default defineConfig({
-  schema: "./src/drizzle/schema/schema.ts",
-  out: "./Migrations",
-  dialect: "mysql",
+  schema: "./src/drizzle/schema/postgressSchema.ts",
+  dialect: "postgresql",
   dbCredentials: {
-    url: AppEnv.DATABASE_URL as string,
+    url: process.env.POSTGRES_URL!,
   },
-  // verbose: true,
   strict: true,
   breakpoints: true,
 });

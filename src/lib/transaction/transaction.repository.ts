@@ -13,7 +13,7 @@ import {
   booksTable,
   transactionsTable,
   usersTable,
-} from "../../drizzle/schema/schema";
+} from "../../drizzle/schema/postgressSchema";
 
 export class TransactionRepository {
   private userRepo: UserRepository;
@@ -71,7 +71,7 @@ export class TransactionRepository {
         const [result] = await trxn
           .insert(transactionsTable)
           .values(newTransaction)
-          .$returningId();
+          .returning();
         return result.transactionId;
       });
       const issuedTransaction = (await this.getById(createdTrxnId))!;
@@ -163,8 +163,8 @@ export class TransactionRepository {
                 transactionsTable.transactionId,
                 updatedTransaction.transactionId
               )
-            );
-          return result.affectedRows;
+            ).returning();
+          return result;
         });
         if (updated) {
           return updatedTransaction;
@@ -347,38 +347,17 @@ export async function fetchPendingTransaction(): Promise<ITransaction[]> {
   }
 }
 
-import { isNull, lt } from "drizzle-orm";
-import { MySqlColumn } from "drizzle-orm/mysql-core";
-
 // TODO-fix the fine will be calculated for 24 hrs like user will have 24*30 hrs to return without getting fine but the user will be having only  , make fine as not for 24 hrs dependent so tht both reflect same.
+import { isNull, lt } from "drizzle-orm";
+import { PgColumn } from "drizzle-orm/pg-core"; 
+
+// Helper function to add 30 days to issuedDate
+function getDueDate(issuedDate: PgColumn) {
+  const interval = 30;
+  return sql`(${issuedDate} + INTERVAL '30 days')`;
+}
 
 export async function metaDataOfTransactions() {
-  // Helper function to add 30 days to issuedDate
-  function getDueDate(
-    issuedDate: MySqlColumn<
-      {
-        name: "transactionDate";
-        tableName: "transactions";
-        dataType: "date";
-        columnType: "MySqlDateTime";
-        data: Date;
-        driverParam: string | number;
-        notNull: true;
-        hasDefault: false;
-        isPrimaryKey: false;
-        isAutoincrement: false;
-        hasRuntimeDefault: false;
-        enumValues: undefined;
-        baseColumn: never;
-        generated: undefined;
-      },
-      object
-    >
-  ) {
-    // TODO extend this by passing a new param interval which can be given to user based on their subscription
-    return sql`DATE_ADD(${issuedDate}, INTERVAL 30 DAY)`;
-  }
-
   // Run queries in parallel using Promise.all()
   const [
     [totalTransactions],
@@ -397,15 +376,12 @@ export async function metaDataOfTransactions() {
 
     // Query for overdue transactions
     db
-      .select({
-        count: count(),
-        // dueDate: getDueDate(transactionsTable.issueddate)
-      })
+      .select({ count: count() })
       .from(transactionsTable)
       .where(
         and(
           isNull(transactionsTable.returnDate),
-          lt(getDueDate(transactionsTable.issueddate), sql`NOW()`)
+          lt(getDueDate(transactionsTable.issueddate), sql`CURRENT_TIMESTAMP`)
         )
       ),
 
@@ -418,7 +394,7 @@ export async function metaDataOfTransactions() {
           isNull(transactionsTable.returnDate),
           eq(
             sql`DATE(${getDueDate(transactionsTable.issueddate)})`,
-            sql`CURDATE()`
+            sql`CURRENT_DATE`
           )
         )
       ),
@@ -435,4 +411,5 @@ export async function metaDataOfTransactions() {
   // Return the result
   return result;
 }
+
 

@@ -2,9 +2,11 @@ import { IPageRequest, IPagedResponse } from "../../../core/pagination.model";
 import { IRepository } from "../../../core/repository";
 import { IBookBase, IBook, IBookTitle } from "../book-management/models/books.model";
 import { db } from "../../db/db";
-import { booksTable } from "../../drizzle/schema/schema";
+import { booksTable } from "../../drizzle/schema/postgressSchema";
 import { eq, sql, count, or, like } from "drizzle-orm/sql";
-import { asc, desc, inArray } from "drizzle-orm";
+import {  desc, inArray } from "drizzle-orm/sql";
+import { asc } from "drizzle-orm";
+
 export class BookRepository implements IRepository<IBookBase, IBook> {
   /**
    * Creates a new book and adds it to the repository.
@@ -19,89 +21,66 @@ export class BookRepository implements IRepository<IBookBase, IBook> {
       availableNumberOfCopies: data.totalNumberOfCopies,
     };
 
-    const [bookId] = await db.insert(booksTable).values(book).$returningId();
-    console.log(`book with bookId:${bookId} has been added successfully `);
-    return (await this.getById(bookId.id)) as IBook;
+    const [createdBook] = await db.insert(booksTable).values(book).returning();
+    return createdBook as IBook;
   }
+async  getBooks(): Promise<IBook[]> {
+  const result = await db.select().from(booksTable);
+  return result as IBook[];
+}
 
-  async getBooks(): Promise<IBook[]> {
-    const result = await db.select().from(booksTable);
-    return result as unknown as IBook[];
+async  update(id: number, data: IBookBase): Promise<IBook | null> {
+  const [updatedBook] = await db
+    .update(booksTable)
+    .set(data)
+    .where(eq(booksTable.id, id))
+    .returning();
+  return updatedBook as IBook | null;
+}
+
+async  delete(id: number): Promise<IBook | null> {
+  const [deletedBook] = await db
+    .delete(booksTable)
+    .where(eq(booksTable.id, id))
+    .returning();
+  return deletedBook as IBook | null;
+}
+
+
+async  getById(id: number): Promise<IBook | null> {
+  const [book] = await db
+    .select()
+    .from(booksTable)
+    .where(eq(booksTable.id, id));
+  return book as IBook | null;
+}
+
+async  getTitle(ids: number[]): Promise<IBookTitle[] | null> {
+  const result = await db
+    .select({ title: booksTable.title, id: booksTable.id })
+    .from(booksTable)
+    .where(inArray(booksTable.id, ids));
+  if (result.length > 0) {
+    return result as IBookTitle[];
   }
+  return null;
+}
 
-  /**
-   * Updates an existing book in the repository.
-   * @param {number} id - The ID of the book to update.
-   * @param {IBook} data - The new data for the book.
-   * @returns {Promise<IBook | null>} The updated book or null if the book was not found.
-   **/
-  async update(id: number, data: IBookBase): Promise<IBook | null> {
-    const result = await db
-      .update(booksTable)
-      .set(data)
-      .where(eq(booksTable.id, id));
-    // return result
-    return null;
-  }
+async  getByIsbn(isbn: number): Promise<IBook | null> {
+  const [book] = await db
+    .select()
+    .from(booksTable)
+    .where(eq(booksTable.isbnNo, isbn));
+  return book as IBook | null;
+}
 
-  //   /**
-  //    * Deletes a book from the repository.
-  //    * @param {number} id - The ID of the book to delete.
-  //    * @returns {Promise<IBook | null>} The deleted book or null if the book was not found.
-  //    */
-
-  async delete(id: number): Promise<IBook | null> {
-    const book = await this.getById(id);
-    if (book) {
-      console.log("book found");
-      await db.delete(booksTable).where(sql`${booksTable.id}=${id}`);
-      return book;
-    }
-    return null;
-  }
-
-  //   /**
-  //    * Retrieves a book by its ID.
-  //    * @param {number} id - The ID of the book to retrieve.
-  //    * @returns {IBook | null} The book with the specified ID or null if not found.
-  //    */
-  async getById(id: number): Promise<IBook | null> {
-    const result = await db
-      .select()
-      .from(booksTable)
-      .where(sql`${booksTable.id}=${id}`);
-    if (result) {
-      return result[0] as unknown as IBook;
-    }
-    return null;
-  }
-
-  async getTitle(ids: number[]): Promise<IBookTitle[] | null> {
-    const result = await db
-      .select({ title: booksTable.title, id: booksTable.id })
-      .from(booksTable)
-      .where(inArray(booksTable.id, ids));
-    if (result.length > 0) {
-      return result as IBookTitle[];
-    }
-    return null;
-  }
-
-  async getByIsbn(isbn: number): Promise<IBook | null> {
-    const result = await db
-      .select()
-      .from(booksTable)
-      .where(sql`${booksTable.isbnNo}=${+isbn}`);
-    return result[0] as unknown as IBook;
-  }
-
-  async getByTitle(title: string): Promise<IBook[]> {
-    const result = await db
-      .select()
-      .from(booksTable)
-      .where(sql`${booksTable.title} LIKE ${"%" + title + "%"}`);
-    return result as unknown as IBook[];
-  }
+async  getByTitle(title: string): Promise<IBook[]> {
+  const result = await db
+    .select()
+    .from(booksTable)
+    .where(sql`${booksTable.title} ILIKE ${`%${title}%`}`);
+  return result as IBook[];
+}
 
   list(params: IPageRequest): IPagedResponse<IBook> {
     throw new Error("Method not implemented.");
@@ -123,19 +102,17 @@ export async function fetchFilteredBooks(
   // await new Promise((resolve) => setTimeout(resolve, 3000));
 
   try {
-    // Step 1: Create the filtering condition based on the provided query
-    const whereClause = query
-      ? or(
-          like(booksTable.title, `%${query}%`), // Filter by status
-          like(booksTable.id, `%${+query}%`), // Filter by bookId
-          like(booksTable.publisher, `%${query}%`), // Filter by publisher
-          like(booksTable.genre, `%${query}%`), // Filter by genre
-          like(booksTable.author, `%${query}%`), // Filter by author
-          like(booksTable.isbnNo, `%${+query}%`) // Filter by isbn
-        )
-      : undefined;
+const whereClause = query
+  ? or(
+      sql`${booksTable.title} ILIKE ${`%${query}%`}`,
+      sql`${booksTable.id}::text ILIKE ${`%${query}%`}`,
+      sql`${booksTable.publisher} ILIKE ${`%${query}%`}`,
+      sql`${booksTable.genre} ILIKE ${`%${query}%`}`,
+      sql`${booksTable.author} ILIKE ${`%${query}%`}`,
+      sql`${booksTable.isbnNo}::text ILIKE ${`%${query}%`}`
+    )
+  : undefined;
 
-    // Step 2: Execute the database query with pagination
     const results = await db
       .select()
       .from(booksTable)
@@ -146,7 +123,6 @@ export async function fetchFilteredBooks(
         sortOrd === "asc" ? asc(booksTable[key]) : desc(booksTable[key])
       );
 
-    // Step 3: Return the results casted to IBook[]
     return results as unknown as IBook[];
   } catch (error) {
     console.error("Database Error:", error);
@@ -188,3 +164,6 @@ export async function fetchBooksCount(query: string): Promise<number> {
   }
 }
 
+   
+ 
+ 
