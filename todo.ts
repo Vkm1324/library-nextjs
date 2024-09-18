@@ -7,6 +7,9 @@
 // ! adding react table and making it sorting available
 // ^ in transaction table book id should be replaced with book name and add user name to the table too 
 // ! in books card , image size should be set to a aspect-ratio 
+// ! server side sorting when client clicks on headers of table
+// ! in books card , image size should be set to a aspect-ratio 
+// ! internalization & localization
 // color the data acc to the condition in transactions 
 // change status to book return status , and remove transaction type from the transactions 
 // protected admin deleting himself from users table 

@@ -144,8 +144,7 @@ export default function TransactionTable({ data }: MyTransactionTableProps) {
           {/* Desktop view */}
           <DataTable
             columns={transactionColumns}
-            data={data}
-            initialSortBy="status"
+            data={data} 
           />
         </div>
       </div>

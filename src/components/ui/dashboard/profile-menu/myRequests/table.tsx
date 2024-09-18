@@ -1,34 +1,28 @@
-
 import { GenericColumn } from "@/components/ui/table/columns";
 import { DataTable } from "@/components/ui/table/data-table";
 import { IBookResquest } from "@/lib/book-requests/models/books-request.model";
-import { formatDateToLocal } from "@/lib/utils";  
-import { ColumnDef } from "@tanstack/react-table";
+import { formatDateToLocal } from "@/lib/utils"; 
 
-const bookRequestColumns: GenericColumn<any>[] = [
-  {
-    accessorKey: "id",
-    header: "Request ID",
-  },
-  {
-    accessorKey: "bookTitle",
-    header: "Book",
-  },
-  {
-    accessorKey: "requestDate",
-    header: "Request Date",
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-  },
-];
+ const bookRequestColumns: GenericColumn<IBookResquest>[] = [
+   {
+     accessorKey: "id",
+     header: "Request ID",
+   },
+   {
+     accessorKey: "bookTitle",
+     header: "Book",
+   },
+   {
+     accessorKey: "requestDate",
+     header: "Request Date",
+   },
+   {
+     accessorKey: "status",
+     header: "Status",
+   },
+ ];
 
-export default function BookRequestTable({
-  data, 
-}: {
-  data: IBookResquest[]; 
-  }) { 
+export default function BookRequestTable({ data }: { data: IBookResquest[] }) {
   const formattedData = data.map((request) => ({
     ...request,
     requestDate: formatDateToLocal(request.requestDate.toDateString()), // Format the request date
@@ -61,7 +55,6 @@ export default function BookRequestTable({
           <DataTable
             columns={bookRequestColumns}
             data={formattedData}
-            initialSortBy="id"
           />
         </div>
       </div>

@@ -6,7 +6,7 @@ import { GenericColumn } from "../../table/columns";
 import { DataTable } from "@/components/ui/table/data-table";
 import { IBookResquest } from "@/lib/book-requests/models/books-request.model";
 
-const bookRequestsColumns: GenericColumn<any>[] = [
+const bookRequestsColumns: GenericColumn<IBookResquest>[] = [
   {
     accessorKey: "id",
     header: "Request ID",
@@ -60,7 +60,7 @@ const bookRequestsColumns: GenericColumn<any>[] = [
         )}
       </div>
     ),
-    accessorKey: ""
+    accessorKey: "bookTitle"
   },
 ];
 
@@ -132,7 +132,7 @@ export default function BookRequestTable({ data }: { data: IBookResquest[] }) {
           </div>
 
           {/* Desktop view using DataTable */}
-          <DataTable columns={bookRequestsColumns} data={formattedData} initialSortBy="status" />
+          <DataTable columns={bookRequestsColumns} data={formattedData}  />
         </div>
       </div>
     </div>

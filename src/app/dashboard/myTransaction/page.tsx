@@ -16,18 +16,22 @@ export default async function MyTransactionPage({
   searchParams?: {
     query?: string;
     page?: string;
+    key?: string;
+    sortOrd?: string;
   };
 }) {
   const session = await auth();
   const uId = session?.user.uId!;
   const currentPage = Number(searchParams?.page) || 1;
-  const query = (searchParams?.query) || "";
+  const query = searchParams?.query || "";
+  const key = searchParams?.key || "";
+  const sortOrd = searchParams?.sortOrd || "";
   const totalPages = await fetchTransactionPageCountOfUser(uId, query);
-    const transactions = await fetchFilteredTransactionOfUser(
-      uId,
-      currentPage,
-      query
-    );
+  const transactions = await fetchFilteredTransactionOfUser(
+    uId,
+    currentPage,
+    query
+  );
   return (
     <main>
       <section className="w-full py-12 md:py-24 lg:py-0 xl:py-0">
@@ -38,15 +42,15 @@ export default async function MyTransactionPage({
               <Search placeholder="Search... " />
             </div>
             {/* Rendering the Books Table component */}
- 
-     {
-       <Suspense
-         key={uId + currentPage}
-         fallback={<TransactionTableSkeleton />}
-       >
-         <MyTransactionTable data={transactions} />
-       </Suspense>
-     }
+
+            {
+              <Suspense
+                key={uId + currentPage}
+                fallback={<TransactionTableSkeleton />}
+              >
+                <MyTransactionTable data={transactions} />
+              </Suspense>
+            }
             <div className="mt-5 flex w-full justify-center">
               <Pagination totalPages={totalPages} />
             </div>

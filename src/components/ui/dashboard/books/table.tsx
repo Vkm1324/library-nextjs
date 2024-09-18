@@ -92,7 +92,6 @@ export default function UsersTable({
           <DataTable
             columns={createBooksColumns(pendingReturnTransactions)}
             data={formattedData}
-            initialSortBy="id" // Default sorting column
           />
         </div>
       </div>

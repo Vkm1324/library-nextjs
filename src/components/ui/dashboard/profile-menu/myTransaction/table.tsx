@@ -3,10 +3,9 @@
 import { GenericColumn } from "@/components/ui/table/columns";
 import { DataTable } from "@/components/ui/table/data-table";
 import { ITransaction } from "@/lib/transaction/model/transaction.model";
-import { formatDateToLocal } from "@/lib/utils";
-import { ColumnDef } from "@tanstack/react-table";
+import { formatDateToLocal } from "@/lib/utils"; 
 
-const transactionColumns: GenericColumn<any>[] = [
+const transactionColumns: GenericColumn<ITransaction>[] = [
   {
     accessorKey: "transactionId",
     header: "Transaction ID",
@@ -127,9 +126,8 @@ export default function MyTransactionTable({
 
           {/* Desktop view using DataTable */}
           <DataTable
-            columns={transactionColumns}
-            data={formattedData}
-            initialSortBy="transactionId"
+            columns={(transactionColumns)}
+            data={formattedData} 
           />
         </div>
       </div>
