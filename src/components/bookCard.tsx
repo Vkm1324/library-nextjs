@@ -4,7 +4,8 @@ import { User, Building, BookOpen, BookCopy, Hash } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { requestBook } from "@/lib/actions"; 
-
+import Image from "next/image";
+import image from "@/../public/images/book1.png"
 interface BookCardProps {
   book: {
     image: string | undefined;
@@ -41,15 +42,23 @@ export default function BookCard({ book, uid }: BookCardProps) {
   return (
     <Card
       key={book.id}
-      className="overflow-hidden transition-shadow hover:shadow-lg"
+      className="overflow-hidden items-center justify-center transition-shadow hover:shadow-lg"
       onClick={handleRequestBook}
     >
-      {book.image && (
-        <img
-          src={book.image}
+      {book.image ? (
+        <Image
+          src={`${book.image}`}
+          width={200}
+          height={180}
           alt={book.title}
-          className="w-full h-48 object-cover"
+          className=" w-full object-cover"
         />
+      ) : (
+        <Image
+          src={image}
+          alt={"static image"}
+          className=" w-full object-cover"
+        ></Image>
       )}
       <CardHeader className="p-4 bg-muted">
         <CardTitle className="text-lg font-semibold line-clamp-2">

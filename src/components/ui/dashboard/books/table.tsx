@@ -27,7 +27,7 @@ const createBooksColumns = (
   },
   {
     accessorKey: "availableNumberOfCopies",
-    header: "Available Copies",
+    header: "Avl Copies",
   },
   {
     header: "Actions",
@@ -53,8 +53,7 @@ export default function UsersTable({
 }: {
   data: IBook[];
   pendingReturnTransactions: number[];
-}) {
-  // No need to map pendingReturnTransactions to each book individually
+  }) {
   const formattedData = data;
 
   return (

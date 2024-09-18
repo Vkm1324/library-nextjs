@@ -1,11 +1,12 @@
 // ! revalidate the paths to the original paths after they move too and fro in profile 
 // TODO add search for mytransaction and myrequests
-// TODO edit-form of books to be fixed!
+// TODO edit-form of books to be fixed! in update book , image should also  update 
 // ! restructure the transaction table such that status will be calculated on run time, and remove the due date , calculate it on fly.
 // ! make search consistent by comparing both the entities in smaller case  
 // ! role update and setting of users.  
 // ! adding react table and making it sorting available
 // ^ in transaction table book id should be replaced with book name and add user name to the table too 
+// ! in books card , image size should be set to a aspect-ratio 
 // color the data acc to the condition in transactions 
 // change status to book return status , and remove transaction type from the transactions 
 // protected admin deleting himself from users table 
