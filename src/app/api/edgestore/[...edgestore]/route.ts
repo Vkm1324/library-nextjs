@@ -1,11 +1,21 @@
+import { Input } from "@/components/ui/input";
 import { initEdgeStore } from "@edgestore/server";
 import { createEdgeStoreNextHandler } from "@edgestore/server/adapters/next/app";
+import { z } from "zod";
 const es = initEdgeStore.create();
 /**
  * This is the main router for the Edge Store buckets.
  */
 const edgeStoreRouter = es.router({
-  publicFiles: es.fileBucket(),
+  publicFiles: es.imageBucket(
+    {maxSize:1024*1024*1}
+  )
+    .input(
+      z.object({
+      type:z.enum(["books", "profile"]),
+    })
+  )
+  .path(({input})=>[{type:input.type}]),
 });
 const handler = createEdgeStoreNextHandler({
   router: edgeStoreRouter,

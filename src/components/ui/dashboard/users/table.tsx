@@ -4,7 +4,7 @@ import { UpdateUser, DeleteUser } from "./buttons";
 import { GenericColumn } from "../../table/columns";
 import { DataTable } from "@/components/ui/table/data-table";
 import { IUser } from "@/lib/user-management/models/user.model";
-import { getRoleName } from "@/middleware";
+import { getRole } from "@/middleware";
 
 // Define columns for DataTable
 const userColumns: GenericColumn<IUser>[] = [
@@ -23,12 +23,12 @@ const userColumns: GenericColumn<IUser>[] = [
 {
   accessorKey: "role",
   header: "Role",
-  cell: (info) => <span>{getRoleName(info.row.original.role)}</span>, 
+  cell: (info) => <span>{getRole(info.row.original.role)}</span>, 
 },
   {
     header: "Actions",
     cell: (info) => (
-      <div className="flex justify-end gap-3">
+      <div className="flex justify-start gap-3">
         <UpdateUser id={info.row.original.id} />
         {info.row.original.id !== info.row.original.adminUId && (
           <DeleteUser id={info.row.original.id} />
@@ -67,7 +67,7 @@ export default function UsersTable({
                   <div className="flex items-center justify-between border-b pb-4">
                     <p className="text-sm text-gray-500">{user.name}</p>
                     <p className="ml-4 text-sm text-gray-500">
-                      {getRoleName(user.role)}
+                      {getRole(user.role)}
                     </p>
                   </div>
                   <div className="flex justify-start gap-3 pt-4">

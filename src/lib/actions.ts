@@ -8,6 +8,7 @@ import { BookRequestRepository } from "./book-requests/book-request.repository";
 import { IBookResquest } from "./book-requests/models/books-request.model";
 import { TransactionRepository } from "./transaction/transaction.repository";
 import { BookRepository } from "./book-management/books.repository";
+import { useEdgeStore } from "./edgestore";
 
 export async function reject(id: number) {
   try {
@@ -319,6 +320,8 @@ export async function updateBook(
   };
 
   try {
+    //   const { edgestore } = useEdgeStore();
+    // await edgestore.publicFiles.confirmUpload(image);
     const bookRepo = new BookRepository();
     await bookRepo.update(id, updatedData);
   } catch (error) {

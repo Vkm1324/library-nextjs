@@ -1,3 +1,16 @@
+"use client";
+ 
+export function UpdateBook({ id }: { id: number }) {
+  return (
+    <EditAlertDialog
+      id={id}
+      entity="Book"
+      editPath="/dashboard/admin/books"
+      description="This action will take you to the edit page for this book. Any unsaved changes on the current page will be lost."
+    />
+  );
+}
+
 export function CreateBook() {
   return (
     <Link
@@ -10,21 +23,29 @@ export function CreateBook() {
   );
 }
 
-export function UpdateBook({ id }: { id: number }) {
-  return (
-    <Link
-      href={`/dashboard/admin/books/${id}/edit`}
-      className="flex items-center gap-2 rounded-md border p-2 bg-blue-500 text-white hover:bg-blue-600"
-    >
-      <PencilIcon className="w-5" />
-      <span>Edit</span>
-    </Link>
-  );
-}
+// export function UpdateBook({ id }: { id: number }) {
+//   const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+//     if (!confirm("Are you sure you want to edit this book?")) {
+//       e.preventDefault();
+//     }
+//   };
+
+//   return (
+//     <Link
+//       href={`/dashboard/admin/books/${id}/edit`}
+//       className="flex items-center gap-2 rounded-md border p-2 bg-blue-500 text-white hover:bg-blue-600"
+//       onClick={handleClick}
+//     >
+//       <PencilIcon className="w-5" />
+//       <span>Edit</span>
+//     </Link>
+//   );
+// }
 
 import { deleteBook } from "@/lib/actions";
 import { PencilIcon, PlusIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
+import { EditAlertDialog } from "../../alerts/edit-alert";
 
 export function DeleteBook({ id }: { id: number }) {
   const deleteBookWithId = deleteBook.bind(null, id);

@@ -19,7 +19,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { getRoleName } from "@/middleware";
+import { getRole } from "@/middleware";
 
 // Map of links to display in the top navigation bar.
 
@@ -45,7 +45,7 @@ const adminLinks = [
 
 export default function UserNavLinks({ role }: { role: number }) {
   const pathname = usePathname(); 
-  const links = getRoleName(role) === "User" ? userLinks : adminLinks;
+  const links = getRole(role) === "User" ? userLinks : adminLinks;
   return (
     <div className="flex flex-row justify-between gap-4">
       {links.map((link) => {

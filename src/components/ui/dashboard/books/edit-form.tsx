@@ -1,7 +1,5 @@
 "use client";
-
-import * as React from "react"; 
-import { useActionState } from "react";
+ 
 import { updateBook, BookState } from "@/lib/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,42 +15,20 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import Link from "next/link";
 import SingleImageDropzoneUsage from "@/components/ui/uploadImage";
 import { IBook } from "@/lib/book-management/models/books.model";
+import React, { useActionState, useState } from "react";
 
 
 export default function EditBookForm({ book }: { book: IBook }) {
   const initialState: BookState = { message: null, errors: {} };
   const updateBookWithId = updateBook.bind(null, book.id);
   const [state, formAction] = useActionState(updateBookWithId, initialState);
-  const [imageUrl, setImageUrl] = React.useState<string | undefined>(
-    book.image
-  ); 
-
-  // Handle image upload completion
-  const handleUploadComplete = (result: any) => {
-    if (result && result.url) {
-      setImageUrl(result.url);
-      // Update the image URL in the form state 
-    }
-  };
-
-  // Handle form submission
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    // Gather form data
-    const formData = new FormData(event.currentTarget);
-    formData.set("image", imageUrl || "");
-
-    // Submit the form with the updated book information
-    formAction(formData);
-  };
-
+  const [imageUrl, setImageUrl] = useState<string | undefined>(book.image);
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
         <CardTitle>Edit Book</CardTitle>
       </CardHeader>
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
+      <form action={formAction}>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -185,14 +161,18 @@ export default function EditBookForm({ book }: { book: IBook }) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="image">Image</Label>
-              <SingleImageDropzoneUsage
-                onUploadComplete={handleUploadComplete}
+              {/* Pass the state setter to SingleImageDropzoneUsage */}
+              <SingleImageDropzoneUsage setUrl={setImageUrl} />
+
+              {/* Hidden input field to store the image URL */}
+              <Input
+                id="image"
+                name="image"
+                type="text"
+                className="hidden"
+                defaultValue={imageUrl || ""} 
+                required
               />
-              <div className="h-6">
-                {state.errors?.image && (
-                  <p className="text-sm text-red-500">{state.errors.image}</p>
-                )}
-              </div>
             </div>
           </div>
           {state.message && (
@@ -215,4 +195,6 @@ export default function EditBookForm({ book }: { book: IBook }) {
       </form>
     </Card>
   );
-}
+  };
+
+  

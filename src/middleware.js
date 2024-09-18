@@ -2,7 +2,7 @@
 import authConfig from "./../auth.config";  
 import { getToken } from "next-auth/jwt";
 import { Roles } from "./lib/user-management/models/user.model";
-export const getRoleName = (role) => {
+export const getRole = (role) => {
   switch (role) {
     case Roles.Admin:
       return "Admin";
@@ -25,17 +25,16 @@ export default auth(async (req) => {
   }
   // ! remeove salt
   else if (req.auth && req.nextUrl.pathname.startsWith("/dashboard/admin/")) {
-    const secret = process.env.AUTH_SECRET;
     const token = await getToken({
-      req, secret: secret,
+      req,
+      secret: process.env.AUTH_SECRET,
+      secureCookie: process.env.NODE_ENV === "production",
     });
-    // console.log(token);
-    const id = token?.id; 
-    let roleId= token?.role;  
+     const roleId= token?.role;  
     // console.log("User role is ", roleId);
     if (roleId) {
     }
-    const userRole = getRoleName(roleId);
+    const userRole = getRole(roleId);
     // console.log("User role is ", userRole , roleId.toString());
       if (userRole !== "Admin") {
               const newUrl = new URL("/dashboard", req.nextUrl.origin);

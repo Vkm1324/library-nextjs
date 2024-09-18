@@ -104,9 +104,11 @@ export default function BookRequestTable({ data }: { data: IBookResquest[] }) {
                 </div>
 
                 {/* Second row with Approve and Reject buttons */}
-                <div className="flex justify-between gap-4">
-                  <ApproveRequest id={request.id} />
-                  <RejectRequest id={request.id} />
+                <div className="flex justify-between gap-4 ">
+                  { request.status !=="pending"? 
+                    <><ApproveRequest id={request.id} /><RejectRequest id={request.id} /></>
+                    :" "
+                  }
                 </div>
 
                 {/* Status */}
