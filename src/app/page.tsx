@@ -12,25 +12,30 @@ import { Suspense } from "react";
 import { fetchBooksCount } from "@/lib/book-management/books.repository";
 import Pagination from "@/components/ui/landingPage/pagination";
 import BooksGrid from "@/components/ui/landingPage/booksGrid";
-// UI-Skeletons 
+// UI-Skeletons
 import BooksGridSkeleton from "@/components/ui/skeletons/booksGrid";
-import { inter, lusitana,protestGuerrilla  } from "@/components/ui/font";
+import { inter, lusitana, protestGuerrilla } from "@/components/ui/font";
+import { getTranslations } from "next-intl/server";
+import LocaleSwitcher from "@/components/LocaleSwitcher";
 
-export default async function LandingPage({ searchParams, }: {
+export default async function LandingPage({
+  searchParams,
+}: {
   searchParams?: {
     query?: string;
     page?: string;
   };
 }) {
-  
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const totalPages = await fetchBooksCount(query);
-  
+  const t = await getTranslations("LandingPage");
+
   return (
     <div className="flex flex-col min-h-screen">
       <header className="px-4 lg:px-6 h-14 flex items-center">
         <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
+          <LocaleSwitcher />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex items-center">
@@ -66,7 +71,7 @@ export default async function LandingPage({ searchParams, }: {
         <h1
           className={`${protestGuerrilla.className} antialiased text-3xl pl-4 font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none`}
         >
-          Welcome to Library...
+          {t("title")}
         </h1>
         <section className="w-full py-12 md:py-24 lg:py-0 xl:py-0">
           <div className="container px-4 md:px-6">
@@ -133,7 +138,4 @@ export default async function LandingPage({ searchParams, }: {
       </footer>
     </div>
   );
-
- 
 }
-
