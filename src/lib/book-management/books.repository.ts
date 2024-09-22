@@ -1,20 +1,11 @@
 import { IPageRequest, IPagedResponse } from "../../../core/pagination.model";
 import { IRepository } from "../../../core/repository";
 import { IBookBase, IBook, IBookTitle } from "../book-management/models/books.model";
-import { AppEnv } from "../../../read-env";
-import mysql from "mysql2/promise";
 import { db } from "../../db/db";
 import { booksTable } from "../../drizzle/schema/schema";
 import { eq, sql, count, or, like } from "drizzle-orm/sql";
-
+import { asc, desc, inArray } from "drizzle-orm";
 export class BookRepository implements IRepository<IBookBase, IBook> {
-  // private mySqlPoolConnection: MySqlPoolConnection;
-  pool: mysql.Pool | null;
-
-  constructor() {
-    this.pool = mysql.createPool(AppEnv.DATABASE_URL);
-  }
-
   /**
    * Creates a new book and adds it to the repository.
    * @param {IBookBase} data - The base data for the book to be created.
@@ -85,13 +76,13 @@ export class BookRepository implements IRepository<IBookBase, IBook> {
     return null;
   }
 
-  async getName(id: number): Promise<IBookTitle | null> {
+  async getTitle(ids: number[]): Promise<IBookTitle[] | null> {
     const result = await db
-      .select({ title: booksTable.title,id:booksTable.id })
+      .select({ title: booksTable.title, id: booksTable.id })
       .from(booksTable)
-      .where(sql`${booksTable.id}=${id}`);
-    if (result) {
-      return result[0] as unknown as IBook;
+      .where(inArray(booksTable.id, ids));
+    if (result.length > 0) {
+      return result as IBookTitle[];
     }
     return null;
   }
@@ -117,12 +108,19 @@ export class BookRepository implements IRepository<IBookBase, IBook> {
   }
 }
 
-export async function fetchFilteredBooks(query: string, currentPage: number) {
+export async function fetchFilteredBooks(
+  query: string,
+  currentPage: number,
+  key: keyof IBook | undefined,
+  sortOrd: string | undefined
+) {
   const ITEMS_PER_PAGE = 8;
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-
+  if (!key) {
+    key = "id";
+  }
   // Simulate delay, remove later
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  // await new Promise((resolve) => setTimeout(resolve, 3000));
 
   try {
     // Step 1: Create the filtering condition based on the provided query
@@ -144,7 +142,9 @@ export async function fetchFilteredBooks(query: string, currentPage: number) {
       .where(whereClause)
       .limit(ITEMS_PER_PAGE)
       .offset(offset)
-      .orderBy(booksTable.id);
+      .orderBy(
+        sortOrd === "asc" ? asc(booksTable[key]) : desc(booksTable[key])
+      );
 
     // Step 3: Return the results casted to IBook[]
     return results as unknown as IBook[];

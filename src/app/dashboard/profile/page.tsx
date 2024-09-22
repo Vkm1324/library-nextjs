@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { auth } from "../../../../auth";
 import { UserRepository } from "@/lib/user-management/user.repository";
 
-export default async function profile() {
+export default async function Profile() {
     const session = await auth();
     const id = session?.user.uId;
     if (id) {

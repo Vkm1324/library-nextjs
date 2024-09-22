@@ -1,21 +1,23 @@
-import { IUser } from "../../user-management/models/user.model";
-
 export interface ITransactionBase {
   // immutable data 
   bookId: number;
   userId: number; 
 }
 
-type transactionType ="borrow" | "return";
-type statusType ="completed"| "overdue";
+export type transactionType ="borrow" | "return";
+export type statusType ="completed"| "overdue";
 
 export interface ITransaction extends ITransactionBase {
-  bookTitle: string;
   transactionId: number;
   transactionType: transactionType;
-  issueddate: Date;
-  dueDate: Date;
+  issueddate: Date ;
+  dueDate: Date ;
   returnDate: Date;
   status: statusType;
   lateFees: number;
+}
+
+export interface ITransactionTable extends ITransaction {
+  userName: string;
+  title: string;
 }

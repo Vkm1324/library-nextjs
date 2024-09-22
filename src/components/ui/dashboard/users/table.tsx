@@ -5,39 +5,91 @@ import { GenericColumn } from "../../table/columns";
 import { DataTable } from "@/components/ui/table/data-table";
 import { IUser } from "@/lib/user-management/models/user.model";
 import { getRole } from "@/middleware";
+import Image from "next/image";
+import { UserRound } from "lucide-react";
+import clsx from "clsx";
 
+interface IUserTable extends IUser {
+  adminUId: number; // Adding adminUId for table comparison
+}
 // Define columns for DataTable
-const userColumns: GenericColumn<IUser>[] = [
+const userColumns: GenericColumn<IUserTable>[] = [
   {
     accessorKey: "id",
     header: "User ID",
+  },
+
+  {
+    header: "User ",
+    render: (user: IUser) => {
+      return user.image ? (
+        <Image
+          className="rounded-full"
+          src={user.image}
+          height={40}
+          width={40}
+          alt={""}
+        ></Image>
+      ) : (
+        <span>
+          {" "}
+          <UserRound className=" rounded-sm"></UserRound>{" "}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "name",
     header: "Name",
   },
+
+  {
+    accessorKey: "phoneNum",
+    header: "Phone",
+    render: (user: IUser) => (
+      <span
+        className={clsx({
+          "text-red-500": !user.phoneNum,
+        })}
+      >
+        {user.phoneNum ? user.phoneNum : "N / A"}
+      </span>
+    ),
+  },
+  {
+    accessorKey: "address",
+    header: "Address",
+    render: (user: IUser) => (
+      <span
+        className={clsx({
+          "text-red-500": !user.address,
+        })}
+      >
+        {user.address ? user.address : "N / A"}
+      </span>
+    ),
+  },
+
   {
     accessorKey: "email",
     header: "Email",
   },
-{
-  accessorKey: "role",
-  header: "Role",
-  cell: (info) => <span>{getRole(info.row.original.role)}</span>, 
-},
+  {
+    accessorKey: "role",
+    header: "Role",
+    render: (user: IUserTable) => <span>{getRole(user.role)}</span>,
+  },
   {
     header: "Actions",
-    cell: (info) => (
+    render: (user: IUserTable) => (
       <div className="flex justify-start gap-3">
-        <UpdateUser id={info.row.original.id} />
-        {info.row.original.id !== info.row.original.adminUId && (
-          <DeleteUser id={info.row.original.id} />
-        )}
+        <UpdateUser id={user.id} />
+        {user.id !== user.adminUId && <DeleteUser id={user.id} />}
       </div>
     ),
-    accessorKey: "image"
   },
 ];
+
 
 export default function UsersTable({
   data,
@@ -51,7 +103,6 @@ export default function UsersTable({
     ...user,
     adminUId, // Adding adminUId to each user for conditional rendering
   }));
-
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -83,7 +134,7 @@ export default function UsersTable({
           <DataTable
             columns={userColumns}
             data={formattedData}
-            initialSortBy="id" // Default sorting column
+            initialSortKey="id" // Default sorting column
           />
         </div>
       </div>

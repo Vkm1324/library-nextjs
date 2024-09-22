@@ -9,7 +9,7 @@ import {
 } from "./models/user.model"; 
 import { db } from "../../db/db";
 import { usersTable } from "../../drizzle/schema/schema";
-import { count, eq, sql } from "drizzle-orm/sql";
+import { count, eq, inArray, sql } from "drizzle-orm/sql";
 /**
  * Class representing a user repository.
  * @implements {IRepository<IUserBase, IUser>}
@@ -63,16 +63,15 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
    * @param {IUserBase} data - The user data.
    * @returns {Promise<IUser>} The created user.
    */
-  // destructure and  then insert
-  // ! fix the create currently we r hard coding when new user creates
+  // destructure and  then insert 
   async create(data: IUserBase): Promise<IUser> {
     const user: IUser = {
       ...data,
       id: 0,
       role: Roles.User,
       DOB: null,
-      phoneNum: 0,
-      address: "",
+      phoneNum: null,
+      address: null,
     };
     const [result] = await db.insert(usersTable).values(user).$returningId();
     console.log(`User with UserId:${result.id} has been added successfully `);
@@ -111,16 +110,21 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
       .where(sql`${usersTable.name} LIKE ${"%" + name + "%"}`);
     return result as unknown as IUser[];
   }
-  async getUsername(id: number): Promise<IUser | null> {
-    const result = await db
-      .select({ id: usersTable.id, name: usersTable.name })
-      .from(usersTable)
-      .where(sql`${usersTable.id}=${id}`);
-    if (result) {
-      return result[0] as unknown as IUser;
-    }
-    return null;
+
+
+async  getUsername(ids: number[]): Promise<Array<IUser> | null> {
+  const result = await db
+    .select({
+      id: usersTable.id,
+      name: usersTable.name,
+    })
+    .from(usersTable)
+    .where(inArray(usersTable.id, ids));
+  if (result.length > 0) {
+    return result as IUser[];
   }
+  return null;
+}
 
   async getByPhoneNumber(phoneNumber: string) {
     const result = await db

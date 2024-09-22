@@ -1,11 +1,16 @@
 "use client";
 import { ITransaction } from "@/lib/transaction/model/transaction.model";
-import { CellContext } from "@tanstack/react-table";
 import { ReturnBookButton } from "./buttons";
 import { formatDateToLocal } from "@/lib/utils";
 import { DataTable } from "../../table/data-table";
+import { GenericColumn } from "../../table/columns";
 
-const transactionColumns = [
+interface ITransactionTable extends ITransaction {
+  userName: string;
+  title: string;
+}
+
+const createTransactionColumns = (): GenericColumn<ITransactionTable>[] => [
   {
     accessorKey: "transactionId",
     header: "Transaction ID",
@@ -15,30 +20,43 @@ const transactionColumns = [
     header: "Book ID",
   },
   {
+    header: "Book Name",
+      render: (transaction: ITransactionTable) => {
+      return <span>{transaction.title}</span>;
+    },
+  },
+  {
+    accessorKey: "userId",
+    header: "User ID",
+  },
+  {
+    header: "User Name",
+    render: (transaction: ITransactionTable) => {
+      return <span>{transaction.userName}</span>;
+    },
+  },
+  {
     accessorKey: "lateFees",
     header: "Late Fees",
   },
   {
-    accessorKey: "issueddate",
     header: "Issued Date",
-    cell: (info: CellContext<ITransaction, unknown>) => {
-      const issuedDate = info.row.original.issueddate;
+    render: (transaction: ITransaction) => {
+      const issuedDate = transaction.issueddate;
       return <span>{formatDateToLocal(issuedDate.toDateString())}</span>;
     },
   },
   {
-    accessorKey: "dueDate",
     header: "Due Date",
-    cell: (info: CellContext<ITransaction, unknown>) => {
-      const dueDate = info.row.original.dueDate;
+    render: (transaction: ITransaction) => {
+      const dueDate = transaction.dueDate;
       return <span>{formatDateToLocal(dueDate.toDateString())}</span>;
     },
   },
   {
-    accessorKey: "returnDate",
     header: "Return Date",
-    cell: (info: CellContext<ITransaction, unknown>) => {
-      const returnDate = info.row.original.returnDate;
+    render: (transaction: ITransaction) => {
+      const returnDate = transaction.returnDate;
       return (
         <span>
           {returnDate ? formatDateToLocal(returnDate.toDateString()) : "N/A"}
@@ -47,10 +65,9 @@ const transactionColumns = [
     },
   },
   {
-    accessorKey: "status",
     header: "Status",
-    cell: (info: CellContext<ITransaction, unknown>) => {
-      const { transactionType, returnDate, dueDate } = info.row.original;
+    render: (transaction: ITransaction) => {
+      const { transactionType, returnDate, dueDate } = transaction;
       const status =
         transactionType === "borrow"
           ? "Pending"
@@ -70,8 +87,8 @@ const transactionColumns = [
   },
   {
     header: "Action",
-    cell: (info: CellContext<ITransaction, unknown>) => {
-      const { transactionType, transactionId } = info.row.original;
+    render: (transaction: ITransaction) => {
+      const { transactionType, transactionId } = transaction;
       return (
         <div className="flex justify-end gap-3">
           {transactionType === "borrow" && (
@@ -80,18 +97,17 @@ const transactionColumns = [
         </div>
       );
     },
-    accessorKey: "", // Empty because it's a custom action column
   },
 ];
 
 interface MyTransactionTableProps {
-  data: ITransaction[];
+  data: ITransactionTable[];
 }
 
 export default function TransactionTable({ data }: MyTransactionTableProps) {
   const formattedData = data.map((transaction) => ({
     ...transaction,
-    // Keep the original dates for logic, format them only when rendering
+    // Keeping the original dates for logic, format them only when rendering
   }));
 
   return (
@@ -143,8 +159,8 @@ export default function TransactionTable({ data }: MyTransactionTableProps) {
 
           {/* Desktop view */}
           <DataTable
-            columns={transactionColumns}
-            data={data} 
+            columns={createTransactionColumns()}
+            data={formattedData}
           />
         </div>
       </div>

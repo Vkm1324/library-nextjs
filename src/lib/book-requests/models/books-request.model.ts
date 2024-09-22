@@ -1,11 +1,15 @@
-export interface IBookRequestBase {
+ export interface IBookRequestBase {
   userId: number;
   bookId: number;
-  requestDate: Date;
+  requestDate: Date  ;
 }
 
 export interface IBookResquest extends IBookRequestBase {
-  bookTitle: string;
   id: number;
   status: "pending" | "approved" | "rejected";
+}
+ 
+export interface IBookResquestTable extends IBookResquest {
+  title: string;
+  userName: string;
 }

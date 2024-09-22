@@ -7,13 +7,22 @@ import { auth } from "../../../../auth";
 export default async function BooksGrid({
   query,
   currentPage,
+    key,
+  sortOrd
 }: {
   query: string;
   currentPage: number;
+  key?: keyof IBook;
+  sortOrd?: string;
 }) {
-  const books: IBook[] = await fetchFilteredBooks(query, currentPage);
-          const session = await auth();
-          const uid = session?.user.uId;
+  const books: IBook[] = await fetchFilteredBooks(
+    query,
+    currentPage,
+    key,
+    sortOrd
+  );
+  const session = await auth();
+  const uid = session?.user.uId;
   return (
     <section className="w-full py-12 bg-background">
       <div className="container px-4 md:px-6">
@@ -27,7 +36,6 @@ export default async function BooksGrid({
               <BookCard key={book.id} book={book} uid={uid} />
             ))}
           </div>
-          
         ) : (
           <Card className="p-6">
             <p className="text-lg text-center text-muted-foreground font-semibold">

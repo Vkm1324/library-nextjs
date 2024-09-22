@@ -16,19 +16,20 @@ export default function SearchComponent({ placeholder }: { placeholder: string }
       params.delete("query");
     }
     replace(`${pathName}?${params.toString()}`);
-  }, 1000);
+  }, 500);
 return (
-  <div className="relative flex flex-1 flex-shrink-0 items-center">
+  <div className="relative flex flex-1 items-center max-w-md">
     <label htmlFor="search" className="sr-only">
       Search
     </label>
     <input
-      className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+      id="search"
+      className="peer inline w-full max-w-xs rounded-md border border-gray-300 py-2 pl-10 pr-3 text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder:text-gray-400"
       placeholder={placeholder}
       onChange={(e) => handleSearch(e.target.value)}
       defaultValue={searchParams.get("query")?.toString()}
     />
-    <Search className=" absolute  left-3 h-6 w-4 text-gray-500" />
+    <Search className="absolute left-3 h-5 w-4 text-gray-500 peer-focus:text-blue-500" />
   </div>
 );
 

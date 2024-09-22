@@ -2,6 +2,7 @@
 
 import { formatFileSize } from "@edgestore/react/utils";
 import { UploadCloudIcon, X } from "lucide-react";
+import Image from "next/image";
 import * as React from "react";
 import { useDropzone, type DropzoneOptions } from "react-dropzone";
 
@@ -138,9 +139,11 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
 
           {imageUrl ? (
             // Image Preview
-            <img
+            <Image
               className="h-full w-full rounded-md object-cover"
               src={imageUrl}
+              width={200}
+              height={200}
               alt={acceptedFiles[0]?.name}
             />
           ) : (

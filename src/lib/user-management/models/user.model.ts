@@ -4,8 +4,8 @@ export interface IUserBase {
   email: string;
   image?: string | undefined;
   DOB: Date | null ;
-  phoneNum: number;
-  address: string;
+  phoneNum: number | null;
+  address: string | null;
 }
 
 export interface IUserProfile extends IUserBase{

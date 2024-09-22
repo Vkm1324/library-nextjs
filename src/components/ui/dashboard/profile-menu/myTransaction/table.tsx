@@ -2,17 +2,37 @@
 
 import { GenericColumn } from "@/components/ui/table/columns";
 import { DataTable } from "@/components/ui/table/data-table";
-import { ITransaction } from "@/lib/transaction/model/transaction.model";
-import { formatDateToLocal } from "@/lib/utils"; 
+import { ITransaction, ITransactionTable } from "@/lib/transaction/model/transaction.model"; 
+import { formatDateToLocal } from "@/lib/utils";
+import clsx from "clsx";
+ 
+interface MyTransactionTable
+  extends ITransaction {
+  title: string;
+  userName: string;
+  
+}
 
-const transactionColumns: GenericColumn<ITransaction>[] = [
+const transactionColumns: GenericColumn<MyTransactionTable>[] = [
   {
     accessorKey: "transactionId",
     header: "Transaction ID",
   },
   {
-    accessorKey: "bookTitle",
-    header: "Book",
+    header: "Book Id",
+    accessorKey: "bookId",
+  },
+  {
+    header: "Book Title",
+    render: (transaction: ITransactionTable) => (
+      <span
+        className={clsx({
+          "text-red-500": !transaction.title,
+        })}
+      >
+        {transaction.title ? transaction.title : "Deleted Book"}
+      </span>
+    ),
   },
   {
     accessorKey: "lateFees",
@@ -21,22 +41,35 @@ const transactionColumns: GenericColumn<ITransaction>[] = [
   {
     accessorKey: "issueddate",
     header: "Issued Date",
+    render: (transaction: MyTransactionTable) => (
+      <span>{formatDateToLocal(transaction.issueddate.toString())}</span>
+    ),
   },
   {
     accessorKey: "dueDate",
     header: "Due Date",
+    render: (transaction: MyTransactionTable) => (
+      <span>{formatDateToLocal(transaction.dueDate.toString())}</span>
+    ),
   },
   {
     accessorKey: "returnDate",
     header: "Return Date",
+    render: (transaction: MyTransactionTable) => (
+      <span>
+        {transaction.returnDate
+          ? formatDateToLocal(transaction.returnDate.toString())
+          : "N/A"}
+      </span>
+    ),
   },
   {
     accessorKey: "transactionType",
     header: "Status",
-    cell: ({ row }) =>
-      row.original.transactionType === "borrow" ? (
-        <span className="text-yellow-500">Pending</span>
-      ) : row.original.returnDate > row.original.dueDate ? (
+    render: (transaction: MyTransactionTable) =>
+      transaction.transactionType === "borrow" ? (
+        <span className="text-yellow-500">Not Returned</span>
+      ) : new Date(transaction.returnDate) > new Date(transaction.dueDate) ? (
         <span className="text-red-500">Overdue</span>
       ) : (
         <span className="text-green-500">Completed</span>
@@ -44,29 +77,26 @@ const transactionColumns: GenericColumn<ITransaction>[] = [
   },
 ];
 
-
 interface MyTransactionTableProps {
-  data: ITransaction[];
+  data: MyTransactionTable[];
 }
 
-export default function MyTransactionTable({
-  data,
-}: MyTransactionTableProps) {
-  const formattedData = data.map((transaction) => ({
+export default function MyTransactionTable({ data }: MyTransactionTableProps) {
+  const formattedData = data ? data.map((transaction) => ({
     ...transaction,
-    issueddate: formatDateToLocal(transaction.issueddate.toDateString()),
-    dueDate: formatDateToLocal(transaction.dueDate.toDateString()),
+    issueddate: formatDateToLocal(transaction.issueddate.toString()),
+    dueDate: formatDateToLocal(transaction.dueDate.toString()),
     returnDate: transaction.returnDate
-      ? formatDateToLocal(transaction.returnDate.toDateString())
+      ? formatDateToLocal(transaction.returnDate.toString())
       : "N/A",
-  }));
+  })) : null;
 
   return (
-    <div className="mt-6 flow-root">
+    <div className="mt-6 flow-root ">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           {/* Mobile view */}
-          <div className="md:hidden">
+          <div className="md:hidden max-w-[375px]">
             {formattedData?.map((transaction) => (
               <div
                 key={transaction.transactionId}
@@ -82,11 +112,9 @@ export default function MyTransactionTable({
                     </p>
                   </div>
                   <div className="flex justify-between">
-                    <p className="text-sm font-medium text-gray-700">
-                      Book Title
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {transaction.bookTitle}
+                    <p className="text-sm font-medium text-gray-700">Title</p>
+                    <p className="text-sm text-gray-500 truncate max-w-[150px] pl-2">
+                      {transaction.title}
                     </p>
                   </div>
                   <div className="flex justify-between">
@@ -108,10 +136,27 @@ export default function MyTransactionTable({
                 </div>
                 <div className="flex justify-between pt-4">
                   <p className="text-sm font-medium text-gray-700">Status</p>
-                  <p className="text-sm text-gray-500">
+                  <p
+                    className={clsx("text-sm", {
+                      "text-yellow-500":
+                        transaction.transactionType === "borrow",
+                      "text-red-500":
+                        new Date(transaction.returnDate) >
+                        new Date(transaction.dueDate),
+                      "text-green-500":
+                        !(transaction.transactionType === "borrow") &&
+                        !(
+                          new Date(transaction.returnDate) >
+                          new Date(transaction.dueDate)
+                        ),
+                    })}
+                  >
                     {transaction.transactionType === "borrow"
                       ? "Pending"
-                      : transaction.status}
+                      : new Date(transaction.returnDate) >
+                        new Date(transaction.dueDate)
+                      ? "Overdue"
+                      : "Completed"}
                   </p>
                 </div>
                 <div className="flex justify-between pt-2">
@@ -125,10 +170,7 @@ export default function MyTransactionTable({
           </div>
 
           {/* Desktop view using DataTable */}
-          <DataTable
-            columns={(transactionColumns)}
-            data={formattedData} 
-          />
+          <DataTable columns={transactionColumns} data={data} />
         </div>
       </div>
     </div>

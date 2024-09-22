@@ -12,21 +12,20 @@ import {
   MessageCircleMore,
   UserRoundPenIcon,
 } from "lucide-react";
-import { auth, signOut } from "../../../../../auth";
+import { auth } from "../../../../../auth";
 import Image from "next/image";
 import Logout from ".././profile/logout";
-import Link from "next/link"; 
-// import clsx from "clsx";
+import Link from "next/link";  
 
 const profileLinks = [
   {
     name: "Profile",
-    href: "dashboard/profile",
+    href: "/dashboard/profile",
     icon: UserRoundPenIcon,
   },
   {
     name: "My Transaction",
-    href: "dashboard/myTransaction",
+    href: "/dashboard/myTransaction",
     icon: Bell,
   },
   {
@@ -34,11 +33,6 @@ const profileLinks = [
     href: "/dashboard/myRequests",
     icon: MessageCircleMore,
   },
-  // {
-  //   name: "Help",
-  //   href: "dashboard/help",
-  //   icon: HelpCircle,
-  // },
   {
     name: "Sign Out",
     href: "dashboard/logout",

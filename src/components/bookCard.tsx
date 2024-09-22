@@ -51,13 +51,15 @@ export default function BookCard({ book, uid }: BookCardProps) {
           width={200}
           height={180}
           alt={book.title}
-          className=" w-full object-cover"
+          className="  object-cover"
         />
       ) : (
         <Image
           src={image}
+          width={200}
+          height={180}
           alt={"static image"}
-          className=" w-full object-cover"
+          className=" object-cover"
         ></Image>
       )}
       <CardHeader className="p-4 bg-muted">

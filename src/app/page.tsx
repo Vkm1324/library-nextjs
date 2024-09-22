@@ -12,10 +12,9 @@ import { Suspense } from "react";
 import { fetchBooksCount } from "@/lib/book-management/books.repository";
 import Pagination from "@/components/ui/landingPage/pagination";
 import BooksGrid from "@/components/ui/landingPage/booksGrid";
- 
 // UI-Skeletons 
 import BooksGridSkeleton from "@/components/ui/skeletons/booksGrid";
-
+import { inter, lusitana,protestGuerrilla  } from "@/components/ui/font";
 
 export default async function LandingPage({ searchParams, }: {
   searchParams?: {
@@ -64,7 +63,9 @@ export default async function LandingPage({ searchParams, }: {
         </nav>
       </header>
       <main className="flex-1">
-        <h1 className="text-3xl pl-4 font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
+        <h1
+          className={`${protestGuerrilla.className} antialiased text-3xl pl-4 font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none`}
+        >
           Welcome to Library...
         </h1>
         <section className="w-full py-12 md:py-24 lg:py-0 xl:py-0">
@@ -132,4 +133,7 @@ export default async function LandingPage({ searchParams, }: {
       </footer>
     </div>
   );
+
+ 
 }
+

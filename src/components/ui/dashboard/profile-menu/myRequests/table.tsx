@@ -1,32 +1,46 @@
+"use client";
+
 import { GenericColumn } from "@/components/ui/table/columns";
 import { DataTable } from "@/components/ui/table/data-table";
-import { IBookResquest } from "@/lib/book-requests/models/books-request.model";
-import { formatDateToLocal } from "@/lib/utils"; 
+import { IBookResquestTable } from "@/lib/book-requests/models/books-request.model";
+import { formatDateToLocal } from "@/lib/utils";
+import clsx from "clsx";
 
- const bookRequestColumns: GenericColumn<IBookResquest>[] = [
-   {
-     accessorKey: "id",
-     header: "Request ID",
-   },
-   {
-     accessorKey: "bookTitle",
-     header: "Book",
-   },
-   {
-     accessorKey: "requestDate",
-     header: "Request Date",
-   },
-   {
-     accessorKey: "status",
-     header: "Status",
-   },
- ];
 
-export default function BookRequestTable({ data }: { data: IBookResquest[] }) {
+const bookRequestColumns: GenericColumn<IBookResquestTable>[] = [
+  {
+    accessorKey: "id",
+    header: "Request ID",
+  },
+  {
+    header: "Book",
+    render: (request: IBookResquestTable) => (
+      <span
+        className={clsx({
+          "text-red-500": !request.title,
+        })}
+      >
+        {request.title ? request.title : "Deleted Book"}
+      </span>
+    ),
+  },
+  {
+    accessorKey: "requestDate",
+    header: "Request Date",
+    render: (request: IBookResquestTable) => (
+      <span>{formatDateToLocal(request.requestDate.toDateString())}</span>
+    ),
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+  },
+];
+
+export default function BookRequestTable({ data }: { data: IBookResquestTable[] }) {
   const formattedData = data.map((request) => ({
     ...request,
-    requestDate: formatDateToLocal(request.requestDate.toDateString()), // Format the request date
-  }));
+   }));
 
   return (
     <div className="mt-6 flow-root">
@@ -41,10 +55,10 @@ export default function BookRequestTable({ data }: { data: IBookResquest[] }) {
               >
                 <div className="flex items-center justify-between border-b pb-4">
                   <p className="text-sm text-gray-500 mr-1">{request.bookId}</p>
-                  <p className="text-sm text-gray-500">{request.bookTitle}</p>
+                  <p className="text-sm text-gray-500">{request.title}</p>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
-                  <p className="text-sm text-gray-500">{request.requestDate}</p>
+                  <p className="text-sm text-gray-500">{formatDateToLocal(request.requestDate.toDateString())}</p>
                   <p className="text-xl font-medium">{request.status}</p>
                 </div>
               </div>
@@ -52,10 +66,7 @@ export default function BookRequestTable({ data }: { data: IBookResquest[] }) {
           </div>
 
           {/* Desktop view using DataTable */}
-          <DataTable
-            columns={bookRequestColumns}
-            data={formattedData}
-          />
+          <DataTable columns={bookRequestColumns} data={formattedData} />
         </div>
       </div>
     </div>

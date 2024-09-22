@@ -4,12 +4,12 @@ import { formatDateToLocal } from "@/lib/utils";
 import { ApproveRequest, RejectRequest } from "../user-request/buttons";
 import { GenericColumn } from "../../table/columns";
 import { DataTable } from "@/components/ui/table/data-table";
-import { IBookResquest } from "@/lib/book-requests/models/books-request.model";
-interface bookreq extends IBookResquest {
-  username: string;
-}
+import { IBookResquest, IBookResquestTable } from "@/lib/book-requests/models/books-request.model";
+import clsx from "clsx";
 
-const bookRequestsColumns: GenericColumn<bookreq>[] = [
+
+   
+const bookRequestsColumns: GenericColumn<IBookResquestTable>[] = [
   {
     accessorKey: "id",
     header: "Request ID",
@@ -19,58 +19,64 @@ const bookRequestsColumns: GenericColumn<bookreq>[] = [
     header: "Book Id",
   },
   {
-    accessorKey: "bookTitle",
-    header: "Book Title ",
+    accessorKey: "title",
+    header: "Book Title",
   },
   {
     accessorKey: "userId",
     header: "User ID",
   },
   {
-    accessorKey: "username",
+    accessorKey: "userName",
     header: "User Name",
-  },
-  {
-    accessorKey: "requestDate",
-    header: "Request Date",
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: (info) => (
+    render: (request: IBookResquestTable) => (
       <span
-        className={`${
-          info.row.original.status === "approved"
-            ? "text-green-800"
-            : info.row.original.status === "rejected"
-            ? "text-red-800"
-            : "text-yellow-800"
-        }`}
+        className={clsx({
+          "text-red-500": !request.userName,
+        })}
       >
-        {info.row.original.status}
+        {request.userName ? request.userName : "Deleted User"}
       </span>
     ),
   },
   {
-    header: "Action",
-    cell: (info) => (
+    accessorKey: "requestDate",
+    header: "Request Date",
+    render: (request: IBookResquestTable) => (
+      <span>{formatDateToLocal(request.requestDate.toDateString())}</span>
+    ),
+  },
+  {
+    header: "Status",
+    accessorKey: "status",
+    render: (request) => {
+      const statusClass =
+        request.status === "approved"
+          ? "text-green-800"
+          : request.status === "rejected"
+          ? "text-red-800"
+          : "text-yellow-800";
+      return <span className={statusClass}>{request.status}</span>;
+    },
+  },
+  {
+    header: "Actions",
+    render: (request: IBookResquestTable) => (
       <div className="flex justify-end gap-3">
-        {info.row.original.status === "pending" && (
+        {request.status === "pending" && (
           <>
-            <ApproveRequest id={info.row.original.id} />
-            <RejectRequest id={info.row.original.id} />
+            <ApproveRequest id={request.id} />
+            <RejectRequest id={request.id} />
           </>
         )}
       </div>
     ),
-    accessorKey: "bookTitle",
   },
 ];
 
-export default function BookRequestTable({ data }: { data: IBookResquest[] }) {
+export default function BookRequestTable({ data }: { data: IBookResquestTable[] }) {
   const formattedData = data.map((request) => ({
-    ...request,
-    requestDate: formatDateToLocal(request.requestDate.toDateString()), // Format the request date
+    ...request, 
   }));
 
   return (
@@ -108,10 +114,14 @@ export default function BookRequestTable({ data }: { data: IBookResquest[] }) {
 
                 {/* Second row with Approve and Reject buttons */}
                 <div className="flex justify-between gap-4 ">
-                  { request.status !=="pending"? 
-                    <><ApproveRequest id={request.id} /><RejectRequest id={request.id} /></>
-                    :" "
-                  }
+                  {request.status !== "pending" ? (
+                    <>
+                      <ApproveRequest id={request.id} />
+                      <RejectRequest id={request.id} />
+                    </>
+                  ) : (
+                    " "
+                  )}
                 </div>
 
                 {/* Status */}
@@ -135,7 +145,7 @@ export default function BookRequestTable({ data }: { data: IBookResquest[] }) {
           </div>
 
           {/* Desktop view using DataTable */}
-          <DataTable columns={bookRequestsColumns} data={formattedData}  />
+          <DataTable columns={bookRequestsColumns} data={formattedData} />
         </div>
       </div>
     </div>

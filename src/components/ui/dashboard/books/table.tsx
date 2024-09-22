@@ -4,6 +4,7 @@ import { UpdateBook, DeleteBook } from "./buttons";
 import { GenericColumn } from "../../table/columns";
 import { DataTable } from "@/components/ui/table/data-table";
 import { IBook } from "@/lib/book-management/models/books.model";
+import { bookRequestStatusType } from "@/drizzle/schema/schema";
 
 // Define columns for DataTable
 const createBooksColumns = (
@@ -30,20 +31,19 @@ const createBooksColumns = (
     header: "Avl Copies",
   },
   {
-    header: "Actions",
-    cell: (info) => {
-      const bookId = info.row.original.id;
-      const isPending = pendingReturnTransactions.some(
-        (transaction) => transaction === bookId
-      );
+    header: "Actions", 
+    render: (book: IBook) => {
+      const bookId = book.id;
+      const isPending = pendingReturnTransactions.includes(bookId);
+
       return (
         <div className="flex justify-start gap-3">
           <UpdateBook id={bookId} />
+          {/* Only show the Delete button if there are no pending transactions */}
           {!isPending && <DeleteBook id={bookId} />}
         </div>
       );
     },
-    accessorKey: "isbnNo",
   },
 ];
 
@@ -53,7 +53,7 @@ export default function UsersTable({
 }: {
   data: IBook[];
   pendingReturnTransactions: number[];
-  }) {
+}) {
   const formattedData = data;
 
   return (
@@ -68,7 +68,7 @@ export default function UsersTable({
               );
               return (
                 <div
-                  key={book.id}  
+                  key={book.id}
                   className="mb-2 w-full rounded-md bg-white p-4 shadow-md"
                 >
                   <div className="border rounded-lg p-4">
@@ -92,6 +92,7 @@ export default function UsersTable({
           <DataTable
             columns={createBooksColumns(pendingReturnTransactions)}
             data={formattedData}
+            initialSortKey="id"
           />
         </div>
       </div>

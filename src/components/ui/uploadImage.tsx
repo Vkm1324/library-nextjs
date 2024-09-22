@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { SingleImageDropzone } from "@/components/single-image-dropzone";
 import { useEdgeStore } from "@/lib/edgestore";
+import { Progress } from "@/components/ui/progress";
 
 export default function SingleImageDropzoneUsage({
   setUrl,
@@ -10,17 +11,20 @@ export default function SingleImageDropzoneUsage({
   const [file, setFile] = useState<File | undefined>(undefined);
   const { edgestore } = useEdgeStore();
   const [progress, setProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
 
   // Create a ref to store the previously uploaded file
   const previousFileRef = useRef<File | undefined>(undefined);
 
-  useEffect(() => {
-    const handleUpload = async (file: File) => {
+  const handleUpload = useCallback(
+    async (file: File) => {
+      setIsUploading(true);
       try {
         const res = await edgestore.publicFiles.upload({
           file,
           onProgressChange: (progress) => {
-            setProgress(progress); // Update progress as the file uploads
+            setProgress(progress);
+            // console.log(progress);
           },
           input: { type: "books" },
         });
@@ -28,28 +32,27 @@ export default function SingleImageDropzoneUsage({
         setUrl(res.url);
       } catch (error) {
         console.error("Upload failed:", error);
+      } finally {
+        setIsUploading(false);
       }
-    };
+    },
+    [edgestore.publicFiles, setUrl]
+  );
 
+  useEffect(() => {
     // Only trigger the upload if the file has changed
     if (file && file !== previousFileRef.current) {
       handleUpload(file);
       previousFileRef.current = file; // Store the current file in ref to avoid re-upload
-    } else {
-      setProgress(0); // Reset progress when no file is selected or if it's the same file
     }
-
-    return () => {
-      setProgress(0);
-    };
-  }, [file, edgestore.publicFiles, setUrl]);
+  }, [file, handleUpload]);
 
   const handleFileChange = (file?: File) => {
     setFile(file); // Set file for upload
   };
 
   return (
-    <div>
+    <div className="space-y-4">
       <SingleImageDropzone
         width={200}
         height={200}
@@ -60,17 +63,12 @@ export default function SingleImageDropzoneUsage({
           maxFiles: 1,
         }}
       />
-      {file && progress > 0 && (
-        <div className="mt-5">
-          <div className="w-full bg-gray-200 rounded">
-            <div
-              className={`h-2 rounded transition-all duration-300 ${
-                progress === 100 ? "bg-green-500" : "bg-blue-500"
-              }`}
-              style={{ width: `${20}%` }}
-            />
-          </div>
-          <p className="text-center mt-2">{progress}%</p>
+      {isUploading && (
+        <div className="w-[200px]">
+          <Progress value={progress} className="w-full" />
+          <p className="text-sm text-muted-foreground mt-2">
+            Uploading: {progress.toFixed(0)}%
+          </p>
         </div>
       )}
     </div>

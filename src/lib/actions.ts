@@ -131,7 +131,7 @@ export async function updateProfile(
   }
 
   revalidatePath("/dashboard/profile");
-  redirect("/dashboard/profile");
+  redirect("/dashboard/admin/users");
 }
 
 export async function deleteUser(id: number) {
