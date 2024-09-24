@@ -3,12 +3,13 @@
 // ! role update and setting of users.
 // ! in books card , image size should be set to a aspect-ratio
 // ! in books card , image size should be set to a aspect-ratio
-// ! internalization & localization
+// !  localization for status and dleted book and user
 // ! table max width and w-full
 // ! edit form has to retain its previous data
 // ! make every table to give inital sord ord and sort key
 // ! update the request status from pending to rejected when the requested book deleted by admin call reject(bookid)
-// !  duplicated data catch the error  when user email and book isbn  (addded by admin)   
+// !  duplicated data catch the error  when user email and book isbn  (addded by admin)
+// ! cards should be made compaitable with mobile design too   
 // TODO edit-form of books to be fixed! in update book , image should also  update
 
 //  revalidate the paths to the original paths after they move too and fro in profile

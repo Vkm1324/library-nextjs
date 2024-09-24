@@ -16,6 +16,7 @@ import { auth } from "../../../../../auth";
 import Image from "next/image";
 import Logout from ".././profile/logout";
 import Link from "next/link";  
+import { getTranslations } from "next-intl/server";
 
 const profileLinks = [
   {
@@ -44,6 +45,7 @@ export default async function ProfileMenu() {
   // const pathname = usePathname();
   const session = await auth();
   const userImage = session?.user?.image;
+  const t = await getTranslations("profile-links");
 
   return (
     <DropdownMenu>
@@ -70,7 +72,7 @@ export default async function ProfileMenu() {
                 href={link.href}
               >
                 <link.icon className="mr-2 h-4 w-4" />
-                {link.name}
+                {`${t(link.name)}`}
               </Link>
             )}
           </DropdownMenuItem>

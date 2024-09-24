@@ -12,11 +12,11 @@ const createBooksColumns = (
 ): GenericColumn<IBook>[] => [
   {
     accessorKey: "id",
-    header: "Book ID",
+    header: "Book Id",
   },
   {
     accessorKey: "title",
-    header: "Name",
+    header: "Book Title",
   },
   {
     accessorKey: "author",

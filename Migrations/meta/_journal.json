@@ -15,6 +15,13 @@
       "when": 1726309986335,
       "tag": "0001_wonderful_stardust",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1727096019950,
+      "tag": "0002_majestic_jigsaw",
+      "breakpoints": true
     }
   ]
 }

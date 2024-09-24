@@ -16,11 +16,11 @@ interface IUserTable extends IUser {
 const userColumns: GenericColumn<IUserTable>[] = [
   {
     accessorKey: "id",
-    header: "User ID",
+    header: "User Id",
   },
 
   {
-    header: "User ",
+    header: "User Image",
     render: (user: IUser) => {
       return user.image ? (
         <Image
@@ -40,12 +40,12 @@ const userColumns: GenericColumn<IUserTable>[] = [
   },
   {
     accessorKey: "name",
-    header: "Name",
+    header: "User Name",
   },
 
   {
     accessorKey: "phoneNum",
-    header: "Phone",
+    header: "Phone Number",
     render: (user: IUser) => (
       <span
         className={clsx({

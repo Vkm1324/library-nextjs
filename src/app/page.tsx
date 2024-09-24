@@ -34,36 +34,44 @@ export default async function LandingPage({
   return (
     <div className="flex flex-col min-h-screen">
       <header className="px-4 lg:px-6 h-14 flex items-center">
+        <LocaleSwitcher />
         <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
-          <LocaleSwitcher />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex items-center">
-                Catalog
+                {t("header.dropdownMenu.catalog")}
                 <ChevronDown className="ml-1 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem>Books</DropdownMenuItem>
-              <DropdownMenuItem>eBooks</DropdownMenuItem>
-              <DropdownMenuItem>Magazines</DropdownMenuItem>
-              <DropdownMenuItem>Maps</DropdownMenuItem>
+              <DropdownMenuItem>
+                {t("header.dropdownMenu.items.0")}
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                {t("header.dropdownMenu.items.1")}
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                {t("header.dropdownMenu.items.2")}
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                {t("header.dropdownMenu.items.3")}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <Link
             className="text-sm font-medium hover:underline hidden sm:block underline-offset-4"
             href="#"
           >
-            Events
+            {t("header.links.events")}
           </Link>
           <Link
             className="text-sm font-medium hidden sm:block hover:underline underline-offset-4"
             href="#"
           >
-            About
+            {t("header.links.about")}
           </Link>
           <Link key={"Login"} href={"/login"}>
-            <Button variant="default">Sign In</Button>
+            <Button variant="default"> {t("header.links.signIn")}</Button>
           </Link>
         </nav>
       </header>
@@ -100,23 +108,30 @@ export default async function LandingPage({
             <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
               <div className="flex flex-col items-center space-y-4 text-center">
                 <Book className="h-10 w-10" />
-                <h2 className="text-xl font-bold">Extensive Collection</h2>
+                <h2 className="text-xl font-bold">
+                  {" "}
+                  {t("mainSection.features.1.title")}
+                </h2>
                 <p className="text-gray-500 dark:text-gray-400">
-                  Access thousands of books, e-books, audiobooks, and more.
+                  {t("mainSection.features.1.description")}
                 </p>
               </div>
               <div className="flex flex-col items-center space-y-4 text-center">
                 <Calendar className="h-10 w-10" />
-                <h2 className="text-xl font-bold">Events & Programs</h2>
+                <h2 className="text-xl font-bold">
+                  {t("mainSection.features.2.title")}
+                </h2>
                 <p className="text-gray-500 dark:text-gray-400">
-                  Join our reading clubs, workshops, and educational programs.
+                  {t("mainSection.features.2.description")}
                 </p>
               </div>
               <div className="flex flex-col items-center space-y-4 text-center">
                 <Users className="h-10 w-10" />
-                <h2 className="text-xl font-bold">Community Space</h2>
+                <h2 className="text-xl font-bold">
+                  {t("mainSection.features.3.title")}
+                </h2>
                 <p className="text-gray-500 dark:text-gray-400">
-                  Enjoy our quiet study areas and collaborative spaces.
+                  {t("mainSection.features.3.description")}
                 </p>
               </div>
             </div>
@@ -125,14 +140,14 @@ export default async function LandingPage({
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          © 2023 Library. All rights reserved.
+          {t("footer.copyright")}
         </p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link className="text-xs hover:underline underline-offset-4" href="#">
-            Terms of Service
+            {t("footer.links.termsOfService")}
           </Link>
           <Link className="text-xs hover:underline underline-offset-4" href="#">
-            Privacy
+            {t("footer.links.privacy")}
           </Link>
         </nav>
       </footer>

@@ -1,6 +1,146 @@
 {
   "LandingPage": {
-    "title": "Welcome to Library..."
+    "title": "Welcome to Library...",
+    "header": {
+      "dropdownMenu": {
+        "catalog": "Catalog",
+        "items": { "1": "Books", "2": "eBooks", "3": "Magazines", "0": "Maps" }
+      },
+      "links": {
+        "events": "Events",
+        "about": "About",
+        "signIn": "Sign In"
+      }
+    },
+    "mainSection": {
+      "features": {
+        "1": {
+          "title": "Extensive Collection",
+          "description": "Access thousands of books, e-books, audiobooks, and more."
+        },
+        "2": {
+          "title": "Events & Programs",
+          "description": "Join our reading clubs, workshops, and educational programs."
+        },
+        "3": {
+          "title": "Community Space",
+          "description": "Enjoy our quiet study areas and collaborative spaces."
+        }
+      }
+    },
+    "footer": {
+      "copyright": "© 2023 Library. All rights reserved.",
+      "links": {
+        "termsOfService": "Terms of Service",
+        "privacy": "Privacy"
+      }
+    }
+  },
+  "Sign-In": {
+    "title": "Sign In Page",
+    "form": {
+      "welcomeTitle": "Welcome",
+      "signInDescription": "Sign In",
+      "googleButton": {
+        "text": "Sign in with Google"
+      },
+      "orDivider": {
+        "text": "Or"
+      },
+      "githubButton": {
+        "text": "Sign in with GitHub"
+      }
+    }
+  },
+  "top-nav": {
+    "1": "Home",
+    "2": "Book Request"
+  },
+  "Home": {
+    "book-request-card": "Users Book Request",
+    "transaction-card": "Transactions",
+    "users-card": "Users",
+    "book-card": "Book"
+  },
+  "nav-links": {
+    "userLinks": {
+      "Home": "Home",
+      "Book Request": "Book Request"
+    },
+    "adminLinks": {
+      "Home": "Home",
+      "Book Request": "Book Request",
+      "Users Book Request": "Users Book Request",
+      "Transactions": "Transactions",
+      "Users": "Users",
+      "Book": "Book"
+    }
+  },
+  "profile-links": {
+    "Profile": "Profile",
+    "My Transaction": "My Transaction",
+    "My Requests": "My Requests",
+    "Sign Out": "Sign Out"
+  },
+  "Edit Profile": {
+    "title": "Edit Profile",
+    "Name": "Name",
+    "Email": "Email",
+    "Date of Birth": "Date of Birth",
+    "Phone Number": "Phone Number",
+    "Address": "Address",
+    "Cancel": "Cancel",
+    "Update Profile": "Update Profile",
+    "errors": {
+      "name": "Name is required.",
+      "email": "Email is required.",
+      "DOB": "Date of Birth is required.",
+      "phoneNum": "Phone Number is required.",
+      "address": "Address is required."
+    },
+    "success": {
+      "message": "Profile updated successfully."
+    }
+  },
+  "TableHeaders": {
+    "Request Date": "Request Date",
+    "Request Id": "Request Id",
+    "Book": "Book",
+    "Status": "Status",
+    "Transaction Id": "Transaction Id",
+    "Book Id": "Book Id",
+    "Book Title": "Book Title",
+    "Late Fees": "Late Fees",
+    "Issued Date": "Issued Date",
+    "Due Date": "Due Date",
+    "Return Date": "Return Date",
+    "User Id": "User Id",
+    "User Name": "User Name",
+    "User Image": "User Image",
+    "Phone Number": "Phone Number",
+    "Address": "Address",
+    "Actions": "Actions",
+    "Email": "Email",
+    "Avl Copies": "Avl Copies",
+    "Publisher": "Publisher",
+    "Author": "Author",
+    "Role": "Role"
+  },
+  "TableData": {
+    "Pending": "Pending",
+    "Overdue": "Overdue",
+    "Completed": "Completed",
+    "Approved": "Approved",
+    "N/A": "N/A",
+    "Deleted Book": "Deleted Book",
+    "Deleted User": "Deleted User",
+    "No Results": "No Results",
+    "Not Returned": "Not Returned",
+    "Edit":"Edit",
+    "Are you sure":"Are you sure",
+    "Cancel":"Cancel",
+    "Proceed to Edit":"Proceed to Edit",
+    "Delete":"Delete"
   },
   "LocaleSwitcher": {
     "en": "English",

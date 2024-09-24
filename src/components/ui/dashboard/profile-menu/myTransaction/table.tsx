@@ -5,6 +5,7 @@ import { DataTable } from "@/components/ui/table/data-table";
 import { ITransaction, ITransactionTable } from "@/lib/transaction/model/transaction.model"; 
 import { formatDateToLocal } from "@/lib/utils";
 import clsx from "clsx";
+import { TranslatedLabel } from "../myRequests/lalbelWrapper";
  
 interface MyTransactionTable
   extends ITransaction {
@@ -16,7 +17,7 @@ interface MyTransactionTable
 const transactionColumns: GenericColumn<MyTransactionTable>[] = [
   {
     accessorKey: "transactionId",
-    header: "Transaction ID",
+    header: "Transaction Id",
   },
   {
     header: "Book Id",
@@ -30,7 +31,11 @@ const transactionColumns: GenericColumn<MyTransactionTable>[] = [
           "text-red-500": !transaction.title,
         })}
       >
-        {transaction.title ? transaction.title : "Deleted Book"}
+        {transaction.title ? (
+          transaction.title
+        ) : (
+          <TranslatedLabel nameSpace={"TableData"} value={"Deleted Book"} />
+        )}
       </span>
     ),
   },
@@ -57,9 +62,11 @@ const transactionColumns: GenericColumn<MyTransactionTable>[] = [
     header: "Return Date",
     render: (transaction: MyTransactionTable) => (
       <span>
-        {transaction.returnDate
-          ? formatDateToLocal(transaction.returnDate.toString())
-          : "N/A"}
+        {transaction.returnDate ? (
+          formatDateToLocal(transaction.returnDate.toString())
+        ) : (
+          <TranslatedLabel nameSpace={"TableData"} value={"N / A"} />
+        )}
       </span>
     ),
   },
@@ -68,11 +75,20 @@ const transactionColumns: GenericColumn<MyTransactionTable>[] = [
     header: "Status",
     render: (transaction: MyTransactionTable) =>
       transaction.transactionType === "borrow" ? (
-        <span className="text-yellow-500">Not Returned</span>
+        <span className="text-yellow-500">
+          <TranslatedLabel nameSpace={"TableData"} value={"Not Returned"} />
+        </span>
       ) : new Date(transaction.returnDate) > new Date(transaction.dueDate) ? (
-        <span className="text-red-500">Overdue</span>
+        <span className="text-red-500">
+          <TranslatedLabel nameSpace={"TableData"} value={"Overdue"} />
+        </span>
       ) : (
-        <span className="text-green-500">Completed</span>
+        <span className="text-green-500">
+          <TranslatedLabel
+            nameSpace={"TableData"}
+            value={"Completed"}
+          />
+        </span>
       ),
   },
 ];

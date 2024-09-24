@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { GenericColumn } from "./columns";
+import { useTranslations } from "next-intl";
 
 interface DataTableProps<TData> {
   columns: GenericColumn<TData>[];
@@ -22,13 +23,16 @@ export function DataTable<TData>({
   data,
   initialSortKey,
 }: DataTableProps<TData>) {
+  
   const searchParams = useSearchParams();
   const pathName = usePathname();
   const { replace } = useRouter();
 
   const currentSortField = searchParams.get("key") || String(initialSortKey);
   const currentSortOrder = searchParams.get("sortOrd") || "asc";
-
+  const t = useTranslations("TableHeaders");
+  const td = useTranslations("TableData");
+  
   const handleSort = (field?: keyof TData) => {
     if (!field) return;
 
@@ -43,6 +47,7 @@ export function DataTable<TData>({
     replace(`${pathName}?${params.toString()}`);
   };
 
+ 
   return (
     <div className="hidden md:block rounded-md border">
       <Table>
@@ -58,7 +63,7 @@ export function DataTable<TData>({
               >
                 <div className="flex items-center">
                   <span className="truncate max-w-[150px]">
-                    {column.header}
+                    {t(column.header)}
                   </span>
                   {column.accessorKey &&
                     currentSortField === String(column.accessorKey) && (
@@ -98,7 +103,7 @@ export function DataTable<TData>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                {td("No Results")}
               </TableCell>
             </TableRow>
           )}

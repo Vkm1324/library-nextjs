@@ -31,9 +31,11 @@ export default async function BooksGrid({
         </h2>
 
         {books.length > 0 ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {books.map((book) => (
-              <BookCard key={book.id} book={book} uid={uid} />
+              <div key={book.id} className="flex justify-center">
+                <BookCard book={book} uid={uid} />
+              </div>
             ))}
           </div>
         ) : (

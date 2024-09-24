@@ -8,6 +8,7 @@ export const booksTable = mysqlTable("books", {
   publisher: varchar("publisher", { length: 255 }).notNull(),
   genre: varchar("genre", { length: 255 }).notNull(),
   isbnNo: int("isbNo").notNull().unique(),
+  price: int("price"),
   image: varchar("image",{length:255}),
   numofPages: int("numofPages").notNull(),
   totalNumberOfCopies: int("totalNumberOfCopies").notNull(),

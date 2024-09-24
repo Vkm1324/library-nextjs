@@ -1,21 +1,21 @@
 version: "3"
 # --------------------------------------Production----Docker-----------------------------------------------------
 
-# services:
-#     lms_pma:
-#         image: phpmyadmin/phpmyadmin
-#         container_name: lms_pma
-#         restart: unless-stopped
-#         environment:
-#             PMA_HOST: library-database.cn2k6gkoqxb1.ap-south-1.rds.amazonaws.com
-#             PMA_PORT: 3306
-#             PMA_USER: ScottLang
-#             PMA_PASSWORD: AntMan#321
-#             PMA_ABSOLUTE_URI: http://localhost:8081
-#         ports:
-#             - 8081:80
-# volumes:
-#     dbdata:
+services:
+    lms_pma:
+        image: phpmyadmin/phpmyadmin
+        container_name: lms_pma
+        restart: unless-stopped
+        environment:
+            PMA_HOST: library-database.cn2k6gkoqxb1.ap-south-1.rds.amazonaws.com
+            PMA_PORT: 3306
+            PMA_USER: ScottLang
+            PMA_PASSWORD: AntMan#321
+            PMA_ABSOLUTE_URI: http://localhost:8081
+        ports:
+            - 8081:80
+volumes:
+    dbdata:
 
 # --------------------------------------Development----Docker-----------------------------------------------------
 

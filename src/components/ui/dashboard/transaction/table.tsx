@@ -13,22 +13,22 @@ interface ITransactionTable extends ITransaction {
 const createTransactionColumns = (): GenericColumn<ITransactionTable>[] => [
   {
     accessorKey: "transactionId",
-    header: "Transaction ID",
+    header: "Transaction Id",
   },
+  // {
+  //   accessorKey: "bookId",
+  //   header: "Book Id",
+  // },
   {
-    accessorKey: "bookId",
-    header: "Book ID",
-  },
-  {
-    header: "Book Name",
-      render: (transaction: ITransactionTable) => {
+    header: "Book Title",
+    render: (transaction: ITransactionTable) => {
       return <span>{transaction.title}</span>;
     },
   },
-  {
-    accessorKey: "userId",
-    header: "User ID",
-  },
+  // {
+  //   accessorKey: "userId",
+  //   header: "User ID",
+  // },
   {
     header: "User Name",
     render: (transaction: ITransactionTable) => {
@@ -86,7 +86,7 @@ const createTransactionColumns = (): GenericColumn<ITransactionTable>[] => [
     },
   },
   {
-    header: "Action",
+    header: "Actions",
     render: (transaction: ITransaction) => {
       const { transactionType, transactionId } = transaction;
       return (

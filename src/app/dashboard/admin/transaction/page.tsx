@@ -8,6 +8,8 @@ import Pagination from "@/components/ui/landingPage/pagination";
 import TransactionTableSkeleton from "@/components/ui/skeletons/TransactionTable";
 import Search from "@/components/ui/landingPage/search";
 import { PageTemplate } from "@/components/ui/pageTemplate"; 
+import { dueList } from "@/lib/actions";
+
 
 export default async function TransactionPage({
   searchParams,

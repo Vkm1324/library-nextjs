@@ -20,6 +20,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { getRole } from "@/middleware";
+import { useTranslations } from "next-intl";
 
 // Map of links to display in the top navigation bar.
 
@@ -45,6 +46,7 @@ const adminLinks = [
 
 export default function UserNavLinks({ role }: { role: number }) {
   const pathname = usePathname(); 
+    const t = useTranslations("nav-links");
   const links = getRole(role) === "User" ? userLinks : adminLinks;
   return (
     <div className="flex flex-row justify-between gap-4">
@@ -62,7 +64,8 @@ export default function UserNavLinks({ role }: { role: number }) {
             )}
           >
             <LinkIcon className="w-6" />
-            <p className="hidden md:block">{link.name}</p>
+            {/* TODO make dynamic access the links of */}
+            <p className="hidden md:block">{t(`adminLinks.${link.name}`)}</p>
           </Link>
         );
       })}

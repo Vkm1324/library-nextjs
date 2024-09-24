@@ -4,3 +4,4 @@ export interface GenericColumn<TData> {
   // Optionally, a render function if a column needs custom rendering
   render?: (data: TData) => React.ReactNode;
 }
+

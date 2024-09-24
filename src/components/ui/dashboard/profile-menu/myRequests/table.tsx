@@ -5,12 +5,11 @@ import { DataTable } from "@/components/ui/table/data-table";
 import { IBookResquestTable } from "@/lib/book-requests/models/books-request.model";
 import { formatDateToLocal } from "@/lib/utils";
 import clsx from "clsx";
-
-
+import { TranslatedLabel } from "./lalbelWrapper";
 const bookRequestColumns: GenericColumn<IBookResquestTable>[] = [
   {
     accessorKey: "id",
-    header: "Request ID",
+    header: "Request Id",
   },
   {
     header: "Book",
@@ -20,7 +19,11 @@ const bookRequestColumns: GenericColumn<IBookResquestTable>[] = [
           "text-red-500": !request.title,
         })}
       >
-        {request.title ? request.title : "Deleted Book"}
+        {request.title ? (
+          request.title
+        ) : (
+          <TranslatedLabel nameSpace={"TableData"} value={"Deleted Book"} />
+        )}
       </span>
     ),
   },
@@ -34,6 +37,20 @@ const bookRequestColumns: GenericColumn<IBookResquestTable>[] = [
   {
     accessorKey: "status",
     header: "Status",
+    render: (request: IBookResquestTable) =>
+      request.status === "pending" ? (
+        <span className="text-yellow-500">
+          {<TranslatedLabel nameSpace={"TableData"} value={"Pending"} />}
+        </span>
+      ) : request.status === "rejected" ? (
+        <span className="text-red-500">
+          {<TranslatedLabel nameSpace={"TableData"} value={"Rejected"} />}
+        </span>
+      ) : (
+        <span className="text-green-500">
+          {<TranslatedLabel nameSpace={"TableData"} value={"Approved"} />}
+        </span>
+      ),
   },
 ];
 

@@ -33,7 +33,6 @@ export default async function UserPage({
       >
         <UsersTable adminUId={adminUId} data={totalUsers} />
       </PageTemplate>
-      ;
     </main>
   );
 }

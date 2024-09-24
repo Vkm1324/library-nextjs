@@ -16,6 +16,7 @@ import Link from "next/link";
 import SingleImageDropzoneUsage from "@/components/ui/uploadImage";
 import { IBook } from "@/lib/book-management/models/books.model";
 import React, { useActionState, useState } from "react";
+import { BookOpenCheck } from "lucide-react";
 
 
 export default function EditBookForm({ book }: { book: IBook }) {
@@ -42,6 +43,21 @@ export default function EditBookForm({ book }: { book: IBook }) {
               <div className="h-6">
                 {state.errors?.title && (
                   <p className="text-sm text-red-500">{state.errors.title}</p>
+                )}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="Price">Price</Label>
+              <Input
+                id="price"
+                name="price"
+                type="number"
+                defaultValue={book.price ? book.price : ""}
+                required
+              />
+              <div className="h-6">
+                {state.errors?.price && (
+                  <p className="text-sm text-red-500">{state.errors.price}</p>
                 )}
               </div>
             </div>
@@ -170,7 +186,7 @@ export default function EditBookForm({ book }: { book: IBook }) {
                 name="image"
                 type="text"
                 className="hidden"
-                defaultValue={imageUrl || ""} 
+                defaultValue={imageUrl || ""}
                 required
               />
             </div>

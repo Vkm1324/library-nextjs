@@ -7,8 +7,7 @@ import { update, UserRepository } from "./user-management/user.repository";
 import { BookRequestRepository } from "./book-requests/book-request.repository";
 import { IBookResquest } from "./book-requests/models/books-request.model";
 import { TransactionRepository } from "./transaction/transaction.repository";
-import { BookRepository } from "./book-management/books.repository";
-import { useEdgeStore } from "./edgestore";
+import { BookRepository } from "./book-management/books.repository"; 
 
 export async function reject(id: number) {
   try {
@@ -230,7 +229,16 @@ export async function updateTransaction(id: number) {
     return { message: "Database Error: Failed to Delete Invoice." };
   }
 }
-
+export async function dueList(issueddate: Date) {
+  try {
+    const user = new TransactionRepository();
+    const dueList= await user.getByIssuedDate(issueddate);
+    revalidatePath("/dashboard/admin/transaction");
+    return dueList;
+  } catch (error) {
+    return { message: "Database Error: Failed to Delete Invoice." };
+  }
+}
 // Zod validation schema for updating book details
 const BookUpdateSchema = z.object({
   title: z.string().min(1, { message: "Please enter a valid title." }),
@@ -246,6 +254,9 @@ const BookUpdateSchema = z.object({
   numofPages: z.coerce
     .number()
     .min(1, { message: "Enter a valid page count." }),
+  price: z.coerce
+    .number()
+    .min(1, { message: "Enter a valid Price." }),
   totalNumberOfCopies: z.coerce.number().min(1, {
     message: "Enter a valid total copy count.",
   }),
@@ -258,6 +269,7 @@ const BookUpdateSchema = z.object({
 export type BookState = {
   errors?: {
     title?: string[];
+    price?: string[];
     author?: string[];
     publisher?: string[];
     genre?: string[];
@@ -278,6 +290,7 @@ export async function updateBook(
 ) {
   const validatedFields = BookUpdateSchema.safeParse({
     title: formData.get("title"),
+    price: formData.get("price"),
     author: formData.get("author"),
     publisher: formData.get("publisher"),
     genre: formData.get("genre"),
@@ -305,10 +318,12 @@ export async function updateBook(
     totalNumberOfCopies,
     availableNumberOfCopies,
     image,
+    price,
   } = validatedFields.data;
 
   const updatedData = {
     title,
+    price,
     author,
     publisher,
     genre,

@@ -1,8 +1,151 @@
 {
   "LandingPage": {
-    "title": "ಲೈಬ್ರರಿಗೆ ಸುಸ್ವಾಗತ..."
+    "title": "ಗ್ರಂಥಾಲಯಕ್ಕೆ ಸ್ವಾಗತ...",
+    "header": {
+      "dropdownMenu": {
+        "catalog": "ಕ್ಯಾಟಲಾಗ್",
+        "items": {
+          "1": "ಪುಸ್ತಕಗಳು",
+          "2": "ಇ-ಪುಸ್ತಕಗಳು",
+          "3": "ಮಾಸಪತ್ರಿಕೆಗಳು",
+          "0": "ನಕ್ಷೆಗಳು"
+        }
+      },
+      "links": {
+        "events": "ಕಾರ್ಯಕ್ರಮಗಳು",
+        "about": "ಬಗ್ಗೆ",
+        "signIn": "ಸೈನ್ ಇನ್"
+      }
+    },
+    "mainSection": {
+      "features": {
+        "1": {
+          "title": "ವಿಶಾಲ ಸಂಗ್ರಹ",
+          "description": "ಸಾವಿರಾರು ಪುಸ್ತಕಗಳು, ಇ-ಪುಸ್ತಕಗಳು, ಆಡಿಯೋಬುಕ್ಸ್ ಮತ್ತು ಇನ್ನಷ್ಟು ಹೊಂದಿಕೊಳ್ಳಿ."
+        },
+        "2": {
+          "title": "ಕಾರ್ಯಕ್ರಮಗಳು ಮತ್ತು ಕಾರ್ಯಕ್ರಮಗಳು",
+          "description": "ನಮ್ಮ ಓದು ಕ್ಲಬ್ಬುಗಳು, ಕಾರ್ಯಾಗಾರಗಳು ಮತ್ತು ಶೈಕ್ಷಣಿಕ ಕಾರ್ಯಕ್ರಮಗಳಲ್ಲಿ ಸೇರಿಕೊಳ್ಳಿ."
+        },
+        "3": {
+          "title": "ಸಾಮೂಹಿಕ ಸ್ಥಳ",
+          "description": "ನಮ್ಮ ಮೌನ ಅಧ್ಯಯನ ಪ್ರದೇಶಗಳು ಮತ್ತು ಸಹಯೋಗದ ಸ್ಥಳಗಳನ್ನು ಅನುಭವಿಸಿ."
+        }
+      }
+    },
+    "footer": {
+      "copyright": "© 2023 ಗ್ರಂಥಾಲಯ. ಎಲ್ಲಾ ಹಕ್ಕುಗಳು ಕಾಯ್ದಿರಿಸಲಾಗಿವೆ.",
+      "links": {
+        "termsOfService": "ಸೇವಾ ನಿಯಮಗಳು",
+        "privacy": "ಗೌಪ್ಯತೆ"
+      }
+    }
   },
-    "LocaleSwitcher": {
+  "Sign-In": {
+    "title": "ಸೈನ್ ಇನ್ ಪುಟ",
+    "form": {
+      "localeSwitcher": {
+        "label": "ಭಾಷೆ",
+        "options": {
+          "en": "ಆಂಗ್ಲ",
+          "kn": "ಕನ್ನಡ"
+        }
+      },
+      "welcomeTitle": "ಸುಸ್ವಾಗತ",
+      "signInDescription": "ಸೈನ್ ಇನ್ ಮಾಡಿ",
+      "googleButton": {
+        "text": "ಗೂಗಲ್‌ನೊಂದಿಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ"
+      },
+      "orDivider": {
+        "text": "ಅಥವಾ"
+      },
+      "githubButton": {
+        "text": "GitHub ನೊಂದಿಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ"
+      }
+    }
+  },
+  "nav-links": {
+    "userLinks": {
+      "Home": "ಮುಖಪುಟ",
+      "Book Request": "ಪುಸ್ತಕ ವಿನಂತಿ"
+    },
+    "adminLinks": {
+      "Home": "ಮುಖಪುಟ",
+      "Book Request": "ಪುಸ್ತಕ ವಿನಂತಿ",
+      "Users Book Request": "ಬಳಕೆದಾರರ ಪುಸ್ತಕ ವಿನಂತಿ",
+      "Transactions": "ವಹಿವಾಟುಗಳು",
+      "Users": "ಬಳಕೆದಾರರು",
+      "Book": "ಪುಸ್ತಕ"
+    }
+  },
+  "profile-links": {
+    "Profile": "ಪ್ರೊಫೈಲ್",
+    "My Transaction": "ನನ್ನ ವ್ಯವಹಾರ",
+    "My Requests": "ನನ್ನ ವಿನಂತಿಗಳು",
+    "Sign Out": "ಹಾಗುಬಿಡಿ"
+  },
+  "Edit Profile": {
+    "title": "ಪ್ರೊಫೈಲ್ ಸಂಪಾದಿಸಿ",
+    "Name": "ಹೆಸರು",
+    "Email": "ಇಮೇಲ್",
+    "Date of Birth": "ಜನ್ಮ ದಿನಾಂಕ",
+    "Phone Number": "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ",
+    "Address": "ಊರ",
+    "Cancel": "ರದ್ದು ಮಾಡಿ",
+    "Update Profile": "ಪ್ರೊಫೈಲ್ ನವೀಕರಿಸಿ",
+    "errors": {
+      "name": "ಹೆಸರು ಅಗತ್ಯವಾಗಿದೆ.",
+      "email": "ಇಮೇಲ್ ಅಗತ್ಯವಾಗಿದೆ.",
+      "DOB": "ಜನ್ಮ ದಿನಾಂಕ ಅಗತ್ಯವಾಗಿದೆ.",
+      "phoneNum": "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಅಗತ್ಯವಾಗಿದೆ.",
+      "address": "ಊರ ಅಗತ್ಯವಾಗಿದೆ."
+    },
+    "success": {
+      "message": "ಪ್ರೊಫೈಲ್ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ."
+    }
+  },
+  "TableHeaders": {
+    "Request Date": "ವಿನಂತಿಯ ದಿನಾಂಕ",
+    "Request Id": "ವಿನಂತಿಯ ಐಡಿ",
+    "Book": "ಪುಸ್ತಕ",
+    "Status": "ಸ್ಥಿತಿ",
+    "Transaction Id": "ವಹಿವಾಟು ಐಡಿ",
+    "Book Id": "ಪುಸ್ತಕ ಐಡಿ",
+    "Book Title": "ಪುಸ್ತಕದ ಶೀರ್ಷಿಕೆ",
+    "Late Fees": "ವಿಲಂಬ ಶುಲ್ಕ",
+    "Issued Date": "ಮಾರ್ಪಣೆ ದಿನಾಂಕ",
+    "Due Date": "ತೇದಿಯ ದಿನಾಂಕ",
+    "Return Date": "ಹಿಂತಿರುಗಿಸುವ ದಿನಾಂಕ",
+    "User Id": "ಬಳಕೆದಾರ ಐಡಿ",
+    "User Name": "ಬಳಕೆದಾರ ಹೆಸರ",
+    "User Image": "ಬಳಕೆದಾರ ಇಮೇಜ್",
+    "Phone Number": "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ",
+    "Address": "ಊರ",
+    "Email": "ಇಮೇಲ್",
+    "Role": "ಭೂಮಿಕೆ",
+    "Actions": "ಕಾರ್ಯಗಳು",
+    "Avl Copies": "ಲಭ್ಯ ಪ್ರತಿಗಳು",
+    "Publisher": "ಪ್ರಕಾಶಕ",
+    "Author": "ಲೇಖಕ"
+  },
+  "TableData": {
+    "Pending": "ಬಾಕಿ",
+    "Overdue": "ಮೀರಿ ಹೋಯಿತು",
+    "Completed": "ಪೂರ್ಣಗೊಂಡಿದೆ",
+    "Approved": "ಮಂಜೂರಾಗಿದೆ",
+    "N/A": "ಲಭ್ಯವಿಲ್ಲ",
+    "Deleted Book": "ಅಳಿಸಿದ ಪುಸ್ತಕ",
+    "Deleted User": "ಅಳಿಸಿದ ಬಳಕೆದಾರ",
+    "No Results": "ಫಲಿತಾಂಶಗಳಿಲ್ಲ",
+    "Not Returned": "ಮತ್ತೆ ತಿರುಗಿಸಿಲ್ಲ",
+    "Edit": "ತಿದ್ದು",
+    "Book":"ಪುಸ್ತಕ",
+    "Are you sure": "ನೀವು ಖಚಿತವಾಗಿದ್ದೀರಾ",
+    "Cancel": "ರದ್ದುಮಾಡು",
+    "Proceed to Edit": "ತಿದ್ದು ಮಾಡಲು ಮುಂದುವರಿಸಿ"
+
+  },
+  "LocaleSwitcher": {
     "en": "English",
     "kn": "ಕನ್ನಡ",
     "label": "ಭಾಷೆ"

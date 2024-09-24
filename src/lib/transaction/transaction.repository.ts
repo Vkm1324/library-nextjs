@@ -11,7 +11,7 @@ import {
   usersTable,
 } from "../../drizzle/schema/schema";
 
-export class TransactionRepository { 
+export class TransactionRepository {
   private userRepo: UserRepository;
   private bookRepo: BookRepository;
 
@@ -111,6 +111,16 @@ export class TransactionRepository {
       .where(sql`${transactionsTable.userId}=${id}`);
     if (result && result.length > 0) {
       return result as unknown as ITransaction;
+    }
+    return null;
+  }
+  async getByIssuedDate(issueddate:Date): Promise<ITransaction[] | null> {
+    const result = await db
+      .select()
+      .from(transactionsTable)
+      .where(sql`${transactionsTable.issueddate}=${issueddate}`);
+    if (result && result.length > 0) {
+      return result as unknown as ITransaction[];
     }
     return null;
   }

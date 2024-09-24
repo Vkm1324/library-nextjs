@@ -16,6 +16,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { User, Mail, Calendar, Phone, MapPin } from "lucide-react"; 
 import Link from "next/link";
 import { IUser } from "@/lib/user-management/models/user.model";
+import { useTranslations } from "next-intl";
 
  
 
@@ -23,11 +24,11 @@ export default function EditProfileForm({ user }: { user: IUser }) {
   const initialState: State = { message: null, errors: {} };
   const updateProfileWithId = updateProfile.bind(null, user.id);
   const [state, formAction] = useActionState(updateProfileWithId, initialState);
-
+  const t = useTranslations("Edit Profile");
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle>Edit Profile</CardTitle>
+        <CardTitle>{t("title")}</CardTitle>
       </CardHeader>
       <form action={formAction}>
         <CardContent className="space-y-4">
@@ -35,7 +36,7 @@ export default function EditProfileForm({ user }: { user: IUser }) {
             <div className="space-y-2">
               <Label htmlFor="name" className="flex items-center gap-2">
                 <User className="h-4 w-4" />
-                Name
+                {t("Name")}
               </Label>
               <Input id="name" name="name" defaultValue={user.name} required />
               <div className="h-6">
@@ -47,7 +48,7 @@ export default function EditProfileForm({ user }: { user: IUser }) {
             <div className="space-y-2">
               <Label htmlFor="email" className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                Email
+                {t("Email")}
               </Label>
               <Input
                 id="email"
@@ -65,7 +66,7 @@ export default function EditProfileForm({ user }: { user: IUser }) {
             <div className="space-y-2">
               <Label htmlFor="DOB" className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
-                Date of Birth
+                {t("Date of Birth")}
               </Label>
               <Input
                 id="DOB"
@@ -83,7 +84,7 @@ export default function EditProfileForm({ user }: { user: IUser }) {
             <div className="space-y-2">
               <Label htmlFor="phoneNum" className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
-                Phone Number
+                {t("Phone Number")}
               </Label>
               <Input
                 id="phoneNum"
@@ -104,7 +105,7 @@ export default function EditProfileForm({ user }: { user: IUser }) {
           <div className="space-y-2">
             <Label htmlFor="address" className="flex items-center gap-2">
               <MapPin className="h-4 w-4" />
-              Address
+              {t("Address")}
             </Label>
             <Input
               id="address"
@@ -131,9 +132,9 @@ export default function EditProfileForm({ user }: { user: IUser }) {
             href="/dashboard"
             className="mt-4 rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-400"
           >
-           Cancel
+            {t("Cancel")}
           </Link>
-          <Button type="submit">Update Profile</Button>
+          <Button type="submit">{t("Update Profile")}</Button>
         </CardFooter>
       </form>
     </Card>
