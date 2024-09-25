@@ -73,13 +73,16 @@
       "Users Book Request": "Users Book Request",
       "Transactions": "Transactions",
       "Users": "Users",
-      "Book": "Book"
+      "Book": "Book",
+      "Meetings":"Meetings",
+      "Professors":"Professors"
     }
   },
   "profile-links": {
     "Profile": "Profile",
     "My Transaction": "My Transaction",
     "My Requests": "My Requests",
+    "My Meetings":"My Meetings",
     "Sign Out": "Sign Out"
   },
   "Edit Profile": {
@@ -96,7 +99,17 @@
       "email": "Email is required.",
       "DOB": "Date of Birth is required.",
       "phoneNum": "Phone Number is required.",
-      "address": "Address is required."
+      "address": "Address is required.",
+      "Department":"Department",
+      "Bio":"Bio",
+      "Engineering":"Engineering",
+      "Marketing":"Marketing",
+      "Sales":"Sales",
+      "Human Resources":"Human Resources",
+      "Finance":"Finance",
+      "Tell us about yourself":"Tell us about yourself"
+
+
     },
     "success": {
       "message": "Profile updated successfully."
@@ -124,7 +137,9 @@
     "Avl Copies": "Avl Copies",
     "Publisher": "Publisher",
     "Author": "Author",
-    "Role": "Role"
+    "Role": "Role",
+    "Bio": "Bio",
+    "Sl No":"Sl No"
   },
   "TableData": {
     "Pending": "Pending",

@@ -1,5 +1,4 @@
- import { date, datetime, int, mysqlTable, serial,mysqlEnum, uniqueIndex, varchar, bigint, timestamp } from "drizzle-orm/mysql-core";
-import { sql } from "drizzle-orm/sql/sql";
+ import { date, datetime, int, mysqlTable, serial,mysqlEnum,  varchar, bigint, } from "drizzle-orm/mysql-core";
  
 export const booksTable = mysqlTable("books", {
   id: serial("id").primaryKey(),
@@ -45,17 +44,6 @@ export const transactionsTable = mysqlTable("transactions", {
   lateFees: int("lateFees"),
 });
 
-export const logTable = mysqlTable("Log", {
-  id: serial("id").primaryKey(), // Add a primary key field for uniqueness
-  userId: int("userId").notNull(), // Reference to user ID
-  refreshToken: varchar("refreshToken", { length: 255 }).notNull(), // Refresh token field
-  time: timestamp("time")
-  .default(sql`CURRENT_TIMESTAMP`)
-  .notNull(), // Current timestamp
-});
-
-
-
 export const bookRequestStatusType = mysqlEnum("status", [
   "pending",
   "approved",
@@ -69,3 +57,18 @@ export const bookRequestTable = mysqlTable("BookRequest", {
   requestDate: datetime("requestDate").notNull(),
   status: bookRequestStatusType.notNull(), // "pending", "approved", or "rejected"
 });
+
+export const professorTable = mysqlTable("Professor", {
+  pfid: serial("pfid").primaryKey(), // Primary Key
+  userId: int("userId")
+    .notNull()
+    .references(() => usersTable.id), // Foreign Key to Users table
+  bio: varchar("bio" ,{ length: 255 }), // Bio of the professor
+  link: varchar("link", { length: 255 }), // Link (e.g., personal website or profile link)
+  deptId: int("deptId") // Department ID (can also be a foreign key if needed)
+});
+
+export const departmentTable = mysqlTable("department", {
+  deptId: serial("deptId").primaryKey(), // Primary Key
+  deptName: varchar("deptName", { length: 255 }),
+  });

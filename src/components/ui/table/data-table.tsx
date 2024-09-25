@@ -49,7 +49,7 @@ export function DataTable<TData>({
 
  
   return (
-    <div className="hidden md:block rounded-md border">
+    <div className="min-w-full hidden md:block rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>

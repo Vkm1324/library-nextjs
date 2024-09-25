@@ -65,10 +65,15 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
    */
   // destructure and  then insert 
   async create(data: IUserBase): Promise<IUser> {
+    // authority of user 
+    const organisationUser = (data.email).endsWith(
+      "codecraft.co.in"
+    );
+    console.log("organisation User :", organisationUser);
     const user: IUser = {
       ...data,
       id: 0,
-      role: Roles.User,
+      role: organisationUser ? Roles.Professor :Roles.User,
       DOB: null,
       phoneNum: null,
       address: null,
@@ -264,8 +269,8 @@ export const getRoleName = (role: number) => {
   switch (role) {
     case Roles.Admin:
       return "Admin";
-    case Roles.Editor:
-      return "Editor";
+    case Roles.Professor:
+      return "Professor";
     case Roles.User:
       return "User";
     default:

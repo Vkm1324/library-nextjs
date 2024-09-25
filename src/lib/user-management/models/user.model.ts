@@ -14,7 +14,7 @@ export interface IUserProfile extends IUserBase{
 
 export enum Roles {
   Admin = 5050,
-  Editor = 4040,
+  Professor = 4040,
   User = 2020,
 } 
 

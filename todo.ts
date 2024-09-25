@@ -10,8 +10,9 @@
 // ! update the request status from pending to rejected when the requested book deleted by admin call reject(bookid)
 // !  duplicated data catch the error  when user email and book isbn  (addded by admin)
 // ! cards should be made compaitable with mobile design too   
+// ! go back should be landing page url 
 // TODO edit-form of books to be fixed! in update book , image should also  update
-
+// TODO conveert myTransactions into myTransaction 
 //  revalidate the paths to the original paths after they move too and fro in profile
 //  add search for mytransaction and myrequests
 //  make search consistent by comparing both the entities in smaller case

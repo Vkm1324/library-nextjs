@@ -10,10 +10,10 @@ import clsx from "clsx";
 
    
 const bookRequestsColumns: GenericColumn<IBookResquestTable>[] = [
-  {
-    accessorKey: "id",
-    header: "Request ID",
-  },
+  // {
+  //   accessorKey: "id",
+  //   header: "Request ID",
+  // },
   {
     accessorKey: "bookId",
     header: "Book Id",
@@ -22,10 +22,10 @@ const bookRequestsColumns: GenericColumn<IBookResquestTable>[] = [
     accessorKey: "title",
     header: "Book Title",
   },
-  {
-    accessorKey: "userId",
-    header: "User ID",
-  },
+  // {
+  //   accessorKey: "userId",
+  //   header: "User ID",
+  // },
   {
     accessorKey: "userName",
     header: "User Name",
@@ -80,9 +80,9 @@ export default function BookRequestTable({ data }: { data: IBookResquestTable[] 
   }));
 
   return (
-    <div className="mt-6 flow-root">
+    <div className="mt-6 min-w-full flow-root">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
+        <div className="rounded-lg min-w-full bg-gray-50 p-2 md:pt-0">
           {/* Mobile view */}
           <div className="md:hidden">
             {formattedData?.map((request) => (

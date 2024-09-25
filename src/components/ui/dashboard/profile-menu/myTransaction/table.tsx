@@ -108,9 +108,9 @@ export default function MyTransactionTable({ data }: MyTransactionTableProps) {
   })) : null;
 
   return (
-    <div className="mt-6 flow-root ">
+    <div className="mt-6 flow-root min-w-full">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
+        <div className="rounded-lg min-w-full bg-gray-50 p-2 md:pt-0">
           {/* Mobile view */}
           <div className="md:hidden max-w-[375px]">
             {formattedData?.map((transaction) => (

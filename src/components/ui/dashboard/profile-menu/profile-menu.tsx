@@ -6,6 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  AlarmClock,
   Bell,
   HelpCircle,
   LogOutIcon,
@@ -33,6 +34,11 @@ const profileLinks = [
     name: "My Requests",
     href: "/dashboard/myRequests",
     icon: MessageCircleMore,
+  },
+  {
+    name: "My Meetings",
+    href: "/dashboard/myMeeting",
+    icon: AlarmClock,
   },
   {
     name: "Sign Out",

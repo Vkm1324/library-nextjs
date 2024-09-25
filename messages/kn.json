@@ -75,13 +75,16 @@
       "Users Book Request": "ಬಳಕೆದಾರರ ಪುಸ್ತಕ ವಿನಂತಿ",
       "Transactions": "ವಹಿವಾಟುಗಳು",
       "Users": "ಬಳಕೆದಾರರು",
-      "Book": "ಪುಸ್ತಕ"
+      "Book": "ಪುಸ್ತಕ",
+      "Meetings": "ಸಭೆಗಳು",
+      "Professors": "ಪ್ರಾಧ್ಯಾಪಕರು"
     }
   },
   "profile-links": {
     "Profile": "ಪ್ರೊಫೈಲ್",
     "My Transaction": "ನನ್ನ ವ್ಯವಹಾರ",
     "My Requests": "ನನ್ನ ವಿನಂತಿಗಳು",
+     "My Meetings": "ನನ್ನ ಸಭೆಗಳು",
     "Sign Out": "ಹಾಗುಬಿಡಿ"
   },
   "Edit Profile": {
@@ -126,7 +129,9 @@
     "Actions": "ಕಾರ್ಯಗಳು",
     "Avl Copies": "ಲಭ್ಯ ಪ್ರತಿಗಳು",
     "Publisher": "ಪ್ರಕಾಶಕ",
-    "Author": "ಲೇಖಕ"
+    "Author": "ಲೇಖಕ",
+    "Bio": "ಜೀವನಚರಿತ್ರೆ",
+    "Sl No": "ಅ.ಸಂ"
   },
   "TableData": {
     "Pending": "ಬಾಕಿ",

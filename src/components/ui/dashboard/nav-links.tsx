@@ -14,6 +14,8 @@
   Users,
   BookPlus,
   NotebookPen,
+  MessageSquareTextIcon,
+  School,
 } from "lucide-react";
 
 import Link from "next/link";
@@ -27,6 +29,12 @@ import { useTranslations } from "next-intl";
 const userLinks = [
   { name: "Home", href: "/dashboard", icon: HomeIcon },
   { name: "Book Request", href: "/dashboard/requestBook", icon: BookPlus },
+  { name: "Professors", href: "/dashboard/professors", icon: School  },
+];
+const professorLinks = [
+  ...userLinks,
+  { name: "Meetings", href: "/dashboard/professor/meetings", icon: MessageSquareTextIcon },
+  // { name: "Book Request", href: "/dashboard/requestBook", icon: BookPlus },
 ];
 const adminLinks = [
   ...userLinks,
@@ -47,7 +55,7 @@ const adminLinks = [
 export default function UserNavLinks({ role }: { role: number }) {
   const pathname = usePathname(); 
     const t = useTranslations("nav-links");
-  const links = getRole(role) === "User" ? userLinks : adminLinks;
+  const links = getRole(role) === "User" ? userLinks : getRole(role) === "Professor" ? professorLinks :adminLinks;
   return (
     <div className="flex flex-row justify-between gap-4">
       {links.map((link) => {

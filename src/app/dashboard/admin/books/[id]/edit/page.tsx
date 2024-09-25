@@ -9,7 +9,6 @@ export default async function Page({ params }: { params: { id: string } }) {
       if (!bookData) {
         notFound();
       }
-  console.log(bookData);
   return (
     <main>
       <Form book={bookData}  />

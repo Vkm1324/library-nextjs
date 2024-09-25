@@ -3,8 +3,7 @@
 import { UpdateBook, DeleteBook } from "./buttons";
 import { GenericColumn } from "../../table/columns";
 import { DataTable } from "@/components/ui/table/data-table";
-import { IBook } from "@/lib/book-management/models/books.model";
-import { bookRequestStatusType } from "@/drizzle/schema/schema";
+import { IBook } from "@/lib/book-management/models/books.model"; 
 
 // Define columns for DataTable
 const createBooksColumns = (
@@ -57,7 +56,7 @@ export default function UsersTable({
   const formattedData = data;
 
   return (
-    <div className="mt-6 flow-root">
+    <div className="mt-6 w-full  max-w-full flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           {/* Mobile view */}

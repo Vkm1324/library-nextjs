@@ -4,6 +4,9 @@ import NextAuth, { DefaultSession } from "next-auth";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/db/db";
 import authConfig from "./auth.config";
+import { getRole } from "@/middleware";
+import { ProfessorRepository } from "@/lib/professors/professors.repsitory";
+import { IProfessorBase } from "@/lib/professors/models/model";
 
 async function getUser(user: IUser): Promise<{ id: number; role: number }> {
   try {
@@ -13,7 +16,12 @@ async function getUser(user: IUser): Promise<{ id: number; role: number }> {
       return { id: result.id, role: result.role };
     } else {
       // const userDetails = {user.email, user.image, user.name};
-      const newUser = await userRepo.create(user);
+      let newUser = await userRepo.create(user);
+      const newProfessor ={
+        userId:newUser.id
+      }
+      const profRepo = new ProfessorRepository();
+      profRepo.create(newProfessor);
       return { id: newUser.id, role: newUser.role };
     }
   } catch (error) {

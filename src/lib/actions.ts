@@ -8,6 +8,8 @@ import { BookRequestRepository } from "./book-requests/book-request.repository";
 import { IBookResquest } from "./book-requests/models/books-request.model";
 import { TransactionRepository } from "./transaction/transaction.repository";
 import { BookRepository } from "./book-management/books.repository"; 
+import { ProfessorRepository } from "./professors/professors.repsitory";
+import { getRole } from "@/middleware";
 
 export async function reject(id: number) {
   try {
@@ -135,10 +137,12 @@ export async function updateProfile(
 
 export async function deleteUser(id: number) {
   try {
+    const prof = new ProfessorRepository();
+    prof.delete(id);
     const user = new UserRepository();
-    await user.delete(+id);
+    const userData=await user.delete(id);
     revalidatePath("/dashboard/users");
-    return { message: "Deleted user ." };
+    return { message: `Deleted ${userData?.name} who was a ${getRole(userData?.role)} `  };
   } catch (error) {
     return { message: "Database Error: Failed to Delete Invoice." };
   }
@@ -356,5 +360,137 @@ export async function deleteBook(id: number) {
     return { message: `Deleted book .${book?.title}` };
   } catch (error) {
     return { message: "Database Error: Failed to Delete book." };
+  }
+}
+// Zod validation schema for professor profile update (omit image)
+const ProfessorProfileUpdateSchema = z.object({
+  name: z.string({
+    invalid_type_error: "Please enter a valid name.",
+  }),
+  email: z.string().email("Please enter a valid email address."),
+  DOB: z.coerce.date({
+    invalid_type_error: "Please enter a valid date of birth.",
+  }),
+  phoneNum: z.coerce.number().int().min(1000000000, {
+    message: "Please enter a valid 10-digit phone number.",
+  }),
+  address: z.string({
+    invalid_type_error: "Please enter a valid address.",
+  }),
+  bio: z.string().min(1, "Please enter a bio."), // Bio validation
+  link: z.string().url("Please enter a valid URL."), // Link validation
+  deptId: z.coerce
+    .number()
+    .int({ message: "Please enter a valid department number." }), // Department validation
+});
+
+// Updated State type with new fields
+export type ProfessorState = {
+  errors?: {
+    name?: string[];
+    email?: string[];
+    DOB?: string[];
+    phoneNum?: string[];
+    address?: string[];
+    bio?: string[];
+    link?: string[];
+    deptId?: string[];
+  };
+  message?: string | null;
+};
+
+// Function to update the professor profile
+export async function updateProfessorProfile(
+  id: number,
+  prevState: ProfessorState,
+  formData: FormData
+) {
+  const validatedFields = ProfessorProfileUpdateSchema.safeParse({
+    name: formData.get("name"),
+    email: formData.get("email"),
+    DOB: formData.get("DOB"),
+    phoneNum: formData.get("phoneNum"),
+    address: formData.get("address"),
+    bio: formData.get("bio"),
+    link: formData.get("link"),
+    deptId: formData.get("department"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing or invalid fields. Failed to update profile.",
+    };
+  }
+
+  const { name, email, DOB, phoneNum, address, bio, link, deptId } =
+    validatedFields.data;
+
+  const updatedData = {
+    
+    name,
+    email,
+    DOB,
+    phoneNum,
+    address,
+    bio,
+    link,
+    deptId,
+  };
+
+  try {
+    const professorRepo = new ProfessorRepository();
+    const userRepo = new UserRepository();
+    await userRepo.update(id, updatedData);
+    await professorRepo.update(id, updatedData);
+  } catch (error) {
+    console.log("Database error: Failed to update profile.");
+    return { message: "Error: Failed to update profile." };
+  }
+
+  revalidatePath("/dashboard/profile");
+  redirect("/dashboard/admin/professors");
+}
+
+export async function getScheduledEvents(invitee_email: string) { 
+  try {
+    const userResponse = await fetch("https://api.calendly.com/users/me", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_CALENDLY_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!userResponse.ok) {
+      throw new Error(`Error fetching user info: ${userResponse.statusText}`);
+    }
+
+    const userData = await userResponse.json();
+    const organizationUri = userData.resource.current_organization;
+
+    const eventsResponse = await fetch(
+      `https://api.calendly.com/scheduled_events?organization=${organizationUri}&invitee_email=${invitee_email}&status=active`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_CALENDLY_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!eventsResponse.ok) {
+      console.error("Error response:", await eventsResponse.text());
+      throw new Error(
+        `Error fetching scheduled events: ${eventsResponse.statusText}`
+      );
+    }
+
+    const eventsData = await eventsResponse.json(); 
+    return eventsData.collection;
+  } catch (error) {
+    console.error("Error fetching scheduled events", error);
+    throw error;
   }
 }

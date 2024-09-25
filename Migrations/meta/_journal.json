@@ -22,6 +22,20 @@
       "when": 1727096019950,
       "tag": "0002_majestic_jigsaw",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1727170263417,
+      "tag": "0003_zippy_spirit",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1727170361166,
+      "tag": "0004_amazing_whiplash",
+      "breakpoints": true
     }
   ]
 }

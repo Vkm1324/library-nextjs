@@ -15,8 +15,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import Link from "next/link";
 import SingleImageDropzoneUsage from "@/components/ui/uploadImage";
 import { IBook } from "@/lib/book-management/models/books.model";
-import React, { useActionState, useState } from "react";
-import { BookOpenCheck } from "lucide-react";
+import React, { useActionState, useState } from "react"; 
 
 
 export default function EditBookForm({ book }: { book: IBook }) {
