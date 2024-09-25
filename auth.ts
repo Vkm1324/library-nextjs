@@ -20,8 +20,10 @@ async function getUser(user: IUser): Promise<{ id: number; role: number }> {
       const newProfessor ={
         userId:newUser.id
       }
-      const profRepo = new ProfessorRepository();
-      profRepo.create(newProfessor);
+      if (getRole(newUser.role) === "Professor") {
+              const profRepo = new ProfessorRepository();
+              profRepo.create(newProfessor);
+      }
       return { id: newUser.id, role: newUser.role };
     }
   } catch (error) {
