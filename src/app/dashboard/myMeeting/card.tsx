@@ -86,7 +86,7 @@ export default function EventCard({
             target="_blank"
             rel="noopener noreferrer"
           >
-            View Event Type
+            Event Link
           </a>
         </div>
 
