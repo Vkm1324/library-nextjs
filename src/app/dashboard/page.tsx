@@ -2,20 +2,41 @@
 import MetaData from "@/components/ui/dashboard/admin/meta-data-card";
 import { auth } from "../../../auth" 
 import { getRole } from "@/middleware";
+import {  metaDataOfTransactions } from "@/lib/transaction/transaction.repository";
 
-export default  async function Dashboard() {
+export default async function Dashboard() {
+  const totalTransaction = await metaDataOfTransactions();
+const pending = (totalTransaction.totalTransactions - (totalTransaction.overdueTransactions + totalTransaction.todaysDueTransactions + totalTransaction.completedTransactions))
   const session = await auth();
   return (
     <main className="p-4">
       <h1 className="text-2xl font-bold mb-4">Welcome {session?.user.name!}</h1>
-      <h1 className="text-2xl font-bold mb-4">Logged In as {getRole(session?.user.role)}</h1>
-      {/* <MetaData data={ [
-      { status: "Due", value: 30, color: "#FFD700" },
-      { status: "Overdue", value: 15, color: "#FF0000" },
-      { status: "Completed", value: 45, color: "#008000" },
-      { status: "Pending", value: 10, color: "#FFFFFF" },
-    ]
-  }></MetaData> */}
+      <h1 className="text-2xl font-bold mb-4">
+        Logged In as {getRole(session?.user.role)}
+      </h1>
+      <MetaData
+        data={[
+          {
+            status: "Due",
+            value: totalTransaction.todaysDueTransactions,
+            color: "#FFD700",
+          },
+          {
+            status: "Overdue",
+            value: totalTransaction.overdueTransactions,
+            color: "#FF0000",
+          },
+          {
+            status: "Completed",
+            value: totalTransaction.completedTransactions,
+            color: "#008000",
+          },
+          {
+            status: "pending", value: pending
+            , color: "#FFFFFF"
+          },
+        ]}
+      ></MetaData>
     </main>
   );
 }

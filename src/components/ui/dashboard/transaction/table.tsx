@@ -66,23 +66,16 @@ const createTransactionColumns = (): GenericColumn<ITransactionTable>[] => [
   },
   {
     header: "Status",
+    accessorKey:"status",
     render: (transaction: ITransaction) => {
-      const { transactionType, returnDate, dueDate } = transaction;
-      const status =
-        transactionType === "borrow"
-          ? "Pending"
-          : returnDate && returnDate > dueDate
-          ? "Overdue"
-          : "Completed";
-
       const statusClass =
-        transactionType === "borrow"
-          ? "text-yellow-800"
-          : returnDate && returnDate > dueDate
+        transaction.status === "overdue"
           ? "text-red-800"
-          : "text-green-800";
+          : transaction.status === "completed"
+          ? "text-green-800"
+          : "text-yellow-800";
 
-      return <span className={statusClass}>{status}</span>;
+      return <span className={statusClass}>{transaction.status}</span>;
     },
   },
   {

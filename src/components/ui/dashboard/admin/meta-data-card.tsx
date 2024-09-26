@@ -11,6 +11,7 @@ import {
   Tooltip,
 } from "recharts";
 
+
 interface TransactionData {
   status: string;
   value: number;
@@ -35,7 +36,7 @@ export default function MetaData({ data }: TransactionMetadataCardProps) {
     0
   );
 
-  console.log("Chart Data:", chartData); // For debugging
+  // console.log("Chart Data:", chartData); 
 
   return (
     <Card className="w-full max-w-md">
@@ -86,3 +87,5 @@ export default function MetaData({ data }: TransactionMetadataCardProps) {
     </Card>
   );
 }
+
+

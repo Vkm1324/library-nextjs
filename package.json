@@ -41,9 +41,16 @@
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.0.3",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "react-is": "^19.0.0-rc-fb9a90fa48-20240614"
+  },
+    "pnpm": {
+    "overrides": {
+      "react-is": "$react-is"
+    }
   },
   "devDependencies": {
+    "@types/d3": "^7.4.3",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
