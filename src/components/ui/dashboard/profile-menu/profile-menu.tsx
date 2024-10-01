@@ -7,8 +7,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   AlarmClock,
+  BadgeIndianRupee,
   Bell,
-  HelpCircle,
   LogOutIcon,
   MessageCircleMore,
   UserRoundPenIcon,
@@ -17,12 +17,27 @@ import { auth } from "../../../../../auth";
 import Image from "next/image";
 import Logout from ".././profile/logout";
 import Link from "next/link";  
-import { getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server"; 
+import BuyProduct from "@/components/razorpay/BuyProduct";
+import { getRole } from "@/middleware";
+import { UserRepository } from "@/lib/user-management/user.repository";
 
+
+
+export default async function ProfileMenu() { 
+  const session = await auth();
+  const userImage = session?.user?.image;
+  const uId = session?.user?.uId;
+  const roleId = session?.user?.role;
+  const role = getRole(roleId);
+  const user = new UserRepository();
+  const userDetails = await user.getById(uId!);
+  const t = await getTranslations("profile-links"); 
 const profileLinks = [
   {
     name: "Profile",
     href: "/dashboard/profile",
+    optionalData: getRole(userDetails?.role),
     icon: UserRoundPenIcon,
   },
   {
@@ -41,17 +56,17 @@ const profileLinks = [
     icon: AlarmClock,
   },
   {
+    name: "Buy Credits",
+    optionalData: userDetails?.credits,
+    href: "/dashboard/credits",
+    icon: BadgeIndianRupee,
+  },
+  {
     name: "Sign Out",
     href: "dashboard/logout",
     icon: LogOutIcon,
   },
 ];
-
-export default async function ProfileMenu() {
-  // const pathname = usePathname();
-  const session = await auth();
-  const userImage = session?.user?.image;
-  const t = await getTranslations("profile-links");
 
   return (
     <DropdownMenu>
@@ -72,13 +87,15 @@ export default async function ProfileMenu() {
           <DropdownMenuItem key={index} asChild>
             {link.name === "Sign Out" ? (
               <Logout />
+            ) : link.name === "Buy Credits" ? (
+              <BuyProduct userUid={uId!}></BuyProduct>
             ) : (
-              <Link
-                key={link.name}
-                href={link.href}
-              >
+              <Link key={link.name} href={link.href}>
                 <link.icon className="mr-2 h-4 w-4" />
-                {`${t(link.name)}`}
+                {t(link.name)}
+                {link.optionalData && (
+                  <span className="text-sm ml-2 text-green-300">{link.optionalData}</span>
+                )}
               </Link>
             )}
           </DropdownMenuItem>

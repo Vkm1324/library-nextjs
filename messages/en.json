@@ -1,5 +1,6 @@
 {
   "LandingPage": {
+    "message": "{name}",
     "title": "Welcome to Library...",
     "header": {
       "dropdownMenu": {
@@ -83,6 +84,9 @@
     "My Transaction": "My Transaction",
     "My Requests": "My Requests",
     "My Meetings":"My Meetings",
+    "Professor": "Professor",
+    "Admin": "Admin",
+    "User ": "User",
     "Sign Out": "Sign Out"
   },
   "Edit Profile": {

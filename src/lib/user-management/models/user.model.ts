@@ -21,6 +21,7 @@ export enum Roles {
 export interface IUser extends IUserProfile {
   id: number;
   role: Roles;
+  credits:number;
 }
 
 export interface IUserDisplay extends Omit<IUser, "role"> {

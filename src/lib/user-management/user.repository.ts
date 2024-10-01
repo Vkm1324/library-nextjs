@@ -63,20 +63,19 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
    * @param {IUserBase} data - The user data.
    * @returns {Promise<IUser>} The created user.
    */
-  // destructure and  then insert 
+  // destructure and  then insert
   async create(data: IUserBase): Promise<IUser> {
-    // authority of user 
-    const organisationUser = (data.email).endsWith(
-      "codecraft.co.in"
-    );
+    // authority of user
+    const organisationUser = data.email.endsWith("codecraft.co.in");
     console.log("organisation User :", organisationUser);
     const user: IUser = {
       ...data,
       id: 0,
-      role: organisationUser ? Roles.Professor :Roles.User,
+      role: organisationUser ? Roles.Professor : Roles.User,
       DOB: null,
       phoneNum: null,
       address: null,
+      credits: 0,
     };
     const [result] = await db.insert(usersTable).values(user).$returningId();
     console.log(`User with UserId:${result.id} has been added successfully `);
@@ -116,20 +115,19 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
     return result as unknown as IUser[];
   }
 
-
-async  getUsername(ids: number[]): Promise<Array<IUser> | null> {
-  const result = await db
-    .select({
-      id: usersTable.id,
-      name: usersTable.name,
-    })
-    .from(usersTable)
-    .where(inArray(usersTable.id, ids));
-  if (result.length > 0) {
-    return result as IUser[];
+  async getUsername(ids: number[]): Promise<Array<IUser> | null> {
+    const result = await db
+      .select({
+        id: usersTable.id,
+        name: usersTable.name,
+      })
+      .from(usersTable)
+      .where(inArray(usersTable.id, ids));
+    if (result.length > 0) {
+      return result as IUser[];
+    }
+    return null;
   }
-  return null;
-}
 
   async getByPhoneNumber(phoneNumber: string) {
     const result = await db
@@ -169,6 +167,17 @@ async  getUsername(ids: number[]): Promise<Array<IUser> | null> {
     const book = await this.getById(id);
     if (book) {
       await db.delete(usersTable).where(sql`${usersTable.id}=${id}`);
+      return book;
+    }
+    return null;
+  }
+  async updateCredit(id: number, creditValue:number): Promise<IUser | null> {
+    const book = await this.getById(id);
+    if (book) {
+      await db
+        .update(usersTable)
+        .set({ credits: creditValue })
+        .where(sql`${usersTable.id}=${id}`);
       return book;
     }
     return null;
