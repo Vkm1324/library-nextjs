@@ -18,8 +18,9 @@ const createMeetingsColumns = (): GenericColumn<IProfessor>[] => [
     header: "User Name",
   },
   {
-    accessorKey: "bio",
+    // accessorKey: "bio",
     header: "Bio",
+    render:(person: IProfessor)=> (<span>{ person.bio ? person.bio : "" }</span>),
   },
   {
     header: "Actions",

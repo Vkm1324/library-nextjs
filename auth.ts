@@ -6,7 +6,6 @@ import { db } from "@/db/db";
 import authConfig from "./auth.config";
 import { getRole } from "@/middleware";
 import { ProfessorRepository } from "@/lib/professors/professors.repsitory";
-import { IProfessorBase } from "@/lib/professors/models/model";
 
 async function getUser(user: IUser): Promise<{ id: number; role: number }> {
   try {
@@ -17,12 +16,12 @@ async function getUser(user: IUser): Promise<{ id: number; role: number }> {
     } else {
       // const userDetails = {user.email, user.image, user.name};
       let newUser = await userRepo.create(user);
-      const newProfessor ={
-        userId:newUser.id
-      }
       if (getRole(newUser.role) === "Professor") {
-              const profRepo = new ProfessorRepository();
-              profRepo.create(newProfessor);
+        const newProfessor = {
+          userId: newUser.id,
+        };
+        const profRepo = new ProfessorRepository();
+        profRepo.create(newProfessor);
       }
       return { id: newUser.id, role: newUser.role };
     }
@@ -80,7 +79,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       if (request.method === "POST") {
         const { authToken } = (await request.json()) ?? {};
- 
+
         const body = request.json();
       }
       // Logged in users are authenticated, otherwise redirect to login page

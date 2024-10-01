@@ -1,5 +1,6 @@
 {
   "LandingPage": {
+    "message": "{name}",
     "title": "ಗ್ರಂಥಾಲಯಕ್ಕೆ ಸ್ವಾಗತ...",
     "header": {
       "dropdownMenu": {
@@ -84,8 +85,11 @@
     "Profile": "ಪ್ರೊಫೈಲ್",
     "My Transaction": "ನನ್ನ ವ್ಯವಹಾರ",
     "My Requests": "ನನ್ನ ವಿನಂತಿಗಳು",
-     "My Meetings": "ನನ್ನ ಸಭೆಗಳು",
-    "Sign Out": "ಹಾಗುಬಿಡಿ"
+    "My Meetings": "ನನ್ನ ಸಭೆಗಳು",
+    "Sign Out": "ಹಾಗುಬಿಡಿ",
+    "Professor": "ಪ್ರಾಧ್ಯಾಪಕ",
+    "Admin": "ನಿರ್ವಾಹಕ",
+    "User ": "ಬಳಕೆದಾರ"
   },
   "Edit Profile": {
     "title": "ಪ್ರೊಫೈಲ್ ಸಂಪಾದಿಸಿ",

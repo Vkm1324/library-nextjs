@@ -1,5 +1,5 @@
 import { getScheduledEvents } from "@/lib/actions";
-import { auth } from "../../../../auth"; 
+import { auth } from "../../../../auth";
 import { CalendarX } from "lucide-react";
 import EventCard from "./card";
 
@@ -15,7 +15,7 @@ export default async function MyMeetingsPage() {
           No meetings scheduled
         </h1>
         <p className="text-gray-500">
-          You dont have any upcoming meetings at the moment.
+          You don`t have any upcoming meetings at the moment.
         </p>
       </div>
     );
@@ -27,31 +27,27 @@ export default async function MyMeetingsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {myevents.map(
           (event: {
-            uri: any;
-            name: any;
-            start_time: any;
-            end_time: any;
-            event_type: any;
-            status: any;
-            calendar_event: { kind: any };
-            updated_at: any;
-            created_at: any;
-            location: {
-                join_url: string;
-                type: any 
-};
+            event: string;
+            status: string;
+            start_time: string;
+            end_time: string;
+            meetLink: string;
+            cancelLink: string;
+            rescheduleLink: string;
+            organizers: { name: string; email: string }[];
+            invitees: { name: string; email: string }[];
           }) => (
             <EventCard
-              key={event.uri}
-              name={event.name}
-              startTime={event.start_time}
-              endTime={event.end_time}
-              eventType={event.location.join_url}
+              key={event.meetLink} // Assuming meetLink is unique
+              event={event.event}
               status={event.status}
-              calendarPlatform={event.calendar_event.kind}
-              updatedAt={event.updated_at}
-              createdAt={event.created_at}
-              locationType={event.location.type}
+              start_time={event.start_time}
+              end_time={event.end_time}
+              meetLink={event.meetLink}
+              cancelLink={event.cancelLink}
+              rescheduleLink={event.rescheduleLink}
+              organizers={event.organizers}
+              invitees={event.invitees}
             />
           )
         )}
