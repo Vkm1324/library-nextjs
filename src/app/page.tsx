@@ -17,6 +17,8 @@ import BooksGridSkeleton from "@/components/ui/skeletons/booksGrid";
 import { inter, lusitana, protestGuerrilla } from "@/components/ui/font";
 import { getTranslations } from "next-intl/server";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
+import { auth } from "../../auth";
+import { redirect } from "next/navigation";
 
 export default async function LandingPage({
   searchParams,
@@ -30,6 +32,10 @@ export default async function LandingPage({
   const currentPage = Number(searchParams?.page) || 1;
   const totalPages = await fetchBooksCount(query);
   const t = await getTranslations("LandingPage");
+  const session = await auth();
+  if (session) {
+    redirect("/dashboard");
+  }
 
   return (
     <div className="flex flex-col min-h-screen">

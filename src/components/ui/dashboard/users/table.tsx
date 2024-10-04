@@ -83,7 +83,7 @@ const userColumns: GenericColumn<IUserTable>[] = [
     header: "Actions",
     render: (user: IUserTable) => (
       <div className="flex justify-start gap-3">
-        <UpdateUser id={user.id} />
+        <UpdateUser id={user.id} name={user.name} />
         {user.id !== user.adminUId && <DeleteUser id={user.id} />}
       </div>
     ),
@@ -122,7 +122,7 @@ export default function UsersTable({
                     </p>
                   </div>
                   <div className="flex justify-start gap-3 pt-4">
-                    <UpdateUser id={user.id} />
+                    <UpdateUser id={user.id} name={user.name} />
                     {user.id !== adminUId && <DeleteUser id={user.id} />}
                   </div>
                 </div>

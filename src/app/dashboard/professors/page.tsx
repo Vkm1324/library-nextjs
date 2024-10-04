@@ -1,5 +1,4 @@
- import UsersTableSkeleton from "@/components/ui/skeletons/users-table";
-import { CreateBook } from "@/components/ui/dashboard/books/buttons";
+ import UsersTableSkeleton from "@/components/ui/skeletons/users-table"; 
 import {
   fetchBooksCount,
   fetchFilteredBooks,
@@ -31,10 +30,9 @@ export default async function UserPage({
   return (
     <main className="flex flex-col">
       <span className="flex flex-row justify-end">
-        {/* <CreateBook /> */}
       </span>
       <PageTemplate
-        totalPages={totalPages}
+        totalPages={1}
         fallback={<UsersTableSkeleton />}
         suspenseKey={currentPage}
       >

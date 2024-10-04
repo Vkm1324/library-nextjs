@@ -1,7 +1,6 @@
 import {
   fetchFilteredTransaction,
-  fetchFilteredTransactionPageCount,
-  lateFeesCalculator,
+  fetchFilteredTransactionPageCount, 
 } from "@/lib/transaction/transaction.repository";
 import { Suspense } from "react";
 import Pagination from "@/components/ui/landingPage/pagination";
@@ -33,10 +32,8 @@ export default async function MyTransactionPage({
     uId,
     query
   );
-
   const transactions = fetchedTransactions.map((transaction) => ({
-    ...transaction,
-    lateFees: lateFeesCalculator(transaction.dueDate),
+    ...transaction
   }));
 
   return (

@@ -19,8 +19,17 @@ const bookRequestsColumns: GenericColumn<IBookResquestTable>[] = [
     header: "Book Id",
   },
   {
-    accessorKey: "title",
     header: "Book Title",
+    render: (request: IBookResquestTable) => (
+      <span
+        className={clsx({
+          "text-red-500": !request.title,
+        })}
+      >
+        {request.title ? request.title : "Deleted Book"}
+      </span>
+    ),
+    // accessorKey: "title",
   },
   // {
   //   accessorKey: "userId",
@@ -62,7 +71,7 @@ const bookRequestsColumns: GenericColumn<IBookResquestTable>[] = [
   {
     header: "Actions",
     render: (request: IBookResquestTable) => (
-      <div className="flex justify-end gap-3">
+      <div className="flex gap-3">
         {request.status === "pending" && (
           <>
             <ApproveRequest id={request.id} />

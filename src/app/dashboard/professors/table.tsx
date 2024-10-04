@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { AddAppointment } from "./appointment-button";
- 
 import { DataTable } from "@/components/ui/table/data-table";
 import { GenericColumn } from "@/components/ui/table/columns";
 import { IProfessor } from "@/lib/professors/models/model";
@@ -15,17 +14,26 @@ const createMeetingsColumns = (): GenericColumn<IProfessor>[] => [
   },
   {
     accessorKey: "name",
-    header: "User Name",
+    header: "Professor Name",
   },
   {
-    accessorKey: "bio",
+    // accessorKey: "bio",
     header: "Bio",
+    render: (person: IProfessor) => <span>{person.bio ? person.bio : ""}</span>,
   },
   {
     header: "Actions",
     render: (person: IProfessor) => (
-      <div className="flex justify-start gap-3">
-        <AddAppointment id={person.userId} name={person.name} />
+      <div className="flex ">
+        {person.link ? (
+          <div>
+            <AddAppointment id={person.userId} name={person.name} />
+          </div>
+        ) : (
+          <div className="flex items-center bg-gradient-to-r from-purple-400 to-pink-400 text-white font-bold py-2 px-4 rounded-lg shadow-lg">
+            <span className="text-lg">Joining Soon!</span>
+          </div>
+        )}
       </div>
     ),
   },
@@ -35,8 +43,8 @@ export default function MeetingsListPage({ data }: { data: IProfessor[] }) {
   const formattedData = data;
 
   return (
-    <div className=" min-w-full flow-root">
-      <div className="min-w-full align-middle">
+    <div className=" max-w-full w-full flow-root">
+      <div className="min-w-fit align-middle">
         <div className="rounded-lg min-w-full bg-gray-50  p-2 md:pt-0">
           {/* Mobile view */}
           <div className="md:hidden">
@@ -50,8 +58,16 @@ export default function MeetingsListPage({ data }: { data: IProfessor[] }) {
                     <p className="text-sm text-gray-500">{person.name}</p>
                     <p className="ml-4 text-sm text-gray-500">{person.bio}</p>
                   </div>
-                  <div className="flex justify-start gap-3 pt-4">
-                    <AddAppointment id={person.userId} name={person.name} />
+                  <div className="flex  gap-3 ">
+                    {person.link ? (
+                      <div>
+                        <AddAppointment id={person.userId} name={person.name} />
+                      </div>
+                    ) : (
+                      <div className="flex items-center bg-gradient-to-r from-purple-400 to-pink-400 text-white font-bold py-2 px-4 rounded-lg shadow-lg">
+                        <span className="text-lg">Joining Soon!</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

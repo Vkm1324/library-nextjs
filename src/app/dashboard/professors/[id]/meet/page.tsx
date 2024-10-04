@@ -17,13 +17,12 @@ export default async function Page({ params }: { params: { id: string } }) {
   const prop = new ProfessorRepository();
   const professor = await prop.getById(+id);
   const calendlyUrl = professor?.link;
-  //  await book.getById(+id);
   if (!calendlyUrl) {
     notFound();
   }
   return (
     <main>
-      <CalendlyCalander calendlyId={calendlyUrl} prefill={ prefill} />
+      <CalendlyCalander calendlyId={calendlyUrl} prefill={ prefill} /> 
     </main>
   );
 }

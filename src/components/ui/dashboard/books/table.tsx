@@ -37,7 +37,7 @@ const createBooksColumns = (
 
       return (
         <div className="flex justify-start gap-3">
-          <UpdateBook id={bookId} />
+          <UpdateBook id={bookId} title={book.title} />
           {/* Only show the Delete button if there are no pending transactions */}
           {!isPending && <DeleteBook id={bookId} />}
         </div>
@@ -78,7 +78,7 @@ export default function UsersTable({
                       </p>
                     </div>
                     <div className="flex justify-start gap-3 pt-4">
-                      <UpdateBook id={book.id} />
+                      <UpdateBook id={book.id} title={book.title} />
                       {!isPending && <DeleteBook id={book.id} />}
                     </div>
                   </div>

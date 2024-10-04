@@ -26,6 +26,7 @@ export const usersTable = mysqlTable("Users", {
   address: varchar("address", { length: 255 }),
   DOB: date("DOB"),
   phoneNum: bigint("phoneNum", { mode: "number", unsigned: true }),
+  credits: bigint("credits", { mode: "number", unsigned: true }),
 });
 
 export const TransactionType = mysqlEnum("transactionType", ["borrow", "return"]);

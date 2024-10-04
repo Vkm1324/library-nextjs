@@ -37,7 +37,7 @@ export function ConfirmationAlertDialog({
           className="flex items-center gap-2 bg-blue-500 text-white hover:bg-blue-600"
         >
           <Calendar className="w-4 h-4" />
-          <span>Meet</span>
+          <span>Join Meetings</span>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

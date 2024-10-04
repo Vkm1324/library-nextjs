@@ -1,9 +1,13 @@
 import { IBook, IBookBase } from "../book-management/models/books.model";
-import { ITransaction, ITransactionBase, ITransactionTable } from "./model/transaction.model";
+import {
+  ITransaction,
+  ITransactionBase,
+  ITransactionTable,
+} from "./model/transaction.model";
 import { BookRepository } from "../book-management/books.repository";
 import { UserRepository } from "../user-management/user.repository";
-import { and, count, eq, inArray, like, or, sql } from "drizzle-orm";
-
+import { and, count, eq, inArray, like, or, SQL, sql } from "drizzle-orm";
+import { differenceInDays, addDays } from "date-fns";
 import { db } from "../../db/db";
 import {
   booksTable,
@@ -43,23 +47,15 @@ export class TransactionRepository {
       ...book,
       availableNumberOfCopies: book.availableNumberOfCopies - 1,
     };
-
+    // TODO remove due date later
     const returnPeriod = +30;
-    const returnDate: Date = addDaysToDate(returnPeriod);
-
-    function addDaysToDate(
-      daysToAdd: number,
-      baseDate: Date = new Date()
-    ): Date {
-      const resultDate = new Date(baseDate);
-      resultDate.setDate(resultDate.getDate() + daysToAdd);
-      return resultDate;
-    }
+    const dueDate: Date = addDays(new Date(), returnPeriod);
     const newTransaction: Omit<ITransaction, "id" | "returnDate"> = {
       ...data,
+      // TODO remove statusdate later
       status: "completed",
       issueddate: new Date(),
-      dueDate: returnDate,
+      dueDate: dueDate,
       transactionId: 0,
       transactionType: "borrow",
       lateFees: 0,
@@ -72,7 +68,6 @@ export class TransactionRepository {
           .update(booksTable)
           .set(updatedBook)
           .where(eq(booksTable.id, updatedBook.id));
-
         const [result] = await trxn
           .insert(transactionsTable)
           .values(newTransaction)
@@ -114,7 +109,7 @@ export class TransactionRepository {
     }
     return null;
   }
-  async getByIssuedDate(issueddate:Date): Promise<ITransaction[] | null> {
+  async getByIssuedDate(issueddate: Date): Promise<ITransaction[] | null> {
     const result = await db
       .select()
       .from(transactionsTable)
@@ -147,7 +142,10 @@ export class TransactionRepository {
           ...transaction,
           transactionType: "return",
           returnDate: new Date(),
-          lateFees: lateFeesCalculator(transaction.dueDate),
+          lateFees: lateFeesCalculator(
+            transaction.dueDate,
+            transaction.returnDate
+          ),
         };
 
         // Execution of queries:
@@ -184,18 +182,52 @@ export class TransactionRepository {
   }
 }
 
-export function lateFeesCalculator(dueDate: Date): number {
+export function generateStatus(
+  issueddate: Date,
+  returnedDate: Date | null
+): "overdue" | "completed" | "pending" {
   const fineAmountPerDay = 5;
   const currentDate = new Date();
-  if (dueDate.getDate() > currentDate.getDate()) {
-    return (currentDate.getDate() - dueDate.getDate()) * fineAmountPerDay;
+  const normalUser = 30;
+  const deu = generateDueDate(issueddate, normalUser);
+  if (returnedDate) {
+    return "completed";
   }
-  return 0;
+  if (differenceInDays(currentDate, deu) > 0) {
+    return "overdue";
+  }
+  return "pending";
+}
+
+function generateDueDate(issueddate: Date, timePeriod: number): Date {
+  return addDays(issueddate, timePeriod);
+}
+
+export function lateFeesCalculator(
+  issueddate: Date,
+  returnedDate: Date | null
+): number {
+  const fineAmountPerDay = 5;
+  const currentDate = new Date();
+  // here we can extend for features for premium users where they can have more extended due date
+  const normalUser = 30;
+  const deu = generateDueDate(issueddate, normalUser);
+  if (returnedDate) {
+    if (differenceInDays(returnedDate, deu) > 0) {
+      return differenceInDays(currentDate, deu) * fineAmountPerDay;;
+    }
+    return 0;
+  }
+  console.log( currentDate,deu ,differenceInDays(currentDate, deu));
+  if (differenceInDays(currentDate, deu) ) {
+    return differenceInDays(currentDate, deu) * fineAmountPerDay;
+  }
+  return 1;
 }
 
 export async function fetchFilteredTransactionPageCount(
   uid?: number,
-  query?: string,
+  query?: string
 ): Promise<number> {
   const ITEMS_PER_PAGE = 8;
   try {
@@ -234,7 +266,10 @@ export async function fetchFilteredTransactionPageCount(
 }
 
 export async function fetchFilteredTransaction(
-currentPage: number, uid?: number, query?: string ) {
+  currentPage: number,
+  uid?: number,
+  query?: string
+) {
   const ITEMS_PER_PAGE = 8;
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
@@ -268,10 +303,8 @@ currentPage: number, uid?: number, query?: string ) {
         userId: transactionsTable.userId,
         transactionType: transactionsTable.transactionType,
         issueddate: transactionsTable.issueddate,
-        dueDate: transactionsTable.dueDate,
         returnDate: transactionsTable.returnDate,
         status: transactionsTable.status,
-        lateFees: transactionsTable.lateFees,
         title: booksTable.title,
         userName: usersTable.name,
       })
@@ -282,7 +315,17 @@ currentPage: number, uid?: number, query?: string ) {
       .limit(ITEMS_PER_PAGE)
       .offset(offset)
       .orderBy(transactionsTable.status, transactionsTable.transactionId);
-    return paginatedResults as unknown as ITransactionTable[];
+
+    const result = paginatedResults.map((transaction) => ({
+      ...transaction,
+      dueDate: generateDueDate(transaction.issueddate, 30),
+      lateFees: lateFeesCalculator(
+        transaction.issueddate,
+        transaction.returnDate
+      ),
+      status: generateStatus(transaction.issueddate, transaction.returnDate),
+    }));
+    return result as unknown as ITransactionTable[];
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch book transactions.");
@@ -290,21 +333,106 @@ currentPage: number, uid?: number, query?: string ) {
 }
 
 export async function fetchPendingTransaction(): Promise<ITransaction[]> {
-  // TODO remove the timeout later
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
   try {
     const results = await db
       .select({ bookId: transactionsTable.bookId })
       .from(transactionsTable)
-      .where(eq(transactionsTable.transactionType, "borrow"))
-      .orderBy(transactionsTable.bookId);
+      .where(eq(transactionsTable.transactionType, "borrow"));
 
     // Return transactions
-    // console.log("its results",results);
     return results as unknown as ITransaction[];
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch transactions.");
   }
 }
+
+import { isNull, lt } from "drizzle-orm";
+import { MySqlColumn } from "drizzle-orm/mysql-core";
+
+// TODO-fix the fine will be calculated for 24 hrs like user will have 24*30 hrs to return without getting fine but the user will be having only  , make fine as not for 24 hrs dependent so tht both reflect same.
+
+export async function metaDataOfTransactions() {
+  // Helper function to add 30 days to issuedDate
+  function getDueDate(
+    issuedDate: MySqlColumn<
+      {
+        name: "transactionDate";
+        tableName: "transactions";
+        dataType: "date";
+        columnType: "MySqlDateTime";
+        data: Date;
+        driverParam: string | number;
+        notNull: true;
+        hasDefault: false;
+        isPrimaryKey: false;
+        isAutoincrement: false;
+        hasRuntimeDefault: false;
+        enumValues: undefined;
+        baseColumn: never;
+        generated: undefined;
+      },
+      object
+    >
+  ) {
+    // TODO extend this by passing a new param interval which can be given to user based on their subscription
+    return sql`DATE_ADD(${issuedDate}, INTERVAL 30 DAY)`;
+  }
+
+  // Run queries in parallel using Promise.all()
+  const [
+    [totalTransactions],
+    [completedTransactions],
+    [overdueTransactions],
+    [todaysdueTransactions],
+  ] = await Promise.all([
+    // Query for total transactions
+    db.select({ count: count() }).from(transactionsTable),
+
+    // Query for completed transactions
+    db
+      .select({ count: count() })
+      .from(transactionsTable)
+      .where(eq(transactionsTable.transactionType, "return")),
+
+    // Query for overdue transactions
+    db
+      .select({
+        count: count(),
+        // dueDate: getDueDate(transactionsTable.issueddate)
+      })
+      .from(transactionsTable)
+      .where(
+        and(
+          isNull(transactionsTable.returnDate),
+          lt(getDueDate(transactionsTable.issueddate), sql`NOW()`)
+        )
+      ),
+
+    // Query for today's due transactions
+    db
+      .select({ count: count() })
+      .from(transactionsTable)
+      .where(
+        and(
+          isNull(transactionsTable.returnDate),
+          eq(
+            sql`DATE(${getDueDate(transactionsTable.issueddate)})`,
+            sql`CURDATE()`
+          )
+        )
+      ),
+  ]);
+
+  // Combine the results into a single object
+  const result = {
+    completedTransactions: completedTransactions.count,
+    overdueTransactions: overdueTransactions.count,
+    todaysDueTransactions: todaysdueTransactions.count,
+    totalTransactions: totalTransactions.count,
+  };
+
+  // Return the result
+  return result;
+}
+

@@ -32,7 +32,9 @@ export default async function TransactionPage({
         fallback={<TransactionTableSkeleton />}
         suspenseKey={query + currentPage}
       >
-        <Table data={transactions} />
+        <Table data={
+          transactions
+        } />
       </PageTemplate>
     </main>
   );

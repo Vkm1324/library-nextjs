@@ -1,5 +1,6 @@
 {
   "LandingPage": {
+    "message": "{name}",
     "title": "ಗ್ರಂಥಾಲಯಕ್ಕೆ ಸ್ವಾಗತ...",
     "header": {
       "dropdownMenu": {
@@ -84,8 +85,11 @@
     "Profile": "ಪ್ರೊಫೈಲ್",
     "My Transaction": "ನನ್ನ ವ್ಯವಹಾರ",
     "My Requests": "ನನ್ನ ವಿನಂತಿಗಳು",
-     "My Meetings": "ನನ್ನ ಸಭೆಗಳು",
-    "Sign Out": "ಹಾಗುಬಿಡಿ"
+    "My Meetings": "ನನ್ನ ಸಭೆಗಳು",
+    "Sign Out": "ಹಾಗುಬಿಡಿ",
+    "Professor": "ಪ್ರಾಧ್ಯಾಪಕ",
+    "Admin": "ನಿರ್ವಾಹಕ",
+    "User ": "ಬಳಕೆದಾರ"
   },
   "Edit Profile": {
     "title": "ಪ್ರೊಫೈಲ್ ಸಂಪಾದಿಸಿ",
@@ -131,7 +135,8 @@
     "Publisher": "ಪ್ರಕಾಶಕ",
     "Author": "ಲೇಖಕ",
     "Bio": "ಜೀವನಚರಿತ್ರೆ",
-    "Sl No": "ಅ.ಸಂ"
+    "Sl No": "ಅ.ಸಂ",
+    "Professor Name": "ಪ್ರಾಧ್ಯಾಪಕರ ಹೆಸರು"
   },
   "TableData": {
     "Pending": "ಬಾಕಿ",
@@ -144,11 +149,10 @@
     "No Results": "ಫಲಿತಾಂಶಗಳಿಲ್ಲ",
     "Not Returned": "ಮತ್ತೆ ತಿರುಗಿಸಿಲ್ಲ",
     "Edit": "ತಿದ್ದು",
-    "Book":"ಪುಸ್ತಕ",
+    "Book": "ಪುಸ್ತಕ",
     "Are you sure": "ನೀವು ಖಚಿತವಾಗಿದ್ದೀರಾ",
     "Cancel": "ರದ್ದುಮಾಡು",
     "Proceed to Edit": "ತಿದ್ದು ಮಾಡಲು ಮುಂದುವರಿಸಿ"
-
   },
   "LocaleSwitcher": {
     "en": "English",
