@@ -20,6 +20,9 @@ importers:
       '@edgestore/server':
         specifier: ^0.2.2
         version: 0.2.2(@aws-sdk/client-s3@3.663.0)(@aws-sdk/s3-request-presigner@3.663.0)(react-dom@19.0.0-rc-f38c22b244-20240704(react@19.0.0-rc-f38c22b244-20240704))(react@19.0.0-rc-f38c22b244-20240704)(zod@3.23.8)
+      '@next/env':
+        specifier: ^14.2.12
+        version: 14.2.14
       '@radix-ui/react-alert-dialog':
         specifier: ^1.1.1
         version: 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.11)(react-dom@19.0.0-rc-f38c22b244-20240704(react@19.0.0-rc-f38c22b244-20240704))(react@19.0.0-rc-f38c22b244-20240704)
@@ -41,6 +44,9 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.20.5
         version: 8.20.5(react-dom@19.0.0-rc-f38c22b244-20240704(react@19.0.0-rc-f38c22b244-20240704))(react@19.0.0-rc-f38c22b244-20240704)
+      '@vercel/postgres':
+        specifier: ^0.10.0
+        version: 0.10.0
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -861,6 +867,9 @@ packages:
 
   '@neondatabase/serverless@0.9.5':
     resolution: {integrity: sha512-siFas6gItqv6wD/pZnvdu34wEqgG3nSE6zWZdq5j2DEsa+VvX8i/5HXJOo06qrw5axPXn+lGCxeR+NLaSPIXug==}
+
+  '@next/env@14.2.14':
+    resolution: {integrity: sha512-/0hWQfiaD5//LvGNgc8PjvyqV50vGK0cADYzaoOOGN8fxzBn3iAiaq3S0tCRnFBldq0LVveLcxCTi41ZoYgAgg==}
 
   '@next/env@15.0.0-canary.131':
     resolution: {integrity: sha512-Fi8wxS3ZGa+C5YPZ620p+Z4kj/ZZbd37zrroAPf4beoKXn9li8LVe9SHaK3by9Pl3UBbs17t0IhQQHdQr20DSA==}
@@ -4477,7 +4486,8 @@ snapshots:
   '@neondatabase/serverless@0.9.5':
     dependencies:
       '@types/pg': 8.11.6
-    optional: true
+
+  '@next/env@14.2.14': {}
 
   '@next/env@15.0.0-canary.131': {}
 
@@ -5351,7 +5361,6 @@ snapshots:
       '@types/node': 20.16.10
       pg-protocol: 1.7.0
       pg-types: 4.0.2
-    optional: true
 
   '@types/prop-types@15.7.13': {}
 
@@ -5413,7 +5422,6 @@ snapshots:
       ws: 8.18.0(bufferutil@4.0.8)
     transitivePeerDependencies:
       - utf-8-validate
-    optional: true
 
   acorn-jsx@5.3.2(acorn@8.12.1):
     dependencies:
@@ -5572,7 +5580,6 @@ snapshots:
   bufferutil@4.0.8:
     dependencies:
       node-gyp-build: 4.8.2
-    optional: true
 
   busboy@1.6.0:
     dependencies:
@@ -6729,8 +6736,7 @@ snapshots:
       - '@babel/core'
       - babel-plugin-macros
 
-  node-gyp-build@4.8.2:
-    optional: true
+  node-gyp-build@4.8.2: {}
 
   normalize-path@3.0.0: {}
 
@@ -6781,8 +6787,7 @@ snapshots:
       define-properties: 1.2.1
       es-object-atoms: 1.0.0
 
-  obuf@1.1.2:
-    optional: true
+  obuf@1.1.2: {}
 
   once@1.4.0:
     dependencies:
@@ -6826,14 +6831,11 @@ snapshots:
 
   path-type@4.0.0: {}
 
-  pg-int8@1.0.1:
-    optional: true
+  pg-int8@1.0.1: {}
 
-  pg-numeric@1.0.2:
-    optional: true
+  pg-numeric@1.0.2: {}
 
-  pg-protocol@1.7.0:
-    optional: true
+  pg-protocol@1.7.0: {}
 
   pg-types@4.0.2:
     dependencies:
@@ -6844,7 +6846,6 @@ snapshots:
       postgres-date: 2.1.0
       postgres-interval: 3.0.0
       postgres-range: 1.1.4
-    optional: true
 
   picocolors@1.1.0: {}
 
@@ -6899,22 +6900,17 @@ snapshots:
       picocolors: 1.1.0
       source-map-js: 1.2.1
 
-  postgres-array@3.0.2:
-    optional: true
+  postgres-array@3.0.2: {}
 
   postgres-bytea@3.0.0:
     dependencies:
       obuf: 1.1.2
-    optional: true
 
-  postgres-date@2.1.0:
-    optional: true
+  postgres-date@2.1.0: {}
 
-  postgres-interval@3.0.0:
-    optional: true
+  postgres-interval@3.0.0: {}
 
-  postgres-range@1.1.4:
-    optional: true
+  postgres-range@1.1.4: {}
 
   preact-render-to-string@5.2.3(preact@10.11.3):
     dependencies:
@@ -7503,7 +7499,6 @@ snapshots:
   ws@8.18.0(bufferutil@4.0.8):
     optionalDependencies:
       bufferutil: 4.0.8
-    optional: true
 
   yaml@2.5.1: {}
 

@@ -6,13 +6,12 @@ import {
   departmentTable,
   professorTable,
   usersTable,
-} from "@/drizzle/schema/schema";
+} from "@/drizzle/schema/postgressSchema";
 import { sql, eq } from "drizzle-orm/sql";
 
 import { asc, desc, like, or, relations } from "drizzle-orm";
 import { DepartMentRepository } from "../department/department.repositories";
-import { UserRepository } from "../user-management/user.repository";
-import { IUser } from "../user-management/models/user.model";
+import { UserRepository } from "../user-management/user.repository"; 
 
 export const professorRelations = relations(professorTable, ({ one }) => ({
   user: one(usersTable, {
@@ -31,7 +30,7 @@ export class ProfessorRepository implements IRepository<IProfessorBase, IProfess
     const [result] = await db
       .insert(professorTable)
       .values({ userId: data.userId })
-      .$returningId();
+      .returning();
     // console.log(`User with PfidId:${result.pfid} has been added successfully `);
     return (await this.getById(result.pfid)) as IProfessor;
   }

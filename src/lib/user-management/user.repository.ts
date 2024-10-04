@@ -2,13 +2,12 @@ import { IPageRequest, IPagedResponse } from "../../../core/pagination.model";
 import { IRepository } from "../../../core/repository";
 import {
   IUser,
-  IUserBase,
-  IUserDisplay,
+  IUserBase, 
   IUserProfile,
   Roles,
 } from "./models/user.model"; 
 import { db } from "../../db/db";
-import { usersTable } from "../../drizzle/schema/schema";
+import { usersTable } from "../../drizzle/schema/postgressSchema";
 import { count, eq, inArray, sql } from "drizzle-orm/sql";
 /**
  * Class representing a user repository.
@@ -77,7 +76,7 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
       address: null,
       credits: 0,
     };
-    const [result] = await db.insert(usersTable).values(user).$returningId();
+    const [result] = await db.insert(usersTable).values(user).returning();
     console.log(`User with UserId:${result.id} has been added successfully `);
     return (await this.getById(result.id)) as IUser;
   }
@@ -172,13 +171,13 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
     return null;
   }
   async updateCredit(id: number, creditValue:number): Promise<IUser | null> {
-    const book = await this.getById(id);
-    if (book) {
+    const user = await this.getById(id);
+    if (user) {
       await db
         .update(usersTable)
         .set({ credits: creditValue })
         .where(sql`${usersTable.id}=${id}`);
-      return book;
+      return user;
     }
     return null;
   }
@@ -192,9 +191,7 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
   //  * @private
   //  * @returns {IUser[]} The list of users.
   //  */
-  // private get users(): IUser[] {
-  //   return this.db.table<IUser>("users");
-  // }
+ 
 
   // /**
   //  * Updates an existing user.
@@ -202,46 +199,14 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
   //  * @param {IUserBase} updatedData - The updated user data.
   //  * @returns {IUser | null} The updated user or null if not found.
   //  */
-  // async update(
-  //   UserIdToUpdate: number,
-  //   updatedData: IUserBase
-  // ): Promise<IUser | null> {
-  //   // const user = await this.getById(UserIdToUpdate);
-  //   // console.log(user);
-  //   // if (updatedData.name != "") {
-  //   //   user!.name = updatedDa ta.name;
-  //   //   this.db.save();
-  //   // }
-  //   // if (updatedData.DOB != "") {
-  //   //   user!.DOB = updatedData.DOB;
-  //   //   this.db.save();
-  //   // }
-  //   // if (updatedData.phoneNum != NaN! || updatedData.phoneNum !== 0) {
-  //   //   console.log(
-  //   //     typeof updatedData.phoneNum,
-  //   //     updatedData.phoneNum,
-  //   //     user!.phoneNum
-  //   //   );
-  //   //   user!.phoneNum = updatedData.phoneNum;
-  //   //   this.db.save();
-  //   // }
-  //   // return user;
-  //   return null;
-  // }
+   
 
   // /**
   //  * Deletes a user by ID.
   //  * @param {number} id - The ID of the user to delete.
   //  * @returns {IUser | null} The deleted user or null if not found.
   //  */
-  // async delete(id: number): Promise<IUser | null> {
-  //   // const userToDelete = this.getById(id);
-  //   // const index = this.users.findIndex((user) => user.UserId === id);
-  //   // this.users.splice(index, 1);
-  //   // this.db.save();
-  //   // return userToDelete;
-  //   return null;
-  // }
+ 
 
   /**
    * Lists all users.

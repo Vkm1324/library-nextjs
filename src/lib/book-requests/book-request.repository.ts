@@ -10,7 +10,7 @@ import {
   bookRequestTable,
   booksTable,
   usersTable,
-} from "@/drizzle/schema/schema";
+} from "@/drizzle/schema/postgressSchema";
 import { eq, count, and, or, like } from "drizzle-orm/sql";
 
 export class BookRequestRepository
@@ -25,11 +25,7 @@ export class BookRequestRepository
     };
     const [result] = await db
       .insert(bookRequestTable)
-      .values(bookRequest)
-      .$returningId();
-    console.log(
-      `BookRequest with BookRequestId:${result.id} has been added successfully `
-    );
+      .values(bookRequest).returning();
     return (await this.getById(result.id)) as IBookResquest;
   }
 
@@ -65,8 +61,9 @@ export class BookRequestRepository
     const [result] = await db
       .update(bookRequestTable)
       .set({ status: data.status })
-      .where(eq(bookRequestTable.id, id));
-    return this.getById(result.insertId);
+      .where(eq(bookRequestTable.id, id))
+      .returning()
+    return result;
   }
   delete(id: number): Promise<IBookResquest | null> {
     throw new Error("Method not implemented.");

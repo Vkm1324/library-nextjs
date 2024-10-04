@@ -2,7 +2,7 @@ import { db } from "../../db/db";
 import { IPageRequest, IPagedResponse } from "../../../core/pagination.model";
 import { IRepository } from "../../../core/repository";
 import { IDepartment, IDepartmentBase } from "./models/model";
-import { departmentTable } from "@/drizzle/schema/schema";
+import { departmentTable } from "@/drizzle/schema/postgressSchema";
 import { sql } from "drizzle-orm/sql";
 
 export class DepartMentRepository
