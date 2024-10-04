@@ -1,5 +1,5 @@
- import NextAuth from "next-auth";
-import authConfig from "./../auth.config";  
+import NextAuth from "next-auth";
+import authConfig from "./../auth.config";
 import { getToken } from "next-auth/jwt";
 import { Roles } from "./lib/user-management/models/user.model";
 export const getRole = (role) => {
@@ -21,7 +21,7 @@ export default auth(async (req) => {
   if (!req.auth && req.nextUrl.pathname !== "/") {
     const newUrl = new URL("/", req.nextUrl.origin);
     return Response.redirect(newUrl);
-  } 
+  }
   else if (req.auth && req.nextUrl.pathname.startsWith("/dashboard/admin/")) {
     const token = await getToken({
       req,
@@ -38,8 +38,10 @@ export default auth(async (req) => {
       const newUrl = new URL("/dashboard", req.nextUrl.origin);
       return Response.redirect(newUrl);
     }
-  }
-  else if (req.auth && req.nextUrl.pathname.startsWith("/dashboard/professor/")) {
+  } else if (
+    req.auth &&
+    req.nextUrl.pathname.startsWith("/dashboard/professor/")
+  ) {
     const token = await getToken({
       req,
       secret: process.env.AUTH_SECRET,
@@ -58,8 +60,6 @@ export default auth(async (req) => {
   }
 });
 
-
 export const config = {
-  matcher: '/dashboard/:path*',
-}
-
+  matcher: ["/dashboard/:path*" ],
+};

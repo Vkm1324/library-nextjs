@@ -124,6 +124,7 @@ export async function fetchFilteredprofessors(
       .select({
         bio: professorTable.bio,
         userId: professorTable.userId,
+        link: professorTable.link,
         name: usersTable.name,
         department:departmentTable.deptName
       })

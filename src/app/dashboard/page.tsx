@@ -13,7 +13,7 @@ const pending = (totalTransaction.totalTransactions - (totalTransaction.overdueT
   return (
     <main className="p-4">
       <h1 className="text-2xl font-bold mb-4">
-        Welcome{ " "} { t("message", { name: session?.user.name })}
+        Welcome {t("message", { name: session?.user.name })}
       </h1>
       <h1 className="text-2xl font-bold mb-4">
         Logged In as {getRole(session?.user.role)}
@@ -21,7 +21,7 @@ const pending = (totalTransaction.totalTransactions - (totalTransaction.overdueT
       <MetaData
         data={[
           {
-            status: "Due",
+            status: "Today's Due",
             value: totalTransaction.todaysDueTransactions,
             color: "#FFD700",
           },
@@ -38,7 +38,7 @@ const pending = (totalTransaction.totalTransactions - (totalTransaction.overdueT
           {
             status: "pending",
             value: pending,
-            color: "#FFFFFF",
+            color: "#808080",
           },
         ]}
       ></MetaData>

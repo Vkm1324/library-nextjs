@@ -34,9 +34,7 @@ export default function MetaData({ data }: TransactionMetadataCardProps) {
   const totalTransactions = chartData.reduce(
     (sum, item) => sum + item.value,
     0
-  );
-
-  // console.log("Chart Data:", chartData); 
+  ); 
 
   return (
     <Card className="w-full max-w-md">

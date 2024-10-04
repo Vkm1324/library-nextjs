@@ -29,9 +29,10 @@ export default async function BooksGrid({
         <h2 className="text-3xl font-bold tracking-tight mb-8">
           Search Results
         </h2>
-
         {books.length > 0 ? (
+          
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            
             {books.map((book) => (
               <div key={book.id} className="flex justify-center">
                 <BookCard book={book} uid={uid} />

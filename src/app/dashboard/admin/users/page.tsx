@@ -23,7 +23,7 @@ export default async function UserPage({
   const totalUsers = await users.fetchFilteredUsers(query, currentPage);
   return (
     <main className="flex flex-col ">
-      <span className=" flex flex-row  justify-center  ">
+      <span className=" flex flex-row  justify-end  ">
         <CreateUser />
       </span>
       <PageTemplate

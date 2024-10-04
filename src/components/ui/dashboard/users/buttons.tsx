@@ -1,3 +1,4 @@
+"use client"
 export function CreateUser() {
   return (
     <Link
@@ -10,26 +11,49 @@ export function CreateUser() {
   );
 }
 
-export function UpdateUser({ id }: { id: number }) {
+export function UpdateUser({ id, name }: { id: number; name: string }) {
   return (
-    <Link
-      href={`/dashboard/admin/users/${id}/edit`}
-      className=" flex items-center gap-2 rounded-md border p-2 bg-blue-500 text-white hover:bg-blue-600"
-    >
-      <PencilIcon className="w-5" />
-      <span>Edit</span>
-    </Link>
+    <EditAlertDialog
+      id={id}
+      entity="User"
+      editPath="/dashboard/admin/users"
+      description={`This action will take you to the edit page for the "${name}". Any unsaved changes on the current page will be lost.`}
+    />
   );
 }
 
 import { deleteUser } from "@/lib/actions";
 import { PencilIcon, PlusIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
+import { EditAlertDialog } from "../../alerts/edit-alert";
+
+// export function DeleteUser({ id }: { id: number }) {
+//   const deleteUserWithId = deleteUser.bind(null, id);
+//   return (
+//     <form action={deleteUserWithId}>
+//       <button
+//         className="flex items-center gap-2 rounded-md border p-2 bg-red-500 text-white hover:bg-red-600"
+//         type="submit"
+//       >
+//         <TrashIcon className="w-5" />
+//         <span>Delete</span>
+//       </button>
+//     </form>
+//   );
+// }
 
 export function DeleteUser({ id }: { id: number }) {
-  const deleteUserWithId = deleteUser.bind(null, id);
+  const handleDelete = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // Prevent the default form submission
+
+    const response = await deleteUser(id); // Call your deleteUser function with the id
+    if (response.message) {
+      console.log(response.message); // Handle the response message as needed
+    }
+  };
+
   return (
-    <form action={deleteUserWithId}>
+    <form onSubmit={handleDelete}>
       <button
         className="flex items-center gap-2 rounded-md border p-2 bg-red-500 text-white hover:bg-red-600"
         type="submit"

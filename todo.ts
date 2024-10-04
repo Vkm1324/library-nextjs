@@ -1,10 +1,9 @@
 
-// ! restructure the transaction table such that status will be calculated on run time, and remove the due date , calculate it on fly.
+//  restructure the transaction table such that status will be calculated on run time, and remove the due date , calculate it on fly.
 // ! role update and setting of users.
-// ! in books card , image size should be set to a aspect-ratio
-// ! in books card , image size should be set to a aspect-ratio
-// !  localization for status and dleted book and user
-// ! table max width and w-full
+//  in books card , image size should be set to a aspect-ratio
+//   localization for status and dleted book and user
+//  table max width and w-full
 // ! edit form has to retain its previous data
 // ! make every table to give inital sord ord and sort key
 // ! update the request status from pending to rejected when the requested book deleted by admin call reject(bookid)

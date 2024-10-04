@@ -2,8 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Razorpay from "razorpay";
 import { nanoid } from "nanoid";
-import { env } from "process";
-
+ 
 // Initialize Razorpay instance with your test key
 const instance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID as string,

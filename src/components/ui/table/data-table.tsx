@@ -85,8 +85,8 @@ export function DataTable<TData>({
                     key={columnIndex}
                     className={`text-left ${
                       column.header === "Actions"
-                        ? "max-w-[250px] "
-                        : "max-w-[200px] "
+                        ? "max-w-fit justify-start"
+                        : "max-w-[200px]"
                     }`}
                   >
                     <div className="truncate">
