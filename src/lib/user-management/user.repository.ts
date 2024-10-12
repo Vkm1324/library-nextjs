@@ -69,7 +69,6 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
     console.log("organisation User :", organisationUser);
     const user: IUser = {
       ...data,
-      id: 0,
       role: organisationUser ? Roles.Professor : Roles.User,
       DOB: null,
       phoneNum: null,
