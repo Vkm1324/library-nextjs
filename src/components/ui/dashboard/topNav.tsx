@@ -14,10 +14,13 @@ export default async function TopNav() {
     <div className="flex h-full flex-row px-3 py-4 md:px-2">
       <div className="grid grid-cols-2 divide-x-*">
         <LocaleSwitcher />
-        <div className="flex items-center  bg-gray-700 px-4 rounded-lg">
-          <span className="text-gray-400 mr-2">Credits:</span>
-          <span className="text-white font-semibold text-lg">{credits}</span>
-        </div>
+        <div className="flex items-center bg-gray-700 px-4 rounded-lg border-r border-gray-500">
+  <span className="text-gray-400 mr-2 hidden sm:inline">Credits:</span>
+  <span className="text-gray-400 mr-2 sm:hidden">💰</span>
+  <span className="text-white font-semibold text-lg">{credits}</span>
+</div>
+
+
       </div>
       <div className="flex grow justify-end flex-row ">
         <UserNavLinks role={userRole!} />

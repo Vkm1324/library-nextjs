@@ -206,6 +206,7 @@ export async function createUser(prevState: State, formData: FormData) {
     phoneNum: +data.phoneNum!,
     address: data.address!,
     image: "",
+    id:null,
   };
   // Insert data into the database
   try {

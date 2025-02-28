@@ -32,7 +32,7 @@ export const booksTable = pgTable("books", {
   author: varchar("author", { length: 255 }).notNull(),
   publisher: varchar("publisher", { length: 255 }).notNull(),
   genre: varchar("genre", { length: 255 }).notNull(),
-  isbnNo: integer("isbnNo").notNull().unique(),
+  isbnNo: bigint("isbnNo",{ mode: "number" }).notNull().unique(),
   price: integer("price"),
   image: varchar("image", { length: 255 }),
   numofPages: integer("numofPages").notNull(),

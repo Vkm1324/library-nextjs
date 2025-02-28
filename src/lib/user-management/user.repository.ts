@@ -1,6 +1,7 @@
 import { IPageRequest, IPagedResponse } from "../../../core/pagination.model";
 import { IRepository } from "../../../core/repository";
 import {
+  IGoogleAuthUser,
   IUser,
   IUserBase, 
   IUserProfile,
@@ -25,10 +26,9 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
         .from(usersTable)
         // TODO include role too in where conditon
         .where(
-          sql`${usersTable.id} LIKE ${"%" + query + "%"} OR 
-          ${usersTable.name} LIKE ${"%" + query + "%"} OR
-          ${usersTable.email} LIKE ${"%" + query + "%"}
-          `
+          sql`${usersTable.id}::TEXT LIKE ${"%" + query + "%"} OR 
+              ${usersTable.name} LIKE ${"%" + query + "%"} OR
+              ${usersTable.email} LIKE ${"%" + query + "%"}`
         )
         .orderBy(usersTable.id)
         .limit(ITEMS_PER_PAGE)
@@ -47,34 +47,39 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
       const [countResult] = await db
         .select({ count: count() })
         .from(usersTable)
-        .where(sql`${usersTable.id} LIKE ${"%" + query + "%"}`);
+        .where(sql`${usersTable.id}::TEXT LIKE ${"%" + query + "%"}`);
+
       const bookCount =
         countResult.count > 0 ? countResult.count / ITEMS_PER_PAGE : 0;
       // Return the  count of books
       return Math.ceil(bookCount);
     } catch (error) {
       console.error("Database Error:", error);
-      throw new Error("Failed to fetch books count.");
+      throw new Error("Failed to fetch users count.");
     }
   }
   /**
    * Creates a new user.
-   * @param {IUserBase} data - The user data.
+   * @param {IGoogleAuthUser} data - The user data.
    * @returns {Promise<IUser>} The created user.
    */
   // destructure and  then insert
-  async create(data: IUserBase): Promise<IUser> {
+  async create(data: IGoogleAuthUser): Promise<IUser> {
     // authority of user
     const organisationUser = data.email.endsWith("codecraft.co.in");
     console.log("organisation User :", organisationUser);
-    const user: IUser = {
-      ...data,
-      role: organisationUser ? Roles.Professor : Roles.User,
-      DOB: null,
-      phoneNum: null,
-      address: null,
-      credits: 0,
-    };
+type IUserWithoutId = Omit<IUser, "id">;
+
+const { id, ...restData } = data; // Exclude `id`
+
+const user: IUserWithoutId = {
+  ...restData,
+  role: organisationUser ? Roles.Professor : Roles.User,
+  DOB: null,
+  phoneNum: null,
+  address: null,
+  credits: 20,
+};
     const [result] = await db.insert(usersTable).values(user).returning();
     console.log(`User with UserId:${result.id} has been added successfully `);
     return (await this.getById(result.id)) as IUser;

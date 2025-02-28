@@ -1,4 +1,4 @@
-import { IUser } from "@/lib/user-management/models/user.model";
+import { IGoogleAuthUser, IUser } from "@/lib/user-management/models/user.model";
 import { UserRepository } from "@/lib/user-management/user.repository";
 import NextAuth, { DefaultSession } from "next-auth";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
@@ -7,13 +7,14 @@ import authConfig from "./auth.config";
 import { getRole } from "@/middleware";
 import { ProfessorRepository } from "@/lib/professors/professors.repsitory";
 
-async function getUser(user: IUser): Promise<{ id: number; role: number }> {
+async function getUser(user: IGoogleAuthUser): Promise<{ id: number; role: number }> {
   try {
     const userRepo = new UserRepository();
     const result = await userRepo.getByMail(user.email);
-    if (result) {
+    console.log("user mail verfication done")
+    if (result) { 
       return { id: result.id, role: result.role };
-    } else {
+    } else { 
       // const userDetails = {user.email, user.image, user.name};
       let newUser = await userRepo.create(user);
       if (getRole(newUser.role) === "Professor") {
@@ -61,7 +62,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         // This condition will be true only on initial sign-in
-        const { id, role } = await getUser(user as unknown as IUser);
+        const { id, role } = await getUser(user as unknown as IGoogleAuthUser);
         token.id = id;
         token.role = role;
       }

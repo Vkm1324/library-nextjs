@@ -1,3 +1,14 @@
+export interface IGoogleAuthUser {
+  // immutable data which has to kept safe
+  id:string | null;
+  name: string;
+  email: string;
+  image?: string | undefined;
+  DOB: Date | null ;
+  phoneNum: number | null;
+  address: string | null;
+}
+
 export interface IUserBase {
   // immutable data which has to kept safe
   name: string;

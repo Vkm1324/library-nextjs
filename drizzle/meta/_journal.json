@@ -15,6 +15,20 @@
       "when": 1726663277807,
       "tag": "0001_nappy_caretaker",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1740723570465,
+      "tag": "0002_dark_franklin_richards",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1740727084218,
+      "tag": "0003_marvelous_roughhouse",
+      "breakpoints": true
     }
   ]
 }
