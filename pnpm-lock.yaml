@@ -20,6 +20,9 @@ importers:
       '@edgestore/server':
         specifier: ^0.2.2
         version: 0.2.2(@aws-sdk/client-s3@3.663.0)(@aws-sdk/s3-request-presigner@3.663.0)(react-dom@19.0.0-rc-f38c22b244-20240704(react@19.0.0-rc-f38c22b244-20240704))(react@19.0.0-rc-f38c22b244-20240704)(zod@3.23.8)
+      '@neondatabase/serverless':
+        specifier: ^0.10.4
+        version: 0.10.4
       '@next/env':
         specifier: ^14.2.12
         version: 14.2.14
@@ -61,7 +64,7 @@ importers:
         version: 16.4.5
       drizzle-orm:
         specifier: ^0.33.0
-        version: 0.33.0(@neondatabase/serverless@0.9.5)(@types/pg@8.11.6)(@types/react@18.3.11)(@vercel/postgres@0.10.0)(mysql2@3.11.3)(postgres@3.4.5)(react@19.0.0-rc-f38c22b244-20240704)
+        version: 0.33.0(@neondatabase/serverless@0.10.4)(@types/pg@8.11.6)(@types/react@18.3.11)(@vercel/postgres@0.10.0)(mysql2@3.11.3)(postgres@3.4.5)(react@19.0.0-rc-f38c22b244-20240704)
       heroicons:
         specifier: ^2.1.5
         version: 2.1.5
@@ -867,6 +870,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@neondatabase/serverless@0.10.4':
+    resolution: {integrity: sha512-2nZuh3VUO9voBauuh+IGYRhGU/MskWHt1IuZvHcJw6GLjDgtqj/KViKo7SIrLdGLdot7vFbiRRw+BgEy3wT9HA==}
 
   '@neondatabase/serverless@0.9.5':
     resolution: {integrity: sha512-siFas6gItqv6wD/pZnvdu34wEqgG3nSE6zWZdq5j2DEsa+VvX8i/5HXJOo06qrw5axPXn+lGCxeR+NLaSPIXug==}
@@ -4490,6 +4496,10 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
+  '@neondatabase/serverless@0.10.4':
+    dependencies:
+      '@types/pg': 8.11.6
+
   '@neondatabase/serverless@0.9.5':
     dependencies:
       '@types/pg': 8.11.6
@@ -5819,9 +5829,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.33.0(@neondatabase/serverless@0.9.5)(@types/pg@8.11.6)(@types/react@18.3.11)(@vercel/postgres@0.10.0)(mysql2@3.11.3)(postgres@3.4.5)(react@19.0.0-rc-f38c22b244-20240704):
+  drizzle-orm@0.33.0(@neondatabase/serverless@0.10.4)(@types/pg@8.11.6)(@types/react@18.3.11)(@vercel/postgres@0.10.0)(mysql2@3.11.3)(postgres@3.4.5)(react@19.0.0-rc-f38c22b244-20240704):
     optionalDependencies:
-      '@neondatabase/serverless': 0.9.5
+      '@neondatabase/serverless': 0.10.4
       '@types/pg': 8.11.6
       '@types/react': 18.3.11
       '@vercel/postgres': 0.10.0
