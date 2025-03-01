@@ -1,13 +1,14 @@
-import "@/drizzle/envConfig";
+import { config } from 'dotenv';
 import { defineConfig } from "drizzle-kit";
+
+config({ path: '.env' });
 
 export default defineConfig({
   schema: "./src/drizzle/schema/postgressSchema.ts",
+  out: "./migrations",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL!, // ✅ Change to DATABASE_URL
-    ssl:'allow'
+    url: process.env.POSTGRES_URL!,
+    ssl:'require'
   },
-  strict: true,
-  breakpoints: true,
 });
