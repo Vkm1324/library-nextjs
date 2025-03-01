@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Library App
 
-## Getting Started
+A powerful **Library Management System** built with **Next.js**, offering seamless book management, role-based access, meeting scheduling, and payment integration.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 🚀 User Features
+- 📚 **Request Books** – Users can request books and track their requests.
+- ✅ **My Transactions** – View approved/rejected book requests and return status.
+- 📅 **Book Meetings** – Schedule meetings with professors via **Calendly**.
+- 🖊 **Update Profile** – Modify personal details.
+- 💳 **Buy Credits** – Test **Razorpay** payment integration for purchasing credits.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 🎓 Professor Features
+- ✨ All **User** privileges.
+- ✅ **Manage Meetings** – Accept or reject meeting requests.
+- 📆 **View Meetings** – Track all scheduled meetings.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🔥 Admin Features
+- 🌟 All **User** and **Professor** privileges.
+- 🏗 **CRUD Operations** – Manage users and books.
+- 📊 **Transaction Analytics** – View charts for **today's dues, overdue books, completed & pending transactions**.
+- ✅ **Approve Returns** – Manage book return requests.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### 🌍 Internationalization (i18n)
+- Supports **Kannada language** for localized experience.
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Next.js** - React framework for performance & scalability.
+- **TypeScript** - Ensures type safety.
+- **Razorpay** - Payment gateway integration.
+- **Calendly** - Meeting scheduling.
+- **i18n** - Multi-language support.
+- **TAILWIND CSS** - Scoped styling.
+- **Vercel** - Hosting & deployment.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Live Demo
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+[Library App](https://library-nextjs-ashy.vercel.app/)
 
-## Deploy on Vercel
+## Installation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Clone the repository**
+   ```sh
+   git clone https://github.com/your-username/library-nextjs.git
+   cd library-nextjs
+   ```
+2. **Install dependencies**
+   ```sh
+   npm install
+   # or
+   yarn install
+   ```
+3. **Start the development server**
+   ```sh
+   npm run dev
+   # or
+   yarn dev
+   ```
+4. Open **http://localhost:3000/** in your browser.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Contributing
+
+We welcome contributions! Feel free to fork the repository, open issues, and submit pull requests.
+
+## License
+
+This project is licensed under the **MIT License**.
+
+---
+⭐ If you find this useful, give it a **star** on GitHub!
+
