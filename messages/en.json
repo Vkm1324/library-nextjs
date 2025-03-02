@@ -151,6 +151,7 @@
     "Overdue": "Overdue",
     "Completed": "Completed",
     "Approved": "Approved",
+    "Rejected":"Rejected",
     "N/A": "N/A",
     "Deleted Book": "Deleted Book",
     "Deleted User": "Deleted User",

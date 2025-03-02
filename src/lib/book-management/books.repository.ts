@@ -105,7 +105,7 @@ export async function fetchFilteredBooks(
 const whereClause = query
   ? or(
       sql`${booksTable.title} ILIKE ${`%${query}%`}`,
-      sql`${booksTable.id}::text ILIKE ${`%${query}%`}`,
+      sql`CAST(${booksTable.id} AS TEXT) ILIKE ${`%${query}%`}`,
       sql`${booksTable.publisher} ILIKE ${`%${query}%`}`,
       sql`${booksTable.genre} ILIKE ${`%${query}%`}`,
       sql`${booksTable.author} ILIKE ${`%${query}%`}`,
@@ -137,12 +137,12 @@ export async function fetchBooksCount(query: string): Promise<number> {
     // Step 1: Create the filtering condition based on the provided query
     const whereClause = query
       ? or(
-          like(booksTable.title, `%${query}%`), // Filter by status
-          like(booksTable.id, `%${+query}%`), // Filter by bookId
+          like(booksTable.title, `%${query}%`), // Filter by title
+          sql`${booksTable.id}::TEXT ILIKE ${`%${query}%`}`, // Filter by bookId
           like(booksTable.publisher, `%${query}%`), // Filter by publisher
           like(booksTable.author, `%${query}%`), // Filter by author
           like(booksTable.genre, `%${query}%`), // Filter by genre
-          like(booksTable.isbnNo, `%${+query}%`) // Filter by isbn
+          sql`${booksTable.isbnNo}::TEXT ILIKE ${`%${query}%`}` // Filter by isbn
         )
       : undefined;
 

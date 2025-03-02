@@ -229,41 +229,36 @@ export async function fetchFilteredTransactionPageCount(
   uid?: number,
   query?: string
 ): Promise<number> {
-  const ITEMS_PER_PAGE = 8;
   try {
-    let whereClause;
-    if (uid !== undefined) {
-      whereClause = query
+    const whereClause = query
+      ? uid !== undefined
         ? and(
             eq(transactionsTable.userId, uid),
             or(
-              like(transactionsTable.bookId, `%${query}%`),
-              like(transactionsTable.status, `%${query}%`)
+              sql`${transactionsTable.bookId}::TEXT ILIKE ${`%${query}%`}`,
+              sql`${transactionsTable.status}::TEXT ILIKE ${`%${query}%`}`
             )
           )
-        : eq(transactionsTable.userId, uid);
-    } else {
-      whereClause = query
-        ? or(
-            like(transactionsTable.bookId, `%${query}%`),
-            like(transactionsTable.status, `%${query}%`)
+        : or(
+            sql`${transactionsTable.bookId}::TEXT ILIKE ${`%${query}%`}`,
+            sql`${transactionsTable.status}::TEXT ILIKE ${`%${query}%`}`
           )
-        : undefined;
-    }
+      : uid !== undefined
+      ? eq(transactionsTable.userId, uid)
+      : undefined;
 
     const [countResult] = await db
       .select({ count: count() })
       .from(transactionsTable)
       .where(whereClause);
 
-    const transactionCount =
-      countResult.count > 0 ? countResult.count / ITEMS_PER_PAGE : 0;
-    return Math.ceil(transactionCount);
+    return Math.ceil(countResult.count); // No need to divide by ITEMS_PER_PAGE
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch transaction count.");
   }
 }
+
 
 export async function fetchFilteredTransaction(
   currentPage: number,
@@ -274,28 +269,23 @@ export async function fetchFilteredTransaction(
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
-    // Step 1: Prepare the where clause
-    let whereClause;
-    if (uid !== undefined) {
-      whereClause = query
+    const whereClause = query
+      ? uid !== undefined
         ? and(
             eq(transactionsTable.userId, uid),
             or(
-              like(transactionsTable.bookId, `%${query}%`),
-              like(transactionsTable.status, `%${query}%`)
+              sql`${transactionsTable.bookId}::TEXT ILIKE ${`%${query}%`}`,
+              sql`${transactionsTable.status}::TEXT ILIKE ${`%${query}%`}`
             )
           )
-        : eq(transactionsTable.userId, uid);
-    } else {
-      whereClause = query
-        ? or(
-            like(transactionsTable.bookId, `%${query}%`),
-            like(transactionsTable.status, `%${query}%`)
+        : or(
+            sql`${transactionsTable.bookId}::TEXT ILIKE ${`%${query}%`}`,
+            sql`${transactionsTable.status}::TEXT ILIKE ${`%${query}%`}`
           )
-        : undefined;
-    }
+      : uid !== undefined
+      ? eq(transactionsTable.userId, uid)
+      : undefined;
 
-    // Step 2: Execute the database query with pagination
     const paginatedResults = await db
       .select({
         transactionId: transactionsTable.transactionId,
@@ -314,9 +304,9 @@ export async function fetchFilteredTransaction(
       .where(whereClause)
       .limit(ITEMS_PER_PAGE)
       .offset(offset)
-      .orderBy(transactionsTable.status, transactionsTable.transactionId);
+      .orderBy(transactionsTable.transactionId); // Removed status ordering
 
-    const result = paginatedResults.map((transaction) => ({
+    return paginatedResults.map((transaction) => ({
       ...transaction,
       dueDate: generateDueDate(transaction.issueddate, 30),
       lateFees: lateFeesCalculator(
@@ -324,13 +314,13 @@ export async function fetchFilteredTransaction(
         transaction.returnDate
       ),
       status: generateStatus(transaction.issueddate, transaction.returnDate),
-    }));
-    return result as unknown as ITransactionTable[];
+    })) as unknown as ITransactionTable[];
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch book transactions.");
   }
 }
+
 
 export async function fetchPendingTransaction(): Promise<ITransaction[]> {
   try {

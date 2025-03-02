@@ -29,6 +29,7 @@ A powerful **Library Management System** built with **Next.js**, offering seamle
 
 - **Next.js** - React framework for performance & scalability.
 - **TypeScript** - Ensures type safety.
+- **Edge Store** - Image Bucket/Hosting Images.
 - **Razorpay** - Payment gateway integration.
 - **Calendly** - Meeting scheduling.
 - **i18n** - Multi-language support.

@@ -11,16 +11,15 @@ import {
   booksTable,
   usersTable,
 } from "@/drizzle/schema/postgressSchema";
-import { eq, count, and, or, like } from "drizzle-orm/sql";
+import { eq, count, and, or, like, sql } from "drizzle-orm/sql";
 
 export class BookRequestRepository
   implements IRepository<IBookRequestBase, IBookResquest>
 {
   async create(data: IBookRequestBase): Promise<IBookResquest> {
-    const bookRequest: IBookResquest = {
+    const bookRequest: Omit<IBookResquest , 'id'> = {
       ...data,
       requestDate: new Date(),
-      id: 0,
       status: "pending",
     };
     const [result] = await db
@@ -86,19 +85,20 @@ export async function fetchFilteredBookRequestPageCount(
         ? and(
             eq(bookRequestTable.userId, uid),
             or(
-              like(bookRequestTable.bookId, `%${query}%`),
-              like(bookRequestTable.status, `%${query}%`)
+              sql`${bookRequestTable.status}::TEXT ILIKE ${`%${query}%`}`,
+              sql`${bookRequestTable.bookId}::TEXT ILIKE ${`%${query}%`}`
             )
           )
         : eq(bookRequestTable.userId, uid);
     } else {
       whereClause = query
         ? or(
-            like(bookRequestTable.bookId, `%${query}%`),
-            like(bookRequestTable.status, `%${query}%`)
+            sql`${bookRequestTable.status}::TEXT ILIKE ${`%${query}%`}`,
+            sql`${bookRequestTable.bookId}::TEXT ILIKE ${`%${query}%`}`
           )
         : undefined;
     }
+    
 
     // Step 2: Fetch the count of filtered records
     const [countResult] = await db
@@ -114,9 +114,10 @@ export async function fetchFilteredBookRequestPageCount(
     return Math.ceil(bookCount);
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch books count.");
+    throw new Error("Failed to fetch filtered books count.");
   }
 }
+
 export async function fetchFilteredBookRequest(
   currentPage: number,
   uid?: number,
@@ -127,25 +128,22 @@ export async function fetchFilteredBookRequest(
 
   try {
     // Step 1: Prepare the where clause
-    let whereClause;
-    if (uid !== undefined) {
-      whereClause = query
+    const whereClause = query
+      ? uid !== undefined
         ? and(
             eq(bookRequestTable.userId, uid),
             or(
-              like(bookRequestTable.bookId, `%${query}%`),
-              like(bookRequestTable.status, `%${query}%`)
+              sql`${bookRequestTable.status}::TEXT ILIKE ${`%${query}%`}`,
+              sql`${bookRequestTable.bookId}::TEXT ILIKE ${`%${query}%`}`
             )
           )
-        : eq(bookRequestTable.userId, uid);
-    } else {
-      whereClause = query
-        ? or(
-            like(bookRequestTable.bookId, `%${query}%`),
-            like(bookRequestTable.status, `%${query}%`)
+        : or(
+            sql`${bookRequestTable.status}::TEXT ILIKE ${`%${query}%`}`,
+            sql`${bookRequestTable.bookId}::TEXT ILIKE ${`%${query}%`}`
           )
-        : undefined;
-    }
+      : uid !== undefined
+      ? eq(bookRequestTable.userId, uid)
+      : undefined;
 
     // Step 2: Execute the database query with pagination
     const paginatedResults = await db
@@ -164,10 +162,13 @@ export async function fetchFilteredBookRequest(
       .where(whereClause)
       .limit(ITEMS_PER_PAGE)
       .offset(offset)
-      .orderBy(bookRequestTable.status, bookRequestTable.id);
+      .orderBy(bookRequestTable.id); // Removed status ordering to avoid enum ordering issues
+
     return paginatedResults as unknown as IBookResquestTable[];
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch book transactions.");
+    throw new Error("Failed to fetch filtered book transactions.");
   }
 }
+
+
