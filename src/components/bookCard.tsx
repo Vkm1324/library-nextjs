@@ -50,6 +50,7 @@ export default function BookCard({ book, uid }: BookCardProps) {
         {/* Image Section */}
         <div className="aspect-[2/3] overflow-hidden">
           <Image
+          priority={false} 
             src={book.image || image}
             alt={book.title}
             width={300}
