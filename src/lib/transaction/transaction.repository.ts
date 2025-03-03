@@ -347,7 +347,10 @@ function getDueDate(issuedDate: PgColumn) {
   return sql`(${issuedDate} + INTERVAL '30 days')`;
 }
 
-export async function metaDataOfTransactions() {
+export async function metaDataOfTransactions(id:number | undefined) {
+  // Create a condition for the WHERE clause based on the provided id
+  const userCondition = id ? eq(transactionsTable.userId, id) : undefined;
+
   // Run queries in parallel using Promise.all()
   const [
     [totalTransactions],
@@ -356,13 +359,18 @@ export async function metaDataOfTransactions() {
     [todaysdueTransactions],
   ] = await Promise.all([
     // Query for total transactions
-    db.select({ count: count() }).from(transactionsTable),
+    db
+      .select({ count: count() })
+      .from(transactionsTable)
+      .where(userCondition),
 
     // Query for completed transactions
     db
       .select({ count: count() })
       .from(transactionsTable)
-      .where(eq(transactionsTable.transactionType, "return")),
+      .where(
+        and(eq(transactionsTable.transactionType, "return"), userCondition)
+      ),
 
     // Query for overdue transactions
     db
@@ -371,7 +379,8 @@ export async function metaDataOfTransactions() {
       .where(
         and(
           isNull(transactionsTable.returnDate),
-          lt(getDueDate(transactionsTable.issueddate), sql`CURRENT_TIMESTAMP`)
+          lt(getDueDate(transactionsTable.issueddate), sql`CURRENT_TIMESTAMP`),
+          userCondition
         )
       ),
 
@@ -385,7 +394,8 @@ export async function metaDataOfTransactions() {
           eq(
             sql`DATE(${getDueDate(transactionsTable.issueddate)})`,
             sql`CURRENT_DATE`
-          )
+          ),
+          userCondition
         )
       ),
   ]);

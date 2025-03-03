@@ -6,10 +6,19 @@ import {  metaDataOfTransactions } from "@/lib/transaction/transaction.repositor
 import { getTranslations } from "next-intl/server";
 
 export default async function Dashboard() {
-  const totalTransaction = await metaDataOfTransactions();
+  const session = await auth();
+  const role =getRole(session?.user.role)
+  let id:number | undefined;
+  if(role!=="Admin"){
+    id=+session?.user.uId!
+  }
+  else{
+    id=undefined
+  }
+
+  const totalTransaction = await metaDataOfTransactions(id);
   const t =await  getTranslations("LandingPage");
 const pending = (totalTransaction.totalTransactions - (totalTransaction.overdueTransactions + totalTransaction.todaysDueTransactions + totalTransaction.completedTransactions))
-  const session = await auth();
   return (
     <main className="p-4">
       <h1 className="text-2xl font-bold mb-4">
